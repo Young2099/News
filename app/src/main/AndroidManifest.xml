@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".mvp.ui.activities.SplashActivity" />
+        <activity android:name=".mvp.ui.activities.PhotoActivity"/>
     </application>
 
 </manifest>

@@ -3,4 +3,8 @@
     <string name="news_title">新闻</string>
     <string name="news_photo">图片</string>
     <string name="news_video">视频</string>
+    <string name="open_drawer">Open navigation drawer</string>
+    <string name="close_drawer">Close navigation drawer</string>
+    <string name="about">关于</string>
+    <string name="communicate">Communicate</string>
 </resources>
