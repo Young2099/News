@@ -17,8 +17,8 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 
     private List<String> mNewsList;
 
-    public NewsRecyclerViewAdapter(List<String> mNewsList) {
-        this.mNewsList = mNewsList;
+    public NewsRecyclerViewAdapter() {
+
     }
 
     @Override
@@ -38,6 +38,10 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         return mNewsList.size();
     }
 
+    public void setItems(List<String> items) {
+        this.mNewsList = items;
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private  TextView mText;
         public ViewHolder(View itemView) {
@@ -45,4 +49,5 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
             mText= (TextView) itemView.findViewById(R.id.msg);
         }
     }
+
 }

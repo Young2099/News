@@ -9,14 +9,16 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.demo.panguso.mvp_mode.R;
+import com.demo.panguso.mvp_mode.component.DaggerNewsComponent;
+import com.demo.panguso.mvp_mode.module.NewsModule;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsPresenter;
-import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.base.BaseFragment;
 import com.demo.panguso.mvp_mode.mvp.view.NewsView;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 /**
  * Created by ${yangfang} on 2016/9/9.
@@ -26,9 +28,10 @@ public class NewsFragment extends BaseFragment implements NewsView {
     RecyclerView mNewsRV;
     ProgressBar mProgressBar;
 
-    private List<String> mNewsList;
-    private NewsRecyclerViewAdapter mNewsRecyclerViewAdapter;
-    private NewsPresenter mNewsPresenter;
+    @Inject
+    NewsRecyclerViewAdapter mNewsRecyclerViewAdapter;
+    @Inject
+    NewsPresenter mNewsPresenter;
 
     @Nullable
     @Override
@@ -37,18 +40,24 @@ public class NewsFragment extends BaseFragment implements NewsView {
         mNewsRV = (RecyclerView) view.findViewById(R.id.news_rv);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         mNewsRV.setHasFixedSize(true);
-        mNewsList = new ArrayList<>();
-        mNewsRecyclerViewAdapter = new NewsRecyclerViewAdapter(mNewsList);
-        mNewsPresenter = new NewsPresenterImpl(this);
+//        mNewsRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+//        mNewsRV.setAdapter(mNewsRecyclerViewAdapter);
+//        mNewsList = new ArrayList<>();
+//        mNewsRecyclerViewAdapter = new NewsRecyclerViewAdapter(mNewsList);
+//        mNewsPresenter = new NewsPresenterImpl(this);
+        DaggerNewsComponent.builder()
+                .newsModule(new NewsModule(this))
+                .build()
+                .inject(this);
         mNewsPresenter.onCreateView();
         return view;
     }
 
     @Override
     public void setItems(List<String> items) {
-        mNewsList.clear();
-        mNewsList.addAll(items);
         mNewsRecyclerViewAdapter.notifyDataSetChanged();
+        mNewsRecyclerViewAdapter.setItems(items);
+        mNewsRV.setAdapter(mNewsRecyclerViewAdapter);
     }
 
     @Override
@@ -64,5 +73,10 @@ public class NewsFragment extends BaseFragment implements NewsView {
     @Override
     public void showMsg(String message) {
 
+    }
+
+    @Override
+    public void onDestoryView() {
+        mNewsPresenter.onDestory();
     }
 }
