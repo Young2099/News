@@ -2,6 +2,7 @@ package com.demo.panguso.mvp_mode.mvp.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,11 +41,7 @@ public class NewsFragment extends BaseFragment implements NewsView {
         mNewsRV = (RecyclerView) view.findViewById(R.id.news_rv);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         mNewsRV.setHasFixedSize(true);
-//        mNewsRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-//        mNewsRV.setAdapter(mNewsRecyclerViewAdapter);
-//        mNewsList = new ArrayList<>();
-//        mNewsRecyclerViewAdapter = new NewsRecyclerViewAdapter(mNewsList);
-//        mNewsPresenter = new NewsPresenterImpl(this);
+        mNewsRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         DaggerNewsComponent.builder()
                 .newsModule(new NewsModule(this))
                 .build()
@@ -55,7 +52,6 @@ public class NewsFragment extends BaseFragment implements NewsView {
 
     @Override
     public void setItems(List<String> items) {
-        mNewsRecyclerViewAdapter.notifyDataSetChanged();
         mNewsRecyclerViewAdapter.setItems(items);
         mNewsRV.setAdapter(mNewsRecyclerViewAdapter);
     }

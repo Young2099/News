@@ -2,6 +2,7 @@ package com.demo.panguso.mvp_mode.interactor;
 
 import android.os.Handler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,6 +10,9 @@ import java.util.List;
  * Created by ${yangfang} on 2016/9/9.
  */
 public class NewsInteractorImpl implements NewsInteractor {
+
+    List<String> list = new ArrayList<>();
+
     @Override
     public void loadNews(final OnFinishedListener listener) {
         new Handler().postDelayed(new Runnable() {
@@ -17,6 +21,7 @@ public class NewsInteractorImpl implements NewsInteractor {
                 listener.onFinished(createArrayList());
             }
         }, 2000);
+
     }
 
     private List<String> createArrayList() {
@@ -29,4 +34,5 @@ public class NewsInteractorImpl implements NewsInteractor {
                 "Item 8",
                 "Item 9");
     }
+
 }
