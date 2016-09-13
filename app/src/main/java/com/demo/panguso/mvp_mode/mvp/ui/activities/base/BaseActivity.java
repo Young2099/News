@@ -6,6 +6,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.demo.panguso.mvp_mode.app.App;
+import com.squareup.leakcanary.RefWatcher;
+
 
 /**
  * Created by ${yangfang} on 2016/9/7.
@@ -30,7 +33,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        RefWatcher refWatcher = App.getWatcher(this);
+        refWatcher.watch(this);
 //        int layoutId = getLayoutId();
 //        setContentView(layoutId);
 //        initInjector();
@@ -107,4 +111,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 //        getMenuInflater().inflate(R.menu.main,menu);
 //        return super.onCreateOptionsMenu(menu);
 //    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = App.getWatcher(this);
+        refWatcher.watch(this);
+    }
 }

@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.component.DaggerNewsComponent;
 import com.demo.panguso.mvp_mode.module.NewsModule;
+import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsPresenter;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.base.BaseFragment;
@@ -51,12 +52,6 @@ public class NewsFragment extends BaseFragment implements NewsView {
     }
 
     @Override
-    public void setItems(List<String> items) {
-        mNewsRecyclerViewAdapter.setItems(items);
-        mNewsRV.setAdapter(mNewsRecyclerViewAdapter);
-    }
-
-    @Override
     public void showProgress() {
         mProgressBar.setVisibility(View.VISIBLE);
     }
@@ -74,5 +69,11 @@ public class NewsFragment extends BaseFragment implements NewsView {
     @Override
     public void onDestoryView() {
         mNewsPresenter.onDestory();
+    }
+
+    @Override
+    public void setItems(List<NewsSummary> items) {
+        mNewsRecyclerViewAdapter.setItems(items);
+        mNewsRV.setAdapter(mNewsRecyclerViewAdapter);
     }
 }
