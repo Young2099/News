@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <color name="night_mask">#90000000</color>
+    <!--56%black-->
+    <!--    <color name="container_background">#1D2124</color>
+        <color name="item_background">#1F2326</color>-->
+    <color name="container_background">#383F41</color>
+    <color name="item_background">#41494B</color>
+    <color name="primary_text">#deffffff</color>
+    <!--87%white-->
+    <color name="secondary_text">#8affffff</color>
+    <!--54%white-->
+    <color name="tertiary_text">#8affffff</color>
+    <!--54%white-->
+
+    <color name="image_place_holder">#272B2F</color>
+</resources>

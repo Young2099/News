@@ -1,12 +1,18 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities.base;
 
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.WindowManager;
 
+import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
+import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 import com.squareup.leakcanary.RefWatcher;
 
 
@@ -20,6 +26,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     private Class mClass;
     public NavigationView mBaseNavView;
     protected boolean mIsHasNavigationView;
+    private boolean isAddView;
+    private View mNightView = null;
+    private WindowManager mWindowManager = null;
 //
 //    /**
 //     * 初始化布局
@@ -33,8 +42,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RefWatcher refWatcher = App.getWatcher(this);
-        refWatcher.watch(this);
+
+        setNightOrDayMode();
+//        RefWatcher refWatcher = App.getWatcher(this);
+//        refWatcher.watch(this);
 //        int layoutId = getLayoutId();
 //        setContentView(layoutId);
 //        initInjector();
@@ -46,6 +57,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 //
 //        }
 //        initNightModeSwitch();
+    }
+
+    private void setNightOrDayMode() {
+        if (SharedPreferencesUtil.getIsNightMode()) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            initNightView();
+            mNightView.setBackgroundResource(R.color.night_mask);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
     }
 
 //    private void initNightModeSwitch() {
@@ -113,10 +135,46 @@ public abstract class BaseActivity extends AppCompatActivity {
 //    }
 
 
+    private void initNightView() {
+        if (isAddView) {
+            return;
+        }
+
+        //  增加夜间模式蒙版
+        WindowManager.LayoutParams nightParams = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.TYPE_APPLICATION,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE |
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSPARENT);
+
+
+        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        mNightView = new View(this);
+        mWindowManager.addView(mNightView, nightParams);
+        isAddView = true;
+    }
+
+    public void changeToNight() {
+
+        getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        initNightView();
+        mNightView.setBackgroundResource(R.color.night_mask);
+    }
+
+    public void changeToDay() {
+        getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        mNightView.setBackgroundResource(R.color.transparent);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         RefWatcher refWatcher = App.getWatcher(this);
         refWatcher.watch(this);
+        if (isAddView) {
+            mWindowManager.removeViewImmediate(mNightView);
+            mWindowManager = null;
+            mNightView = null;
+        }
     }
 }

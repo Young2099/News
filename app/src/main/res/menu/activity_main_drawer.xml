@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+
+    >
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_news"
@@ -14,5 +16,18 @@
             android:icon="@mipmap/ic_menu_video"
             android:title="@string/news_video" />
     </group>
+
+    <item android:title="设置">
+
+        <menu>
+
+            <item
+                android:id="@+id/nav_night_mode"
+                android:actionLayout="@layout/drawer_switch"
+                android:showAsAction="always"
+                android:title="@string/nav_mode" />
+        </menu>
+
+    </item>
 
 </menu>

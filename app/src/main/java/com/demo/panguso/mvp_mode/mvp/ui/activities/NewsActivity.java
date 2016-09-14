@@ -17,6 +17,7 @@ import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.NewsFragment;
+import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 
 import java.util.ArrayList;
 
@@ -127,6 +128,16 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         if (id == R.id.action_about) {
             return true;
         }
+        if(id == R.id.nav_night_mode){
+            if(SharedPreferencesUtil.getIsNightMode()){
+                changeToDay();
+                SharedPreferencesUtil.setIsNightMode(false);
+            }else {
+                changeToNight();
+                SharedPreferencesUtil.setIsNightMode(true);
+            }
+        }
         return super.onOptionsItemSelected(item);
     }
+
 }

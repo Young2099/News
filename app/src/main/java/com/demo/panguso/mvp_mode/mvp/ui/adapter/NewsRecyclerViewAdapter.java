@@ -40,6 +40,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mNewsSummaryTitleTv.setText(mNewsList.get(position).getTitle());
         holder.mNewsSummaryDigestTv.setText(mNewsList.get(position).getDigest());
+        holder.mTextViewTime.setText(mNewsList.get(position).getPtime());
         Glide.with(App.getAppContext()).load(mNewsList.get(position).getImgsrc())
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -65,6 +66,8 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         ImageView mImageViewPhotoIv;
         @BindView(R.id.news_summary_digest_tv)
         TextView mNewsSummaryDigestTv;
+        @BindView(R.id.news_summary_ptime_tv)
+        TextView mTextViewTime;
 
         public ViewHolder(View itemView) {
             super(itemView);
