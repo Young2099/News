@@ -1,6 +1,5 @@
 package com.demo.panguso.mvp_mode.interactor;
 
-import com.demo.panguso.mvp_mode.common.ApiConstants;
 import com.demo.panguso.mvp_mode.component.db.NewsChannelTableManager;
 import com.demo.panguso.mvp_mode.response.RequestCallBack;
 
@@ -17,10 +16,6 @@ import rx.schedulers.Schedulers;
  * Created by ${yangfang} on 2016/9/9.
  */
 public class NewsInteractorImpl implements NewsInteractor<List<NewsChannelTable>> {
-
-    private String type = ApiConstants.HEADLINE_TYPE;
-    private String id = ApiConstants.HEADLINE_ID;//新闻头条的id
-    private int startPage = 0;
 
     @Override
     public Subscription loadChannel(final RequestCallBack<List<NewsChannelTable>> listener) {

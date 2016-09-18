@@ -10,21 +10,31 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.demo.panguso.mvp_mode.R;
+import com.demo.panguso.mvp_mode.common.Constants;
+import com.demo.panguso.mvp_mode.component.DaggerNewsComponent;
+import com.demo.panguso.mvp_mode.module.NewsModule;
+import com.demo.panguso.mvp_mode.mvp.presenter.NewsPresenter;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.NewsFragment;
+import com.demo.panguso.mvp_mode.mvp.view.NewsView;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import greendao.NewsChannelTable;
 
-public class NewsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class NewsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, NewsView {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -38,7 +48,11 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     DrawerLayout mDrawerLayout;
 
     FloatingActionButton mFab;
-    private ArrayList<Fragment> mNewsFragmentList ;
+
+    @Inject
+    NewsPresenter mNewsPresenter;
+
+    private List<Fragment> mNewsFragmentList = new ArrayList<>();
 //    protected void initViews() {
 //        mBaseNavView = mNavView;
 //
@@ -64,35 +78,26 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         mNavView.setNavigationItemSelectedListener(this);
-        initFragment();
-        initViewPager();
-    }
-
-    private void initViewPager() {
-        initFragment();
-        //设置tabLayout的模式
-        mTabs.setTabMode(TabLayout.MODE_FIXED);
-        //为TabLayout添加tba的名称
-        mTabs.addTab(mTabs.newTab().setText("要闻"));
-        mTabs.addTab(mTabs.newTab().setText("科技"));
-        mTabs.addTab(mTabs.newTab().setText("娱乐"));
-        NewsFragmetPagerAdapter adapter = new NewsFragmetPagerAdapter(getSupportFragmentManager(), mNewsFragmentList);
-        mViewPager.setAdapter(adapter);
-        //TabLayour加载viewpager
-        mTabs.setupWithViewPager(mViewPager);
-    }
-
-    private void initFragment() {
-        NewsFragment newsFragment1 = new NewsFragment();
-        NewsFragment newsFragment2 = new NewsFragment();
-        NewsFragment newsFragment3 = new NewsFragment();
-
-        mNewsFragmentList = new ArrayList<>();
-        mNewsFragmentList.add(newsFragment1);
-        mNewsFragmentList.add(newsFragment2);
-        mNewsFragmentList.add(newsFragment3);
+//        initFragment();
+        DaggerNewsComponent.builder()
+                .newsModule(new NewsModule(this))
+                .build().inject(this);
+        mNewsPresenter.onCreate();
 
     }
+
+//
+//    private void initFragment() {
+//        NewsFragment newsFragment1 = new NewsFragment();
+//        NewsFragment newsFragment2 = new NewsFragment();
+//        NewsFragment newsFragment3 = new NewsFragment();
+//
+//        mNewsFragmentList = new ArrayList<>();
+//        mNewsFragmentList.add(newsFragment1);
+//        mNewsFragmentList.add(newsFragment2);
+//        mNewsFragmentList.add(newsFragment3);
+//
+//    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -128,11 +133,11 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         if (id == R.id.action_about) {
             return true;
         }
-        if(id == R.id.nav_night_mode){
-            if(SharedPreferencesUtil.getIsNightMode()){
+        if (id == R.id.nav_night_mode) {
+            if (SharedPreferencesUtil.getIsNightMode()) {
                 changeToDay();
                 SharedPreferencesUtil.setIsNightMode(false);
-            }else {
+            } else {
                 changeToNight();
                 SharedPreferencesUtil.setIsNightMode(true);
             }
@@ -140,4 +145,58 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void initViewPager(List<NewsChannelTable> data) {
+        List<String> channelNames = new ArrayList<>();
+        if (data != null) {
+            for (NewsChannelTable newsChannel : data) {
+                NewsFragment newsFragment = createListFragment(newsChannel.getNewsChannelId(), newsChannel.getNewsChannelType()
+                        , newsChannel.getNewsChannelIndex());
+                mNewsFragmentList.add(newsFragment);
+                channelNames.add(newsChannel.getNewsChannelName());
+                Log.e("TAG","/////)))))"+newsChannel.getNewsChannelName());
+                Log.e("TAG","/////)))))"+newsChannel.getNewsChannelType());
+            }
+            //设置TabLayout的模式
+            mTabs.setTabMode(TabLayout.MODE_FIXED);
+            NewsFragmetPagerAdapter adapter = new NewsFragmetPagerAdapter(getSupportFragmentManager(), channelNames,mNewsFragmentList);
+            mViewPager.setAdapter(adapter);
+            mTabs.setupWithViewPager(mViewPager);
+        }
+    }
+
+    private NewsFragment createListFragment(String channelId, String newsType, int newsChannelIndex) {
+        NewsFragment fragment = new NewsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.NEWS_ID, channelId);
+        bundle.putString( Constants.NEWS_TYPE, newsType);
+        bundle.putInt(Constants.CHANNEL_POSITION, newsChannelIndex);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void showMessage(String message) {
+
+    }
+
+    @Override
+    public void showErrorMsg(String message) {
+
+    }
+
+    @Override
+    public void onDestory() {
+
+    }
 }

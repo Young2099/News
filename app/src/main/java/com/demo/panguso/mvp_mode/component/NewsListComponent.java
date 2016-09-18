@@ -1,7 +1,7 @@
 package com.demo.panguso.mvp_mode.component;
 
 import com.demo.panguso.mvp_mode.module.NewsListModule;
-import com.demo.panguso.mvp_mode.mvp.ui.fragment.NewsListFragment;
+import com.demo.panguso.mvp_mode.mvp.ui.fragment.NewsFragment;
 
 import dagger.Component;
 
@@ -10,5 +10,5 @@ import dagger.Component;
  */
 @Component(modules = {NewsListModule.class})
 public interface NewsListComponent {
-    void inject(NewsListFragment newsListFragment);
+    void inject(NewsFragment newsFragment);
 }

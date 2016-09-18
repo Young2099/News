@@ -1,5 +1,7 @@
 package com.demo.panguso.mvp_mode.component.db;
 
+import android.util.Log;
+
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.ApiConstants;
@@ -20,6 +22,7 @@ public class NewsChannelTableManager {
      * 首次打开程序初始化
      */
     public static void initDB() {
+        Log.e("TAG",".P.P.P.P");
         if (!SharedPreferencesUtil.getIsBoolean()) {
             NewsChannelTableDao dao = App.getNewsChannelTableDao();
             List<String> channelName = Arrays.asList(App.getAppContext().getResources()

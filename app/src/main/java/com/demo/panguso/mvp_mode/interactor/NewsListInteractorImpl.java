@@ -15,6 +15,7 @@ import java.util.Map;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.functions.Func2;
@@ -28,9 +29,10 @@ public class NewsListInteractorImpl implements NewsListInteractor<List<NewsSumma
     private String type = ApiConstants.HEADLINE_TYPE;
     private String id = ApiConstants.HEADLINE_ID;//新闻头条的id
     private int startPage = 0;
+
     @Override
-    public void loadNews(final RequestCallBack<List<NewsSummary>> listener, String type, final String id, int startPage) {
-        RetrofitManager.getInstance(HostType.NETEASE_NEWS_VIDEO).getNewsListObservable(type,id,startPage)
+    public Subscription loadNews(final RequestCallBack<List<NewsSummary>> listener, String type, final String id, int startPage) {
+        return RetrofitManager.getInstance(HostType.NETEASE_NEWS_VIDEO).getNewsListObservable(type, id, startPage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
@@ -47,9 +49,9 @@ public class NewsListInteractorImpl implements NewsListInteractor<List<NewsSumma
                     @Override
                     public NewsSummary call(NewsSummary newsSummary) {
                         try {
-                            Date date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault())
+                            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                                     .parse(newsSummary.getPtime());
-                            String ptime = new SimpleDateFormat("MM-dd hh:mm", Locale.getDefault()).format(date);
+                            String ptime = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault()).format(date);
                             newsSummary.setPtime(ptime);
                         } catch (ParseException e) {
                             e.printStackTrace();

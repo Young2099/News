@@ -11,9 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.demo.panguso.mvp_mode.R;
-import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
-import com.squareup.leakcanary.RefWatcher;
 
 
 /**
@@ -166,15 +164,4 @@ public abstract class BaseActivity extends AppCompatActivity {
         mNightView.setBackgroundResource(R.color.transparent);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        RefWatcher refWatcher = App.getWatcher(this);
-        refWatcher.watch(this);
-        if (isAddView) {
-            mWindowManager.removeViewImmediate(mNightView);
-            mWindowManager = null;
-            mNightView = null;
-        }
-    }
 }

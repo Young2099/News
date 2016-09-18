@@ -5,7 +5,11 @@ package com.demo.panguso.mvp_mode.mvp.view.base;
  */
 public interface BaseView {
     void showProgress();
+
     void hideProgress();
-    void showMsg(String message);
-    void onDestoryView();
+
+    void showMessage(String message);
+
+    void showErrorMsg(String message);
+    void onDestory();
 }
