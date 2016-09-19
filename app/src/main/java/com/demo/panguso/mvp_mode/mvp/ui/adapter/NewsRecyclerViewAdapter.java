@@ -14,6 +14,7 @@ import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
  */
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.ViewHolder> {
 
-    private List<NewsSummary> mNewsList;
+    private List<NewsSummary> mNewsList = new ArrayList<>();
 
     public NewsRecyclerViewAdapter() {
 

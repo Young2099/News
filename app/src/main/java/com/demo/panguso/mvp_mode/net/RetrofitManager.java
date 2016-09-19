@@ -67,7 +67,7 @@ public class RetrofitManager {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
-        Log.e("TAG","///////++++++");
+        Log.e("RetrofitManager","///////++++++");
         mNewsService = retrofit.create(NewsService.class);
     }
 

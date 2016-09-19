@@ -16,14 +16,13 @@ import android.view.MenuItem;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
-import com.demo.panguso.mvp_mode.component.DaggerNewsComponent;
-import com.demo.panguso.mvp_mode.module.NewsModule;
-import com.demo.panguso.mvp_mode.mvp.presenter.NewsPresenter;
+import com.demo.panguso.mvp_mode.component.DaggerNewsChannelComponent;
+import com.demo.panguso.mvp_mode.module.NewsChannelModule;
+import com.demo.panguso.mvp_mode.mvp.presenter.NewsChannelPresenter;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.NewsFragment;
-import com.demo.panguso.mvp_mode.mvp.view.NewsView;
-import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
+import com.demo.panguso.mvp_mode.mvp.view.NewsChannelView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import greendao.NewsChannelTable;
 
-public class NewsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, NewsView {
+public class NewsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, NewsChannelView {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -50,9 +49,8 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     FloatingActionButton mFab;
 
     @Inject
-    NewsPresenter mNewsPresenter;
-
-    private List<Fragment> mNewsFragmentList = new ArrayList<>();
+    NewsChannelPresenter mNewsChannelPresenter;
+    private ArrayList<Fragment> mNewsFragmentList = new ArrayList<>();
 //    protected void initViews() {
 //        mBaseNavView = mNavView;
 //
@@ -70,6 +68,7 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.e("TAG","oooooPPP");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
         ButterKnife.bind(this);
@@ -78,15 +77,26 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         mNavView.setNavigationItemSelectedListener(this);
-//        initFragment();
-        DaggerNewsComponent.builder()
-                .newsModule(new NewsModule(this))
-                .build().inject(this);
-        mNewsPresenter.onCreate();
-
+        DaggerNewsChannelComponent.builder().newsChannelModule(new NewsChannelModule(this))
+                .build()
+                .inject(this);
+        mNewsChannelPresenter.onCreate();
     }
-
 //
+//    private void initViewPager() {
+//        initFragment();
+//        //设置tabLayout的模式
+//        mTabs.setTabMode(TabLayout.MODE_FIXED);
+//        //为TabLayout添加tba的名称
+//        mTabs.addTab(mTabs.newTab().setText("要闻"));
+//        mTabs.addTab(mTabs.newTab().setText("科技"));
+//        mTabs.addTab(mTabs.newTab().setText("娱乐"));
+//        NewsFragmetPagerAdapter adapter = new NewsFragmetPagerAdapter(getSupportFragmentManager(), mNewsFragmentList);
+//        mViewPager.setAdapter(adapter);
+//        //TabLayour加载viewpager
+//        mTabs.setupWithViewPager(mViewPager);
+//    }
+
 //    private void initFragment() {
 //        NewsFragment newsFragment1 = new NewsFragment();
 //        NewsFragment newsFragment2 = new NewsFragment();
@@ -133,44 +143,35 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         if (id == R.id.action_about) {
             return true;
         }
-        if (id == R.id.nav_night_mode) {
-            if (SharedPreferencesUtil.getIsNightMode()) {
-                changeToDay();
-                SharedPreferencesUtil.setIsNightMode(false);
-            } else {
-                changeToNight();
-                SharedPreferencesUtil.setIsNightMode(true);
-            }
-        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public void initViewPager(List<NewsChannelTable> data) {
-        List<String> channelNames = new ArrayList<>();
-        if (data != null) {
-            for (NewsChannelTable newsChannel : data) {
-                NewsFragment newsFragment = createListFragment(newsChannel.getNewsChannelId(), newsChannel.getNewsChannelType()
-                        , newsChannel.getNewsChannelIndex());
+    public void initViewPager(List<NewsChannelTable> list) {
+        Log.e("TAG","pppppp222222");
+        List<String> channelName = new ArrayList<>();
+        if (list != null) {
+            for (NewsChannelTable channelTable : list) {
+                NewsFragment newsFragment = createListFragment(channelTable);
                 mNewsFragmentList.add(newsFragment);
-                channelNames.add(newsChannel.getNewsChannelName());
-                Log.e("TAG","/////)))))"+newsChannel.getNewsChannelName());
-                Log.e("TAG","/////)))))"+newsChannel.getNewsChannelType());
+                channelName.add(channelTable.getNewsChannelName());
             }
-            //设置TabLayout的模式
-            mTabs.setTabMode(TabLayout.MODE_FIXED);
-            NewsFragmetPagerAdapter adapter = new NewsFragmetPagerAdapter(getSupportFragmentManager(), channelNames,mNewsFragmentList);
-            mViewPager.setAdapter(adapter);
-            mTabs.setupWithViewPager(mViewPager);
         }
+        mTabs.setTabMode(TabLayout.MODE_FIXED);
+        NewsFragmetPagerAdapter adapter = new NewsFragmetPagerAdapter(getSupportFragmentManager(), channelName, mNewsFragmentList);
+        mViewPager.setAdapter(adapter);
+        mTabs.setupWithViewPager(mViewPager);
     }
 
-    private NewsFragment createListFragment(String channelId, String newsType, int newsChannelIndex) {
+    private NewsFragment createListFragment(NewsChannelTable channelTable) {
         NewsFragment fragment = new NewsFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.NEWS_ID, channelId);
-        bundle.putString( Constants.NEWS_TYPE, newsType);
-        bundle.putInt(Constants.CHANNEL_POSITION, newsChannelIndex);
+        bundle.putString(Constants.NEWS_ID, channelTable.getNewsChannelId());
+        bundle.putString(Constants.NEWS_TYPE, channelTable.getNewsChannelType());
+        bundle.putInt(Constants.CHANNEL_POSITION, channelTable.getNewsChannelIndex());
+        Log.e("TAG","{channelTable.getNewsChannelId()}"+channelTable.getNewsChannelIndex());
+        Log.e("TAG","{channelTable.getNewsChannelName()}"+channelTable.getNewsChannelName());
+        Log.e("TAG","{channelTable.getNewsChannelType()}"+channelTable.getNewsChannelType());
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -185,18 +186,10 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    @Override
-    public void showMessage(String message) {
-
-    }
 
     @Override
     public void showErrorMsg(String message) {
 
     }
 
-    @Override
-    public void onDestory() {
-
-    }
 }

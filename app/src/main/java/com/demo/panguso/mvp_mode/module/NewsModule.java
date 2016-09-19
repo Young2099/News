@@ -1,5 +1,6 @@
 package com.demo.panguso.mvp_mode.module;
 
+import com.demo.panguso.mvp_mode.module.base.BaseModule;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsPresenter;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter;
@@ -13,16 +14,20 @@ import dagger.Provides;
  */
 
 @Module
-public class NewsModule {
-    private NewsView mNewsView;
-
-    public NewsModule(NewsView newsView) {
-        mNewsView = newsView;
+public class NewsModule extends BaseModule<NewsView>{
+    private String channelId;
+    private String channelType;
+    private int startPage;
+    public NewsModule(NewsView newsView, String channelId, String channelType, int startPage) {
+        mView = newsView;
+        this.channelId = channelId;
+        this.channelType = channelType;
+        this.startPage = startPage;
     }
 
     @Provides
     public NewsPresenter providerNewsPresenter(){
-        return new NewsPresenterImpl(mNewsView);
+        return new NewsPresenterImpl(mView,channelId,channelType,startPage);
     }
 
     @Provides

@@ -8,8 +8,5 @@ public interface BaseView {
 
     void hideProgress();
 
-    void showMessage(String message);
-
     void showErrorMsg(String message);
-    void onDestory();
 }

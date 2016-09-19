@@ -15,10 +15,10 @@ public class NewsFragmetPagerAdapter extends FragmentPagerAdapter {
     private List<Fragment> list = new ArrayList<>();
     private List<String> titles = new ArrayList<>();
 
-    public NewsFragmetPagerAdapter(FragmentManager fm, List<String> mNewsFragmentList, List<Fragment> newsFragmentList) {
+    public NewsFragmetPagerAdapter(FragmentManager fm, List<String> channelName, List<Fragment> mNewsFragmentList) {
         super(fm);
-        titles = mNewsFragmentList;
-        list = newsFragmentList;
+        list = mNewsFragmentList;
+        titles = channelName;
     }
 
     @Override

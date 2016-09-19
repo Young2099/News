@@ -8,6 +8,6 @@ import rx.Subscription;
  * Created by ${yangfang} on 2016/9/9.
  */
 public interface NewsInteractor<T> {
+    Subscription loadNews(RequestCallBack<T> listener, String type, String id, int startPage);
 
-    Subscription loadChannel(RequestCallBack<T> listener);
 }

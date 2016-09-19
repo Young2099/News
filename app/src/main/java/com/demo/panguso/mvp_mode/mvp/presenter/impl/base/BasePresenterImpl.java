@@ -7,7 +7,7 @@ import com.demo.panguso.mvp_mode.response.RequestCallBack;
 import rx.Subscription;
 
 /**
- * Created by ${yangfang} on 2016/9/18.
+ * Created by ${yangfang} on 2016/9/19.
  */
 public class BasePresenterImpl<T extends BaseView, E> implements BasePresenter, RequestCallBack<E> {
     protected T mView;
@@ -33,7 +33,8 @@ public class BasePresenterImpl<T extends BaseView, E> implements BasePresenter, 
 
     @Override
     public void onError(String errorMsg) {
-
+        mView.hideProgress();
+        mView.showErrorMsg(errorMsg);
     }
 
     @Override
