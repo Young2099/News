@@ -81,7 +81,7 @@ public class NewsInteractorImpl implements NewsInteractor<List<NewsSummary>> {
 
                     @Override
                     public void onNext(List<NewsSummary> newsSummaries) {
-                        Log.e("TAG", "success");
+                        Log.e("NewsInteractorImpl", "success");
                         listener.success(newsSummaries);
                     }
                 });

@@ -43,6 +43,7 @@ public class NewsChannelInteractorImpl implements NewsChannelInteractor<List<New
 
                     @Override
                     public void onNext(List<NewsChannelTable> newsChannelTables) {
+                        Log.e("NewsChannel", "success");
                         callBack.success(newsChannelTables);
                     }
                 });
