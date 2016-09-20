@@ -27,7 +27,7 @@ import javax.inject.Inject;
 /**
  * Created by ${yangfang} on 2016/9/9.
  */
-public class NewsFragment extends BaseFragment implements NewsView {
+public class NewsListFragment extends BaseFragment implements NewsView {
 
     RecyclerView mNewsRV;
     ProgressBar mProgressBar;
@@ -55,8 +55,6 @@ public class NewsFragment extends BaseFragment implements NewsView {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.e("NewsFragment","2222222");
-
         View view = inflater.inflate(R.layout.fragment_news, container, false);
 
         mNewsRV = (RecyclerView) view.findViewById(R.id.news_rv);
@@ -70,17 +68,17 @@ public class NewsFragment extends BaseFragment implements NewsView {
         mNewsPresenter.onCreate();
         return view;
     }
-//
-//    @Override
-//    public void showProgress() {
-//        mProgressBar.setVisibility(View.VISIBLE);
-//    }
-//
-//    @Override
-//    public void hideProgress() {
-//        mProgressBar.setVisibility(View.GONE);
-//    }
-//
+
+    @Override
+    public void showProgress() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        mProgressBar.setVisibility(View.GONE);
+    }
+
 
     @Override
     public void setItems(List<NewsSummary> items) {
@@ -88,6 +86,5 @@ public class NewsFragment extends BaseFragment implements NewsView {
         mNewsRecyclerViewAdapter.setItems(items);
         mNewsRV.setAdapter(mNewsRecyclerViewAdapter);
     }
-
 
 }

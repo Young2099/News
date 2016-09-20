@@ -1,9 +1,8 @@
-package com.demo.panguso.mvp_mode.interactor;
-
-import android.util.Log;
+package com.demo.panguso.mvp_mode.interactor.impl;
 
 import com.demo.panguso.mvp_mode.common.ApiConstants;
 import com.demo.panguso.mvp_mode.common.HostType;
+import com.demo.panguso.mvp_mode.interactor.NewsInteractor;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.net.RetrofitManager;
 import com.demo.panguso.mvp_mode.response.RequestCallBack;
@@ -20,27 +19,23 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by ${yangfang} on 2016/9/9.
+ * Created by ${yangfang} on 2016/9/20.
  */
 public class NewsInteractorImpl implements NewsInteractor<List<NewsSummary>> {
-//    private String type = ApiConstants.HEADLINE_TYPE;
-//    private String id = ApiConstants.HEADLINE_ID;//新闻头条的id
-//    private int startPage = 0;
 
     @Override
-    public Subscription loadNews(final RequestCallBack<List<NewsSummary>> listener, String type, final String id, int startPage) {
-        Log.e("NewsInteractorImpl", "6666666");
-        return RetrofitManager.getInstance(HostType.NETEASE_NEWS_VIDEO).getNewsListObservable(type, id, 0)
+    public Subscription setListItem(final RequestCallBack<List<NewsSummary>> listener, String type, final String id, final int startPage) {
+        return RetrofitManager.getInstance(HostType.NETEASE_NEWS_VIDEO).getNewsListObservable(type, id, startPage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .flatMap(new Func1<Map<String, List<NewsSummary>>, Observable<NewsSummary>>() {
                     @Override
                     public Observable<NewsSummary> call(Map<String, List<NewsSummary>> stringListMap) {
+                        //找到id为北京的信息
                         if (id.endsWith(ApiConstants.HOUSE_ID)) {
                             return Observable.from(stringListMap.get("北京"));
                         }
@@ -48,6 +43,7 @@ public class NewsInteractorImpl implements NewsInteractor<List<NewsSummary>> {
                     }
                 })
                 .map(new Func1<NewsSummary, NewsSummary>() {
+                    //.map是将NewsSummery里面的Ptime取出来,进行排序
                     @Override
                     public NewsSummary call(NewsSummary newsSummary) {
                         try {
@@ -61,13 +57,14 @@ public class NewsInteractorImpl implements NewsInteractor<List<NewsSummary>> {
                         return newsSummary;
                     }
                 })
-                //根据时间排序
-                .toSortedList(new Func2<NewsSummary, NewsSummary, Integer>() {
-                    @Override
-                    public Integer call(NewsSummary newsSummary, NewsSummary newsSummary2) {
-                        return newsSummary.getPtime().compareTo(newsSummary2.getPtime());
-                    }
-                })
+                //对新闻信息根据时间进行排序
+//                .toSortedList(new Func2<NewsSummary, NewsSummary, Integer>() {
+//                    @Override
+//                    public Integer call(NewsSummary newsSummary, NewsSummary newsSummary2) {
+//                        return newsSummary2.getPtime().compareTo(newsSummary.getPtime());
+//                    }
+//                })
+                .toList()
                 .subscribe(new Subscriber<List<NewsSummary>>() {
                     @Override
                     public void onCompleted() {
@@ -76,15 +73,13 @@ public class NewsInteractorImpl implements NewsInteractor<List<NewsSummary>> {
 
                     @Override
                     public void onError(Throwable e) {
-                        listener.onError("加载失败");
+                        listener.onError("请求失败");
                     }
 
                     @Override
                     public void onNext(List<NewsSummary> newsSummaries) {
-                        Log.e("NewsInteractorImpl", "success");
                         listener.success(newsSummaries);
                     }
                 });
     }
-
 }

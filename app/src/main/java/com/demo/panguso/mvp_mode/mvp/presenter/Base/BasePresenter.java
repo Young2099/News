@@ -1,4 +1,4 @@
-package com.demo.panguso.mvp_mode.mvp.presenter.Base;
+package com.demo.panguso.mvp_mode.mvp.presenter.base;
 
 /**
  * Created by ${yangfang} on 2016/9/8.

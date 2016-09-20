@@ -1,62 +1,73 @@
 package com.demo.panguso.mvp_mode.mvp.presenter.impl;
 
-import com.demo.panguso.mvp_mode.interactor.NewsInteractor;
-import com.demo.panguso.mvp_mode.interactor.NewsInteractorImpl;
+import com.demo.panguso.mvp_mode.interactor.impl.NewsInteractorImpl;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsPresenter;
-import com.demo.panguso.mvp_mode.mvp.presenter.impl.base.BasePresenterImpl;
+import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.view.NewsView;
 
 import java.util.List;
 
 /**
- * Created by ${yangfang} on 2016/9/9.
+ * Created by ${yangfang} on 2016/9/20.
+ * 在这里去做和activity，fragment做数据处理的交互
  */
 public class NewsPresenterImpl extends BasePresenterImpl<NewsView, List<NewsSummary>> implements NewsPresenter {
-    private NewsInteractor<List<NewsSummary>> mNewsInteractor;
+    private NewsView mView;
+    private NewsInteractorImpl mNewsInteractor;
     private String channelId;
     private String channelType;
     private int startPage;
+    /**
+     * 新闻页面首次加载
+     */
     private boolean mIsLoaded;
 
-    public NewsPresenterImpl(NewsView mNewsView, String channelId, String channelType, int startPage) {
-        mView = mNewsView;
+    public NewsPresenterImpl(NewsView mView, String channelId, String channelType, int startPage) {
         mNewsInteractor = new NewsInteractorImpl();
-        this.channelId = channelId;
-        this.startPage = startPage;
+        this.mView = mView;
         this.channelType = channelType;
+        this.channelId = channelId;
     }
 
+    @Override
+    public void onItemClicked(int position) {
+    }
+
+    /**
+     * 去请求数据
+     */
+    @Override
+    public void onCreate() {
+        if (mView != null) {
+            mSubscription = mNewsInteractor.setListItem(this, channelType, channelId, startPage);
+        }
+    }
+
+    @Override
+    public void onDestory() {
+        mView = null;
+    }
 
     @Override
     public void success(List<NewsSummary> data) {
         mIsLoaded = true;
-        mView.setItems(data);
-        super.success(data);
-        mView.hideProgress();
+        if (mView != null) {
+            mView.setItems(data);
+            mView.hideProgress();
+        }
 
     }
 
     @Override
     public void onError(String errorMsg) {
-        mView.showErrorMsg(errorMsg);
+
     }
 
     @Override
     public void beforeRequest() {
         if (!mIsLoaded) {
-//            mView.showProgress();
+            mView.showProgress();
         }
-    }
-
-
-    @Override
-    public void onCreate() {
-        mSubscription = mNewsInteractor.loadNews(this, channelId, channelType, startPage);
-    }
-
-    @Override
-    public void onItemClicked(int position) {
-
     }
 }

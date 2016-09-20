@@ -1,9 +1,9 @@
 package com.demo.panguso.mvp_mode.mvp.presenter.impl;
 
 import com.demo.panguso.mvp_mode.interactor.NewsChannelInteractor;
-import com.demo.panguso.mvp_mode.interactor.NewsChannelInteractorImpl;
+import com.demo.panguso.mvp_mode.interactor.impl.NewsChannelInteractorImpl;
+import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsChannelPresenter;
-import com.demo.panguso.mvp_mode.mvp.presenter.impl.base.BasePresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.view.NewsChannelView;
 
 import java.util.List;
@@ -25,6 +25,7 @@ public class NewsChannelPresenterImpl extends BasePresenterImpl<NewsChannelView,
 
     @Override
     public void onCreate() {
+        super.onCreate();
         mSubscription = channelInteractor.loadNewsChannels(this);
     }
 
@@ -37,14 +38,5 @@ public class NewsChannelPresenterImpl extends BasePresenterImpl<NewsChannelView,
     public void success(List<NewsChannelTable> data) {
         super.success(data);
         mView.initViewPager(data);
-    }
-
-    @Override
-    public void onError(String errorMsg) {
-    }
-
-    @Override
-    public void beforeRequest() {
-
     }
 }

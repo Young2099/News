@@ -6,6 +6,7 @@ import android.util.SparseArray;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.ApiConstants;
 import com.demo.panguso.mvp_mode.common.HostType;
+import com.demo.panguso.mvp_mode.mvp.bean.NewsDetail;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.utils.NetUtil;
 
@@ -192,6 +193,10 @@ public class RetrofitManager {
 //                .subscribeOn(AndroidSchedulers.mainThread())
 //                .unsubscribeOn(Schedulers.io());
         return mNewsService.getNewsList(getCacheControl(),type,id,startPage);
+    }
+
+    public Observable<Map<String,NewsDetail>> getNewsDetailObservable(String postId){
+        return mNewsService.getNewsDetail(getCacheControl(),postId);
     }
 
 }

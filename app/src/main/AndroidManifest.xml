@@ -14,14 +14,17 @@
         android:theme="@style/BaseAppTheme">
         <activity
             android:name=".mvp.ui.activities.NewsActivity"
-            android:launchMode="singleTop"
-            >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".mvp.ui.activities.NewsDetailActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.Design.NoActionBar" />
         <activity android:name=".mvp.ui.activities.SplashActivity" />
         <activity android:name=".mvp.ui.activities.PhotoActivity" />
     </application>

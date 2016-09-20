@@ -10,29 +10,29 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by ${yangfang} on 2016/9/9.
+ * Created by ${yangfang} on 2016/9/20.
  */
 
 @Module
-public class NewsModule extends BaseModule<NewsView>{
+public class NewsModule extends BaseModule<NewsView> {
     private String channelId;
     private String channelType;
     private int startPage;
-    public NewsModule(NewsView newsView, String channelId, String channelType, int startPage) {
-        mView = newsView;
+
+    public NewsModule(NewsView view, String channelId, String channelType, int startPage) {
+        mView = view;
         this.channelId = channelId;
         this.channelType = channelType;
         this.startPage = startPage;
     }
 
     @Provides
-    public NewsPresenter providerNewsPresenter(){
-        return new NewsPresenterImpl(mView,channelId,channelType,startPage);
+    public NewsPresenter provideNewsPresenter() {
+        return new NewsPresenterImpl(mView, channelId, channelType,startPage);
     }
 
     @Provides
-    public NewsRecyclerViewAdapter providerRecyclerViewAdapter(){
+    public NewsRecyclerViewAdapter providerNewsRecyclerViewAdapter(){
         return new NewsRecyclerViewAdapter();
     }
-
 }

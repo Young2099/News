@@ -1,7 +1,6 @@
 package com.demo.panguso.mvp_mode.mvp.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     }
 
     public void setItems(List<NewsSummary> items) {
-        Log.e("TAG", "++++>>>>>" + items.get(2).getTitle());
         this.mNewsList = items;
     }
 
