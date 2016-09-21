@@ -12,8 +12,6 @@ import com.demo.panguso.mvp_mode.utils.NetUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -21,13 +19,9 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okio.Buffer;
-import okio.BufferedSource;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -128,30 +122,37 @@ public class RetrofitManager {
 
         @Override
         public Response intercept(Chain chain) throws IOException {
-            final Request request = chain.request();
-            final Response response = chain.proceed(request);
-
-            final ResponseBody responseBody = response.body();
-            final long contentLength = responseBody.contentLength();
-
-            BufferedSource source = responseBody.source();
-            source.request(Long.MAX_VALUE); // Buffer the entire body.
-            Buffer buffer = source.buffer();
-            Charset charset = Charset.forName("UTF-8");
-            MediaType contentType = responseBody.contentType();
-            if (contentType != null) {
-                try {
-                    charset = contentType.charset(charset);
-                } catch (UnsupportedCharsetException e) {
-                    Log.e("TAG", "Couldn't decode the response body; charset is likely malformed.");
-                    return response;
-                }
-            }
-//            if (contentLength != 0) {
-//                KLog.v("--------------------------------------------开始打印返回数据----------------------------------------------------");
-//                KLog.json(buffer.clone().readString(charset));
-//                KLog.v("--------------------------------------------结束打印返回数据----------------------------------------------------");
+            Request request = chain.request();
+            long t1 = System.nanoTime();
+//            KLog.i(String.format("Sending request %s on %s%n%s", request.url(), chain.connection(), request.headers()));
+            Response response = chain.proceed(request);
+            long t2 = System.nanoTime();
+//           KLog.i(String.format(Locale.getDefault(), "Received response for %s in %.1fms%n%s",
+//                    response.request().url(), (t2 - t1) / 1e6d, response.headers();
+//            final Request request = chain.request();
+//            final Response response = chain.proceed(request);
+//
+//            final ResponseBody responseBody = response.body();
+//            final long contentLength = responseBody.contentLength();
+//
+//            BufferedSource source = responseBody.source();
+//            source.request(Long.MAX_VALUE); // Buffer the entire body.
+//            Buffer buffer = source.buffer();
+//            Charset charset = Charset.forName("UTF-8");
+//            MediaType contentType = responseBody.contentType();
+//            if (contentType != null) {
+//                try {
+//                    charset = contentType.charset(charset);
+//                } catch (UnsupportedCharsetException e) {
+//                    Log.e("TAG", "Couldn't decode the response body; charset is likely malformed.");
+//                    return response;
+//                }
 //            }
+////            if (contentLength != 0) {
+////                KLog.v("--------------------------------------------开始打印返回数据----------------------------------------------------");
+////                KLog.json(buffer.clone().readString(charset));
+////                KLog.v("--------------------------------------------结束打印返回数据----------------------------------------------------");
+////            }
 
             return response;
         }

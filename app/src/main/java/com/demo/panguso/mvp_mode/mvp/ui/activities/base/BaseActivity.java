@@ -1,23 +1,27 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities.base;
 
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.demo.panguso.mvp_mode.R;
+import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 
 /**
  * Created by ${yangfang} on 2016/9/7.
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private Toolbar toolbar;
@@ -27,6 +31,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private boolean isAddView;
     private View mNightView = null;
     private WindowManager mWindowManager = null;
+    protected T mPresenter;
 //
 //    /**
 //     * 初始化布局
@@ -55,6 +60,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 //
 //        }
 //        initNightModeSwitch();
+    }
+
+    //TODO:适配4.4
+    protected void setStatusBarTranslucent() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            SystemBarTintManager tintManager = new SystemBarTintManager(this);
+            tintManager.setStatusBarTintEnabled(true);
+            tintManager.setStatusBarTintResource(R.color.colorPrimary);
+        }
     }
 
     private void setNightOrDayMode() {
@@ -164,4 +179,25 @@ public abstract class BaseActivity extends AppCompatActivity {
         mNightView.setBackgroundResource(R.color.transparent);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    finishAfterTransition();
+                } else {
+                    finish();
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPresenter != null) {
+            mPresenter.onDestory();
+        }
+    }
 }

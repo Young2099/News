@@ -3,6 +3,7 @@ package com.demo.panguso.mvp_mode.app;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.StrictMode;
 
 import com.demo.panguso.mvp_mode.BuildConfig;
 import com.demo.panguso.mvp_mode.common.Constants;
@@ -48,7 +49,22 @@ public class App extends Application {
         initTools();
         installLeakeCanary();
         //官方推荐将获取DaoMaster对象的方法放到Application层，这样将避免多次创建生成session对象
+        initStricMode();
         setUpDataBase();
+    }
+
+    private void initStricMode() {
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(
+                    new StrictMode.ThreadPolicy.Builder()
+                            .detectAll()
+                            .penaltyLog()//在logcat中打印违规异常信息
+                            .build()
+            );
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog().build());
+        }
     }
 
     public static NewsChannelTableDao getNewsChannelTableDao() {

@@ -30,9 +30,6 @@ public class NewsPresenterImpl extends BasePresenterImpl<NewsView, List<NewsSumm
         this.channelId = channelId;
     }
 
-    @Override
-    public void onItemClicked(int position) {
-    }
 
     /**
      * 去请求数据
@@ -70,4 +67,12 @@ public class NewsPresenterImpl extends BasePresenterImpl<NewsView, List<NewsSumm
             mView.showProgress();
         }
     }
+
+//    @Override
+//    public void onItemClicked(Context context, String postId, String imgSrc) {
+//        Intent intent = new Intent(context, NewsDetailActivity.class);
+//        intent.putExtra(Constants.NEWS_POST_ID, postId);
+//        intent.putExtra(Constants.NEWS_IMG_RES, imgSrc);
+//        context.startActivity(intent);
+//    }
 }

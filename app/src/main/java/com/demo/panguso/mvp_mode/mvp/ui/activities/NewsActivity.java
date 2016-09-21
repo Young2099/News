@@ -72,6 +72,8 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         setContentView(R.layout.activity_news);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
+        //适配
+        setStatusBarTranslucent();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
@@ -79,7 +81,9 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         DaggerNewsChannelComponent.builder().newsChannelModule(new NewsChannelModule(this))
                 .build()
                 .inject(this);
-        mNewsChannelPresenter.onCreate();
+//        mNewsChannelPresenter.onCreate();
+        mPresenter = mNewsChannelPresenter;
+        mPresenter.onCreate();
     }
 
     @Override
@@ -127,7 +131,7 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();

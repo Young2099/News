@@ -14,16 +14,17 @@ public class NewsDetailPresenterImpl extends BasePresenterImpl<NewsDetailView, N
     private NewsDetailInteractor mNewsDetailInteractor;
 
     private String postId;
+    private Boolean mIsLoad;
 
     public NewsDetailPresenterImpl(NewsDetailView view, String postId) {
         mView = view;
         this.postId = postId;
-        mNewsDetailInteractor=  new NewsDetailInteractorImpl();
+        mNewsDetailInteractor = new NewsDetailInteractorImpl();
     }
 
     @Override
     public void onCreate() {
-        mSubscription = mNewsDetailInteractor.loadDetailNews(this,postId);
+        mSubscription = mNewsDetailInteractor.loadDetailNews(this, postId);
     }
 
     @Override
@@ -34,6 +35,18 @@ public class NewsDetailPresenterImpl extends BasePresenterImpl<NewsDetailView, N
     @Override
     public void success(NewsDetail data) {
         super.success(data);
-        mView.initDetailNews(data);
+        if (mView != null) {
+            mView.initDetailNews(data);
+            mView.hideProgress();
+        }
+        mIsLoad = true;
+    }
+
+    @Override
+    public void beforeRequest() {
+        super.beforeRequest();
+        if (!mIsLoad) {
+            mView.showProgress();
+        }
     }
 }

@@ -96,7 +96,7 @@ public class NewsDetail {
     private List<?> relative_sys;
     private List<?> apps;
 
-    private class ImgBean {
+    public class ImgBean {
         private String ref;
         private String pixel;
         private String alt;

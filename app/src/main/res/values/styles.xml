@@ -12,4 +12,7 @@
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
     </style>
 
+    <style name="BaseAppTheme.NoTrans">
+    </style>
+
 </resources>

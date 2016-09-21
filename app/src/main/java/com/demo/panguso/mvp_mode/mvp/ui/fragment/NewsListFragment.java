@@ -1,25 +1,33 @@
 package com.demo.panguso.mvp_mode.mvp.ui.fragment;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.component.DaggerNewsComponent;
+import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
 import com.demo.panguso.mvp_mode.module.NewsModule;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsPresenter;
+import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.base.BaseFragment;
 import com.demo.panguso.mvp_mode.mvp.view.NewsView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -27,7 +35,7 @@ import javax.inject.Inject;
 /**
  * Created by ${yangfang} on 2016/9/9.
  */
-public class NewsListFragment extends BaseFragment implements NewsView {
+public class NewsListFragment extends BaseFragment implements NewsView, OnItemClickListener {
 
     RecyclerView mNewsRV;
     ProgressBar mProgressBar;
@@ -40,12 +48,12 @@ public class NewsListFragment extends BaseFragment implements NewsView {
     private String channelId;
     private String channelType;
     private int startPage;
+    List<NewsSummary> newsSummaries = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("NewsFragment",",,,,,");
-        if(getArguments() != null){
+        if (getArguments() != null) {
             channelId = getArguments().getString(Constants.NEWS_ID);
             channelType = getArguments().getString(Constants.NEWS_TYPE);
             startPage = getArguments().getInt(Constants.CHANNEL_POSITION);
@@ -60,12 +68,15 @@ public class NewsListFragment extends BaseFragment implements NewsView {
         mNewsRV = (RecyclerView) view.findViewById(R.id.news_rv);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         mNewsRV.setHasFixedSize(true);
-        mNewsRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        mNewsRV.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         DaggerNewsComponent.builder()
-                .newsModule(new NewsModule(this,channelId,channelType,startPage))
+                .newsModule(new NewsModule(this, channelId, channelType, startPage))
                 .build()
                 .inject(this);
-        mNewsPresenter.onCreate();
+//        mNewsPresenter.onCreate();
+        mPresenter = mNewsPresenter;
+        mPresenter.onCreate();
+        mNewsRecyclerViewAdapter.setOnItemClickListener(this);
         return view;
     }
 
@@ -79,12 +90,40 @@ public class NewsListFragment extends BaseFragment implements NewsView {
         mProgressBar.setVisibility(View.GONE);
     }
 
+    @Override
+    public void showErrorMsg(String message) {
+
+    }
 
     @Override
     public void setItems(List<NewsSummary> items) {
-        Log.e("NewsFragment","33333");
+        this.newsSummaries = items;
         mNewsRecyclerViewAdapter.setItems(items);
         mNewsRV.setAdapter(mNewsRecyclerViewAdapter);
     }
 
+    /**
+     * 针对每个Itme设置的点击事件
+     *
+     * @param itemView
+     * @param layoutPosition
+     */
+    @Override
+    public void onItemClick(View itemView, int layoutPosition) {
+        startNewDetailActivity(itemView, newsSummaries, layoutPosition);
+    }
+
+    private void startNewDetailActivity(View view, List<NewsSummary> newsSummaries, int position) {
+        Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+        intent.putExtra(Constants.NEWS_POST_ID, newsSummaries.get(position).getPostid());
+        intent.putExtra(Constants.NEWS_IMG_RES, newsSummaries.get(position).getImgsrc());
+        ImageView newsSummaryPhoto = (ImageView) view.findViewById(R.id.news_summary_photo_iv);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), newsSummaryPhoto, Constants.TRANSITION_ANIMATION_NEWS_PHOTOS);
+            startActivity(intent, options.toBundle());
+        }else{
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view,view.getWidth()/2,view.getHeight()/2,0,0);
+            ActivityCompat.startActivity(getActivity(),intent,options.toBundle());
+        }
+    }
 }
