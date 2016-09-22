@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.demo.panguso.mvp_mode.R;
+import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.component.DaggerNewsComponent;
 import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
@@ -26,6 +28,8 @@ import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.base.BaseFragment;
 import com.demo.panguso.mvp_mode.mvp.view.NewsView;
+import com.demo.panguso.mvp_mode.utils.NetUtil;
+import com.demo.panguso.mvp_mode.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +81,14 @@ public class NewsListFragment extends BaseFragment implements NewsView, OnItemCl
         mPresenter = mNewsPresenter;
         mPresenter.onCreate();
         mNewsRecyclerViewAdapter.setOnItemClickListener(this);
+        checkNetState();
         return view;
+    }
+
+    private void checkNetState() {
+        if (!NetUtil.isNetworkAvailable(App.getAppContext())) {
+            ToastUtil.showToast(getActivity(), getString(R.string.internet_error), 0);
+        }
     }
 
     @Override
@@ -92,7 +103,16 @@ public class NewsListFragment extends BaseFragment implements NewsView, OnItemCl
 
     @Override
     public void showErrorMsg(String message) {
+        mProgressBar.setVisibility(View.GONE);
+        if (NetUtil.isNetworkAvailable(App.getAppContext())) {
+            Snackbar.make(mNewsRV, message, Snackbar.LENGTH_LONG).show();
+        }
+    }
 
+    @Override
+    public void onDestroy() {
+        mNewsPresenter.onDestory();
+        super.onDestroy();
     }
 
     @Override
@@ -121,9 +141,9 @@ public class NewsListFragment extends BaseFragment implements NewsView, OnItemCl
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), newsSummaryPhoto, Constants.TRANSITION_ANIMATION_NEWS_PHOTOS);
             startActivity(intent, options.toBundle());
-        }else{
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view,view.getWidth()/2,view.getHeight()/2,0,0);
-            ActivityCompat.startActivity(getActivity(),intent,options.toBundle());
+        } else {
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view, view.getWidth() / 2, view.getHeight() / 2, 0, 0);
+            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
         }
     }
 }

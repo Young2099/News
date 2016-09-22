@@ -137,4 +137,12 @@ public class SharedPreferencesUtil {
         setBoolean(PrefKey.APP_USER,Constants.INIT_DB,value);
     }
 
+    public static void setIsHavePhoto(boolean flag){
+        setBoolean(PrefKey.APP_USER,Constants.SHOW_NEWS_PHOTO,flag);
+    }
+
+    public static boolean getIsHavePhoto(){
+        return getBoolean(PrefKey.APP_USER,Constants.SHOW_NEWS_PHOTO,true);
+    }
+
 }

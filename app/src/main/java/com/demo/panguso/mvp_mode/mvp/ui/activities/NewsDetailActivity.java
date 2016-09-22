@@ -7,17 +7,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.Constants;
+import com.demo.panguso.mvp_mode.common.URLImageGetter;
 import com.demo.panguso.mvp_mode.component.DaggerNewsDetailComponent;
 import com.demo.panguso.mvp_mode.module.NewsDetailModule;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsDetail;
@@ -25,7 +26,6 @@ import com.demo.panguso.mvp_mode.mvp.presenter.NewsDetailPresenter;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.view.NewsDetailView;
 import com.demo.panguso.mvp_mode.utils.MyUtils;
-import com.zzhoujay.richtext.RichText;
 
 import java.util.List;
 
@@ -65,7 +65,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_newsdetail);
+        setContentView(R.layout.activity_news_detail);
         ButterKnife.bind(this);
         if (getIntent() != null) {
             postId = getIntent().getStringExtra(Constants.NEWS_POST_ID);
@@ -111,22 +111,27 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
         mNewsDetailFromTv.setText(getString(R.string.news_from, newsSource, newsTime));
         setNewsDetailPhoto(imgsrc);
         if(mNewsDetailBodyTv != null){
-            RichText.from(newsBody).into(mNewsDetailBodyTv);
+            if(App.isHavePhoto() && newsDetail.getImg().size()>=2){
+                int total = newsDetail.getImg().size();
+                URLImageGetter urlImageGetter = new URLImageGetter(mNewsDetailBodyTv,newsBody,total);
+                mNewsDetailBodyTv.setText(Html.fromHtml(newsBody,urlImageGetter,null));
+
+            }else{
+                mNewsDetailBodyTv.setText(Html.fromHtml(newsBody));
+            }
         }
         setToolBarLayout(newsTitle);
     }
 
     private void setToolBarLayout(String newsTitle) {
         mCollapsingToolbarLayout.setTitle(newsTitle);
-        mCollapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        mCollapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, R.color.primary_text_white));
         mCollapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this,R.color.primary_text_white));
     }
 
     private void setNewsDetailPhoto(String imgsrc) {
-        Glide.with(App.getAppContext()).load(imgsrc)
-                .asBitmap().diskCacheStrategy(DiskCacheStrategy.ALL)
-                .format(DecodeFormat.PREFER_ARGB_8888)
-                .placeholder(R.mipmap.ic_launcher)
+        Glide.with(App.getAppContext()).load(imgsrc).asBitmap()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .error(R.mipmap.ic_launcher)
                 .into(mNewsDetailPhotoIv);
     }

@@ -20,7 +20,9 @@
             android:layout_height="72dp"
             android:layout_centerVertical="true"
             android:layout_margin="8dp"
+            android:transitionName="@string/transition_photos"
             android:scaleType="centerCrop"
+            tools:targetApi="lollipop"
             tools:src="@mipmap/ic_launcher" />
 
         <TextView

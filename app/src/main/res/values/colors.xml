@@ -17,4 +17,6 @@
     <!--54%black-->
     <color name="tertiary_text">#8a000000</color>
     <color name="primary_text_white">#ffffff</color>
+    <color name="alpha_20_black">#40000000</color>
+    <color name="background_color">#ffffff</color>
 </resources>

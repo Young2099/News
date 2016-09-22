@@ -8,6 +8,7 @@ import com.demo.panguso.mvp_mode.mvp.bean.NewsDetail;
 import com.demo.panguso.mvp_mode.net.RetrofitManager;
 import com.demo.panguso.mvp_mode.response.RequestCallBack;
 
+import java.util.List;
 import java.util.Map;
 
 import rx.Subscriber;
@@ -31,7 +32,18 @@ public class NewsDetailInteractorImpl implements NewsDetailInteractor<NewsDetail
                 .map(new Func1<Map<String, NewsDetail>, NewsDetail>() {
                     @Override
                     public NewsDetail call(Map<String, NewsDetail> stringNewsDetailMap) {
-                        return stringNewsDetailMap.get(id);
+                        NewsDetail newsDetail = stringNewsDetailMap.get(id);
+                        List<NewsDetail.ImgBean> imgSrcs = newsDetail.getImg();
+                        if(imgSrcs != null && imgSrcs.size()>2 && App.isHavePhoto()){
+                            String newsBody = newsDetail.getBody();
+                            for(int i =1;i<imgSrcs.size();i++){
+                                String oldChars = "<!--IMG#" + i + "-->";
+                                String newChars = "<img src=\"" + imgSrcs.get(i).getSrc() + "\" />";
+                                newsBody = newsBody.replace(oldChars, newChars);
+                            }
+                            newsDetail.setBody(newsBody);
+                        }
+                        return newsDetail;
                     }
                 }).subscribe(new Subscriber<NewsDetail>() {
                     @Override

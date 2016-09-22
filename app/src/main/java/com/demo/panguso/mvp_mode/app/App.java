@@ -86,6 +86,10 @@ public class App extends Application {
         QueryBuilder.LOG_VALUES = BuildConfig.DEBUG;
     }
 
+    public static boolean isHavePhoto(){
+        return SharedPreferencesUtil.getIsHavePhoto();
+    }
+
     private void initTools() {
         SharedPreferencesUtil.init(this);
     }
