@@ -22,13 +22,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-//    buildscript {
-//        repositories {
-//            mavenCentral()
-//            jcenter()
-//        }
-//
-//    }
+    buildscript {
+        repositories {
+            mavenCentral()
+            jcenter()
+        }
+
+    }
 
     sourceSets {
         main {

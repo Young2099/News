@@ -1,4 +1,4 @@
-package com.demo.panguso.mvp_mode.net;
+package com.demo.panguso.mvp_mode.respository.network;
 
 import com.demo.panguso.mvp_mode.mvp.bean.NewsDetail;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
@@ -33,7 +33,7 @@ public interface NewsService {
 
     @GET
     Observable<ResponseBody> getNewsBodyHtmlPhoto(
-            @Header("Cache-Control") String cacheControl,
+//            @Header("Cache-Control") String cacheControl,
             @Url String photoPath
     );//@url，它允许我们直接传入一个请求的URL,这样以来，我们可以将一个请求获得
     //url直接传入进来，baseUrl将被无视

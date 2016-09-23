@@ -1,6 +1,6 @@
-package com.demo.panguso.mvp_mode.module;
+package com.demo.panguso.mvp_mode.inject.module;
 
-import com.demo.panguso.mvp_mode.module.base.BaseModule;
+import com.demo.panguso.mvp_mode.inject.module.base.BaseModule;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsPresenter;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter;

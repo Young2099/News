@@ -18,7 +18,7 @@ package com.demo.panguso.mvp_mode.mvp.presenter.base;
 
 
 import com.demo.panguso.mvp_mode.mvp.view.base.BaseView;
-import com.demo.panguso.mvp_mode.response.RequestCallBack;
+import com.demo.panguso.mvp_mode.listener.RequestCallBack;
 
 import rx.Subscription;
 

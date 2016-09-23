@@ -1,7 +1,7 @@
-package com.demo.panguso.mvp_mode.interactor;
+package com.demo.panguso.mvp_mode.mvp.interactor;
 
 
-import com.demo.panguso.mvp_mode.response.RequestCallBack;
+import com.demo.panguso.mvp_mode.listener.RequestCallBack;
 
 import rx.Subscription;
 

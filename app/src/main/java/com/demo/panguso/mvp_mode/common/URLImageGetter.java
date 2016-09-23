@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
-import com.demo.panguso.mvp_mode.net.RetrofitManager;
+import com.demo.panguso.mvp_mode.respository.network.RetrofitManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import okhttp3.ResponseBody;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -30,6 +31,8 @@ public class URLImageGetter implements Html.ImageGetter {
     private String mNewsBody;
     private int mPicCount;
     private int mPicTotal;
+    public Subscription mSubscription;
+
     private static final String mFilePath = App.getAppContext().getCacheDir().getAbsolutePath();
 
     public URLImageGetter(TextView textView, String newsBody, int total) {
@@ -63,7 +66,7 @@ public class URLImageGetter implements Html.ImageGetter {
     }
 
     private Drawable getDrawableFromNet(final String s) {
-        RetrofitManager.getInstance(HostType.NEWS_DETAIL_HTML_PHOTO).getNewsBodyHtmlPhoto(s)
+        mSubscription = RetrofitManager.getInstance(HostType.NEWS_DETAIL_HTML_PHOTO).getNewsBodyHtmlPhoto(s)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

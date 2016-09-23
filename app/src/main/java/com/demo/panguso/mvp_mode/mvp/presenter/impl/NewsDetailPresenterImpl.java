@@ -1,7 +1,7 @@
 package com.demo.panguso.mvp_mode.mvp.presenter.impl;
 
-import com.demo.panguso.mvp_mode.interactor.NewsDetailInteractor;
-import com.demo.panguso.mvp_mode.interactor.impl.NewsDetailInteractorImpl;
+import com.demo.panguso.mvp_mode.mvp.interactor.NewsDetailInteractor;
+import com.demo.panguso.mvp_mode.mvp.interactor.impl.NewsDetailInteractorImpl;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsDetail;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsDetailPresenter;
 import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenterImpl;

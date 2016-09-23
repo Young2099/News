@@ -1,11 +1,11 @@
-package com.demo.panguso.mvp_mode.interactor.impl;
+package com.demo.panguso.mvp_mode.mvp.interactor.impl;
 
 import com.demo.panguso.mvp_mode.common.ApiConstants;
 import com.demo.panguso.mvp_mode.common.HostType;
-import com.demo.panguso.mvp_mode.interactor.NewsInteractor;
+import com.demo.panguso.mvp_mode.listener.RequestCallBack;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
-import com.demo.panguso.mvp_mode.net.RetrofitManager;
-import com.demo.panguso.mvp_mode.response.RequestCallBack;
+import com.demo.panguso.mvp_mode.mvp.interactor.NewsInteractor;
+import com.demo.panguso.mvp_mode.respository.network.RetrofitManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

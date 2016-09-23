@@ -1,4 +1,4 @@
-package com.demo.panguso.mvp_mode.component.db;
+package com.demo.panguso.mvp_mode.respository.db;
 
 import android.util.Log;
 

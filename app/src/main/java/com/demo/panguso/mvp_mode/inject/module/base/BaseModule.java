@@ -1,4 +1,4 @@
-package com.demo.panguso.mvp_mode.module.base;
+package com.demo.panguso.mvp_mode.inject.module.base;
 
 import com.demo.panguso.mvp_mode.mvp.view.base.BaseView;
 

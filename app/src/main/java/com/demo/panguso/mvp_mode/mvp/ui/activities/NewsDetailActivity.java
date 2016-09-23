@@ -1,5 +1,6 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -16,16 +17,19 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.common.URLImageGetter;
-import com.demo.panguso.mvp_mode.component.DaggerNewsDetailComponent;
-import com.demo.panguso.mvp_mode.module.NewsDetailModule;
+import com.demo.panguso.mvp_mode.inject.component.DaggerNewsDetailComponent;
+import com.demo.panguso.mvp_mode.inject.module.NewsDetailModule;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsDetail;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsDetailPresenter;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.view.NewsDetailView;
+import com.demo.panguso.mvp_mode.utils.DebugUtil;
 import com.demo.panguso.mvp_mode.utils.MyUtils;
 
 import java.util.List;
@@ -40,6 +44,7 @@ import butterknife.ButterKnife;
  */
 public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
 
+    private static final String TAG = "NewsDetailActivity";
     @Inject
     NewsDetailPresenter mNewsDetailPresenter;
     private String postId;
@@ -62,6 +67,10 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
     FloatingActionButton mFab;
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
+    @BindView(R.id.mask_view)
+    View mMaskView;
+
+    URLImageGetter mUrlImageGetter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -111,17 +120,21 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
         mNewsDetailTitleTv.setText(newsTitle);
         mNewsDetailFromTv.setText(getString(R.string.news_from, newsSource, newsTime));
         setNewsDetailPhoto(imgsrc);
+        setNewsBody(newsDetail, newsBody);
+        setToolBarLayout(newsTitle);
+    }
+
+    private void setNewsBody(NewsDetail newsDetail, String newsBody) {
         if (mNewsDetailBodyTv != null) {
             if (App.isHavePhoto() && newsDetail.getImg().size() >= 2) {
                 int total = newsDetail.getImg().size();
-                URLImageGetter urlImageGetter = new URLImageGetter(mNewsDetailBodyTv, newsBody, total);
-                mNewsDetailBodyTv.setText(Html.fromHtml(newsBody, urlImageGetter, null));
+                mUrlImageGetter = new URLImageGetter(mNewsDetailBodyTv, newsBody, total);
+                mNewsDetailBodyTv.setText(Html.fromHtml(newsBody, mUrlImageGetter, null));
 
             } else {
                 mNewsDetailBodyTv.setText(Html.fromHtml(newsBody));
             }
         }
-        setToolBarLayout(newsTitle);
     }
 
     private void setToolBarLayout(String newsTitle) {
@@ -135,7 +148,13 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .format(DecodeFormat.PREFER_ARGB_8888)
                 .error(R.mipmap.ic_launcher)
-                .into(mNewsDetailPhotoIv);
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        mNewsDetailPhotoIv.setImageBitmap(resource);
+                        mMaskView.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     private String getPhotoSrc(NewsDetail newsDetail) {
@@ -147,5 +166,21 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
             imgsrc = getIntent().getStringExtra(Constants.NEWS_IMG_RES);
         }
         return imgsrc;
+    }
+
+    @Override
+    protected void onDestroy() {
+        cancleUrlImageGetterSubscrition();
+        super.onDestroy();
+    }
+
+    private void cancleUrlImageGetterSubscrition() {
+        if (mUrlImageGetter != null && mUrlImageGetter.mSubscription != null
+                && !mUrlImageGetter.mSubscription.isUnsubscribed()) {
+            {
+                mUrlImageGetter.mSubscription.unsubscribe();
+                DebugUtil.e(TAG,"UrlImageGetter unsubscribe");
+            }
+        }
     }
 }

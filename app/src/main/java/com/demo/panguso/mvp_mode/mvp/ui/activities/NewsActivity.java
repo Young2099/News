@@ -16,8 +16,8 @@ import android.view.MenuItem;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
-import com.demo.panguso.mvp_mode.component.DaggerNewsChannelComponent;
-import com.demo.panguso.mvp_mode.module.NewsChannelModule;
+import com.demo.panguso.mvp_mode.inject.component.DaggerNewsChannelComponent;
+import com.demo.panguso.mvp_mode.inject.module.NewsChannelModule;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsChannelPresenter;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;

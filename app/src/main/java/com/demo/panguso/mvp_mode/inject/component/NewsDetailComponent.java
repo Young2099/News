@@ -1,6 +1,6 @@
-package com.demo.panguso.mvp_mode.component;
+package com.demo.panguso.mvp_mode.inject.component;
 
-import com.demo.panguso.mvp_mode.module.NewsDetailModule;
+import com.demo.panguso.mvp_mode.inject.module.NewsDetailModule;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
 
 import dagger.Component;

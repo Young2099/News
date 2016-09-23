@@ -1,4 +1,4 @@
-package com.demo.panguso.mvp_mode.response;
+package com.demo.panguso.mvp_mode.listener;
 
 /**
  * Created by ${yangfang} on 2016/9/13.

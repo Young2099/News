@@ -1,10 +1,10 @@
-package com.demo.panguso.mvp_mode.interactor.impl;
+package com.demo.panguso.mvp_mode.mvp.interactor.impl;
 
 import android.util.Log;
 
-import com.demo.panguso.mvp_mode.component.db.NewsChannelTableManager;
-import com.demo.panguso.mvp_mode.interactor.NewsChannelInteractor;
-import com.demo.panguso.mvp_mode.response.RequestCallBack;
+import com.demo.panguso.mvp_mode.respository.db.NewsChannelTableManager;
+import com.demo.panguso.mvp_mode.mvp.interactor.NewsChannelInteractor;
+import com.demo.panguso.mvp_mode.listener.RequestCallBack;
 
 import java.util.List;
 

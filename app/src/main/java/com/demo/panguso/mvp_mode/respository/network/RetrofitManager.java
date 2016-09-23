@@ -1,4 +1,4 @@
-package com.demo.panguso.mvp_mode.net;
+package com.demo.panguso.mvp_mode.respository.network;
 
 import android.util.Log;
 import android.util.SparseArray;
@@ -209,7 +209,7 @@ public class RetrofitManager {
     }
 
     public Observable<ResponseBody> getNewsBodyHtmlPhoto(String photoPath) {
-        return mNewsService.getNewsBodyHtmlPhoto(getCacheControl(), photoPath);
+        return mNewsService.getNewsBodyHtmlPhoto(photoPath);
     }
 
 }
