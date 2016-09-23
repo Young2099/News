@@ -15,31 +15,31 @@ public class DebugUtil {
     private static final int INFO = 3;
     private static final int ERROR = 5;
 
-    private static void v(String tag, String msg) {
+    public static void v(String tag, String msg) {
         if (LEVEL <= VERBOSE) {
             Log.v(tag, msg);
         }
     }
 
-    private static void d(String tag, String msg) {
+    public static void d(String tag, String msg) {
         if (LEVEL <= DEBUG) {
             Log.v(tag, msg);
         }
     }
 
-    private static void i(String tag, String msg) {
+    public static void i(String tag, String msg) {
         if (LEVEL <= INFO) {
             Log.v(tag, msg);
         }
     }
 
-    private static void W(String tag, String msg) {
+    public static void W(String tag, String msg) {
         if (LEVEL <= WARN) {
             Log.v(tag, msg);
         }
     }
 
-    private static void e(String tag, String msg) {
+    public static void e(String tag, String msg) {
         if (LEVEL <= ERROR) {
             Log.v(tag, msg);
         }

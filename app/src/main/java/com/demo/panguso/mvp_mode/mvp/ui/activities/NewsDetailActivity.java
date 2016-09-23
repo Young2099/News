@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
@@ -110,13 +111,13 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
         mNewsDetailTitleTv.setText(newsTitle);
         mNewsDetailFromTv.setText(getString(R.string.news_from, newsSource, newsTime));
         setNewsDetailPhoto(imgsrc);
-        if(mNewsDetailBodyTv != null){
-            if(App.isHavePhoto() && newsDetail.getImg().size()>=2){
+        if (mNewsDetailBodyTv != null) {
+            if (App.isHavePhoto() && newsDetail.getImg().size() >= 2) {
                 int total = newsDetail.getImg().size();
-                URLImageGetter urlImageGetter = new URLImageGetter(mNewsDetailBodyTv,newsBody,total);
-                mNewsDetailBodyTv.setText(Html.fromHtml(newsBody,urlImageGetter,null));
+                URLImageGetter urlImageGetter = new URLImageGetter(mNewsDetailBodyTv, newsBody, total);
+                mNewsDetailBodyTv.setText(Html.fromHtml(newsBody, urlImageGetter, null));
 
-            }else{
+            } else {
                 mNewsDetailBodyTv.setText(Html.fromHtml(newsBody));
             }
         }
@@ -126,12 +127,13 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
     private void setToolBarLayout(String newsTitle) {
         mCollapsingToolbarLayout.setTitle(newsTitle);
         mCollapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, R.color.primary_text_white));
-        mCollapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this,R.color.primary_text_white));
+        mCollapsingToolbarLayout.setCollapsedTitleTextColor(ContextCompat.getColor(this, R.color.primary_text_white));
     }
 
     private void setNewsDetailPhoto(String imgsrc) {
         Glide.with(App.getAppContext()).load(imgsrc).asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .format(DecodeFormat.PREFER_ARGB_8888)
                 .error(R.mipmap.ic_launcher)
                 .into(mNewsDetailPhotoIv);
     }

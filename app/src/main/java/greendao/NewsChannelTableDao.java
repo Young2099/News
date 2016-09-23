@@ -28,7 +28,7 @@ public class NewsChannelTableDao extends AbstractDao<NewsChannelTable, String> {
         public final static Property NewsChannelSelect = new Property(3, boolean.class, "newsChannelSelect", false, "NEWS_CHANNEL_SELECT");
         public final static Property NewsChannelIndex = new Property(4, int.class, "newsChannelIndex", false, "NEWS_CHANNEL_INDEX");
         public final static Property NewsChannelFixed = new Property(5, Boolean.class, "newsChannelFixed", false, "NEWS_CHANNEL_FIXED");
-    };
+    }
 
 
     public NewsChannelTableDao(DaoConfig config) {

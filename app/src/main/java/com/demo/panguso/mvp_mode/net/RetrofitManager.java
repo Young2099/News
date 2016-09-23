@@ -22,6 +22,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -56,18 +57,18 @@ public class RetrofitManager {
 
     private static SparseArray<RetrofitManager> retrofitManagerSparseArray = new SparseArray<>(HostType.TYPE_COUNT);
 
-    public RetrofitManager(@HostType.HostTypeChecker int hostType) {
+    private RetrofitManager(@HostType.HostTypeChecker int hostType) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(ApiConstants.getHost(hostType))
                 .client(getOkHttpClient())
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
-        Log.e("RetrofitManager","///////++++++");
+        Log.e("RetrofitManager", "///////++++++");
         mNewsService = retrofit.create(NewsService.class);
     }
 
 
-    public OkHttpClient getOkHttpClient() {
+    private OkHttpClient getOkHttpClient() {
         //双重锁德单例模式
         if (mOkHttpClient == null) {
             synchronized (RetrofitManager.class) {
@@ -158,6 +159,13 @@ public class RetrofitManager {
         }
     };
 
+    /**
+     * -     * @param hostType NETEASE_NEWS_VIDEO：1 （新闻，视频），SINA_NEWS_PHOTO：2（图片新闻）
+     *
+     * @param hostType NETEASE_NEWS_VIDEO：1 （新闻，视频），SINA_NEWS_PHOTO：2（图片新闻）;
+     *                 EWS_DETAIL_HTML_PHOTO:3新闻详情html图片)
+     */
+
     public static RetrofitManager getInstance(int hostType) {
         RetrofitManager retrofitManager = retrofitManagerSparseArray.get(hostType);
         if (retrofitManager == null) {
@@ -193,11 +201,15 @@ public class RetrofitManager {
 //        return mNewsService.getNewsList(getCacheControl(), type, id, startPage).subscribeOn(Schedulers.io())
 //                .subscribeOn(AndroidSchedulers.mainThread())
 //                .unsubscribeOn(Schedulers.io());
-        return mNewsService.getNewsList(getCacheControl(),type,id,startPage);
+        return mNewsService.getNewsList(getCacheControl(), type, id, startPage);
     }
 
-    public Observable<Map<String,NewsDetail>> getNewsDetailObservable(String postId){
-        return mNewsService.getNewsDetail(getCacheControl(),postId);
+    public Observable<Map<String, NewsDetail>> getNewsDetailObservable(String postId) {
+        return mNewsService.getNewsDetail(getCacheControl(), postId);
+    }
+
+    public Observable<ResponseBody> getNewsBodyHtmlPhoto(String photoPath) {
+        return mNewsService.getNewsBodyHtmlPhoto(getCacheControl(), photoPath);
     }
 
 }

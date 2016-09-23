@@ -34,7 +34,7 @@ public class NewsDetailInteractorImpl implements NewsDetailInteractor<NewsDetail
                     public NewsDetail call(Map<String, NewsDetail> stringNewsDetailMap) {
                         NewsDetail newsDetail = stringNewsDetailMap.get(id);
                         List<NewsDetail.ImgBean> imgSrcs = newsDetail.getImg();
-                        if(imgSrcs != null && imgSrcs.size()>2 && App.isHavePhoto()){
+                        if(imgSrcs != null && imgSrcs.size()>=2 && App.isHavePhoto()){
                             String newsBody = newsDetail.getBody();
                             for(int i =1;i<imgSrcs.size();i++){
                                 String oldChars = "<!--IMG#" + i + "-->";

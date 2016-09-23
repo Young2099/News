@@ -8,17 +8,17 @@ import android.widget.TextView;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
+import com.demo.panguso.mvp_mode.net.RetrofitManager;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
-import rx.Observable;
-import rx.Subscriber;
+import okhttp3.ResponseBody;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -30,6 +30,7 @@ public class URLImageGetter implements Html.ImageGetter {
     private String mNewsBody;
     private int mPicCount;
     private int mPicTotal;
+    private static final String mFilePath = App.getAppContext().getCacheDir().getAbsolutePath();
 
     public URLImageGetter(TextView textView, String newsBody, int total) {
         mTextView = textView;
@@ -41,50 +42,47 @@ public class URLImageGetter implements Html.ImageGetter {
 
     @Override
     public Drawable getDrawable(String s) {
-        Drawable drawable = null;
-        File file = new File(App.getAppContext().getCacheDir(), s.hashCode() + "");
-        if (s.startsWith("http")) {
-            if (file.exists()) {
-                drawable = getDrawableFromDisk(file);
-            } else {
-                drawable = getDrawableFromNet(s);
-            }
+//        Drawable drawable = null;
+//        File file = new File(App.getAppContext().getCacheDir(), s.hashCode() + "");
+//        if (s.startsWith("http")) {
+//            if (file.exists()) {
+//                drawable = getDrawableFromDisk(file);
+//            } else {
+//                drawable = getDrawableFromNet(s);
+//            }
+//        }
+        Drawable drawable;
+        File file = new File(mFilePath, s.hashCode() + "");
+        if (file.exists()) {
+            mPicCount++;
+            drawable = getDrawableFromDisk(file);
+        } else {
+            drawable = getDrawableFromNet(s);
         }
         return drawable;
     }
 
     private Drawable getDrawableFromNet(final String s) {
-        Observable.create(new Observable.OnSubscribe<Boolean>() {
-            @Override
-            public void call(Subscriber<? super Boolean> subscriber) {
-                subscriber.onNext(loadNetPicture(s));
-                subscriber.onCompleted();
-            }
-        })
+        RetrofitManager.getInstance(HostType.NEWS_DETAIL_HTML_PHOTO).getNewsBodyHtmlPhoto(s)
                 .subscribeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Boolean>() {
+                .unsubscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Func1<ResponseBody, Boolean>() {
                     @Override
-                    public void onCompleted() {
-
+                    public Boolean call(ResponseBody responseBody) {
+                        return loadNetPicture(responseBody, s);
                     }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(Boolean aBoolean) {
-                        mPicCount++;
-                        if (/*isLoadSuccess &&*/ (mPicCount == mPicTotal - 1)) {
-                            mTextView.setText(Html.fromHtml(mNewsBody, URLImageGetter.this, null));
-                        }
-
-                    }
-                })
-        ;
+                }).subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                mPicCount++;
+                if (/*isLoadSuccess &&*/ (mPicCount == mPicTotal - 1)) {
+                    mTextView.setText(Html.fromHtml(mNewsBody, URLImageGetter.this, null));
+                }
+            }
+        });
         return createPicPlaceholder();
+
     }
 
     @SuppressWarnings("deprecation")
@@ -96,45 +94,32 @@ public class URLImageGetter implements Html.ImageGetter {
         return drawable;
     }
 
-    private Boolean loadNetPicture(String filePath) {
+    private Boolean loadNetPicture(ResponseBody response, String filePath) {
         File file = new File(App.getAppContext().getCacheDir(), filePath.hashCode() + "");
         InputStream in = null;
         FileOutputStream out = null;
-        URL url;
         try {
-            url = new URL(filePath);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setConnectTimeout(5000);
-            connection.setRequestMethod("GET");
-            if (connection.getResponseCode() == 200) {
-                in = connection.getInputStream();
-                out = new FileOutputStream(file);
-                byte[] buffer = new byte[1024];
-                int len;
-                while ((len = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, len);
-                }
-            }else{
-
+            in = response.byteStream();
+            out = new FileOutputStream(file);
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = in.read(buffer)) != -1) {
+                out.write(buffer, 0, len);
             }
             return true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         } finally {
-            if (in != null) {
-                try {
+            try {
+                if (in != null) {
                     in.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
-            }
-            if (out != null) {
-                try {
+                if (out != null) {
                     out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }

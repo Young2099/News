@@ -1,13 +1,17 @@
 package com.demo.panguso.mvp_mode.app;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
 import android.os.StrictMode;
 
 import com.demo.panguso.mvp_mode.BuildConfig;
 import com.demo.panguso.mvp_mode.common.Constants;
+import com.demo.panguso.mvp_mode.utils.DebugUtil;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
+import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import de.greenrobot.dao.query.QueryBuilder;
@@ -33,24 +37,83 @@ public class App extends Application {
     public static Context getAppContext() {
         return appContext;
     }
-
-    /**
-     * release版本用此方法
-     */
-    protected RefWatcher installLeakeCanary() {
-        return RefWatcher.DISABLED;
-//        KLog.init(BuildConfig.LOG_DEBUG);
-    }
+//
+//    /**
+//     * release版本用此方法
+//     */
+//    protected RefWatcher installLeakeCanary() {
+//        return RefWatcher.DISABLED;
+////        KLog.init(BuildConfig.LOG_DEBUG);
+//    }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        appContext = this;
+        appContext = getApplicationContext();
         initTools();
-        installLeakeCanary();
+        initLeakCanary();
+        initActivityLifecycleLogs();
+//        installLeakeCanary();
         //官方推荐将获取DaoMaster对象的方法放到Application层，这样将避免多次创建生成session对象
         initStricMode();
         setUpDataBase();
+    }
+
+    private void initActivityLifecycleLogs() {
+        this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle bundle) {
+                DebugUtil.e("=========", activity + "  onActivityCreated");
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+                DebugUtil.e("=========", activity + "  onActivityStarted");
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+                DebugUtil.e("=========", activity + "  onActivityDestroyed");
+            }
+        });
+    }
+
+    private void initLeakCanary() {
+        if (BuildConfig.DEBUG) {
+            refWatcher = LeakCanary.install(this);
+        } else {
+            refWatcher = installLeakCanary();
+        }
+
+    }
+
+    /**
+     * release版本用此方法
+     *
+     * @return
+     */
+    private RefWatcher installLeakCanary() {
+        return RefWatcher.DISABLED;
     }
 
     private void initStricMode() {
@@ -86,7 +149,7 @@ public class App extends Application {
         QueryBuilder.LOG_VALUES = BuildConfig.DEBUG;
     }
 
-    public static boolean isHavePhoto(){
+    public static boolean isHavePhoto() {
         return SharedPreferencesUtil.getIsHavePhoto();
     }
 
