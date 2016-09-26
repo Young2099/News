@@ -23,6 +23,7 @@ import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.NewsListFragment;
 import com.demo.panguso.mvp_mode.mvp.view.NewsChannelView;
+import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import greendao.NewsChannelTable;
 
 public class NewsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, NewsChannelView {
@@ -45,31 +47,36 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     NavigationView mNavView;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-
+    @BindView(R.id.fab)
     FloatingActionButton mFab;
 
     @Inject
     NewsChannelPresenter mNewsChannelPresenter;
     private ArrayList<Fragment> mNewsFragmentList = new ArrayList<>();
-//    protected void initViews() {
+    protected void initViews() {
 //        mBaseNavView = mNavView;
-//
-//    }
-//
-//    @Override
-//    protected int getLayoutId() {
-//        return R.layout.activity_news;
-//    }
-//
-//    @Override
-//    protected void initInjector() {
-//
-//    }
+
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_news;
+    }
+
+    @Override
+    protected void initInjector() {
+
+    }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_news);
+        init();
+    }
+
+    private void init() {
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
         //适配
@@ -84,6 +91,10 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
 //        mNewsChannelPresenter.onCreate();
         mPresenter = mNewsChannelPresenter;
         mPresenter.onCreate();
+    }
+
+    @OnClick(R.id.fab)
+    public void onClick(){
     }
 
     @Override
@@ -163,10 +174,22 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_about) {
+        if (id == R.id.nav_night_mode) {
+            changeDayOrNight();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void changeDayOrNight() {
+        if (SharedPreferencesUtil.getIsNightMode()) {
+            changeToDay();
+            SharedPreferencesUtil.setIsNightMode(false);
+        } else {
+            changeToNight();
+            SharedPreferencesUtil.setIsNightMode(true);
+        }
+        recreate();
     }
 
 

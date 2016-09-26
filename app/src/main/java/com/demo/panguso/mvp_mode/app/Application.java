@@ -1,7 +1,6 @@
 package com.demo.panguso.mvp_mode.app;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -9,6 +8,9 @@ import android.os.StrictMode;
 
 import com.demo.panguso.mvp_mode.BuildConfig;
 import com.demo.panguso.mvp_mode.common.Constants;
+import com.demo.panguso.mvp_mode.inject.component.ApplicationComponent;
+import com.demo.panguso.mvp_mode.inject.component.DaggerApplicationComponent;
+import com.demo.panguso.mvp_mode.inject.module.ApplicationModule;
 import com.demo.panguso.mvp_mode.utils.DebugUtil;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 import com.squareup.leakcanary.LeakCanary;
@@ -22,13 +24,14 @@ import greendao.NewsChannelTableDao;
 /**
  * Created by ${yangfang} on 2016/9/12.
  */
-public class App extends Application {
+public class Application extends android.app.Application {
     private RefWatcher refWatcher;
     private static DaoSession mDaoSession;
+    private static ApplicationComponent mAppComponent;
 
     //内存泄露检测
     public static RefWatcher getWatcher(Context context) {
-        App application = (App) context.getApplicationContext();
+        Application application = (Application) context.getApplicationContext();
         return application.refWatcher;
     }
 
@@ -36,6 +39,10 @@ public class App extends Application {
 
     public static Context getAppContext() {
         return appContext;
+    }
+
+    public static ApplicationComponent getApplicationComponent() {
+        return mAppComponent;
     }
 //
 //    /**
@@ -49,7 +56,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        appContext = getApplicationContext();
+        appContext = this;
         initTools();
         initLeakCanary();
         initActivityLifecycleLogs();
@@ -57,7 +64,15 @@ public class App extends Application {
         //官方推荐将获取DaoMaster对象的方法放到Application层，这样将避免多次创建生成session对象
         initStricMode();
         setUpDataBase();
+        initAppComponent();
     }
+
+    private void initAppComponent() {
+        mAppComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+    }
+
 
     private void initActivityLifecycleLogs() {
         this.registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {

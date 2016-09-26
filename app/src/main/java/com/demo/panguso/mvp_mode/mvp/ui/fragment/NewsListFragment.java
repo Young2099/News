@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.demo.panguso.mvp_mode.R;
-import com.demo.panguso.mvp_mode.app.App;
+import com.demo.panguso.mvp_mode.app.Application;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.inject.component.DaggerNewsComponent;
 import com.demo.panguso.mvp_mode.inject.module.NewsModule;
@@ -55,6 +55,11 @@ public class NewsListFragment extends BaseFragment implements NewsView, OnItemCl
     List<NewsSummary> newsSummaries = new ArrayList<>();
 
     @Override
+    public void initInjector() {
+
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -69,6 +74,12 @@ public class NewsListFragment extends BaseFragment implements NewsView, OnItemCl
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
 
+        init(view);
+        checkNetState();
+        return view;
+    }
+
+    private void init(View view) {
         mNewsRV = (RecyclerView) view.findViewById(R.id.news_rv);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         mNewsRV.setHasFixedSize(true);
@@ -77,16 +88,13 @@ public class NewsListFragment extends BaseFragment implements NewsView, OnItemCl
                 .newsModule(new NewsModule(this, channelId, channelType, startPage))
                 .build()
                 .inject(this);
-//        mNewsPresenter.onCreate();
         mPresenter = mNewsPresenter;
         mPresenter.onCreate();
         mNewsRecyclerViewAdapter.setOnItemClickListener(this);
-        checkNetState();
-        return view;
     }
 
     private void checkNetState() {
-        if (!NetUtil.isNetworkAvailable(App.getAppContext())) {
+        if (!NetUtil.isNetworkAvailable(Application.getAppContext())) {
             ToastUtil.showToast(getActivity(), getString(R.string.internet_error), 0);
         }
     }
@@ -104,7 +112,7 @@ public class NewsListFragment extends BaseFragment implements NewsView, OnItemCl
     @Override
     public void showErrorMsg(String message) {
         mProgressBar.setVisibility(View.GONE);
-        if (NetUtil.isNetworkAvailable(App.getAppContext())) {
+        if (NetUtil.isNetworkAvailable(Application.getAppContext())) {
             Snackbar.make(mNewsRV, message, Snackbar.LENGTH_LONG).show();
         }
     }

@@ -3,7 +3,7 @@ package com.demo.panguso.mvp_mode.respository.db;
 import android.util.Log;
 
 import com.demo.panguso.mvp_mode.R;
-import com.demo.panguso.mvp_mode.app.App;
+import com.demo.panguso.mvp_mode.app.Application;
 import com.demo.panguso.mvp_mode.common.ApiConstants;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 
@@ -24,11 +24,11 @@ public class NewsChannelTableManager {
     public static void initDB() {
         Log.e("NewsChannelTableManager",".P.P.P.P");
         if (!SharedPreferencesUtil.getIsBoolean()) {
-            NewsChannelTableDao dao = App.getNewsChannelTableDao();
-            List<String> channelName = Arrays.asList(App.getAppContext().getResources()
+            NewsChannelTableDao dao = Application.getNewsChannelTableDao();
+            List<String> channelName = Arrays.asList(Application.getAppContext().getResources()
                     .getStringArray(R.array.news_channel_name));
 
-            List<String> channelId = Arrays.asList(App.getAppContext().getResources()
+            List<String> channelId = Arrays.asList(Application.getAppContext().getResources()
                     .getStringArray(R.array.news_channel_id));
             for (int i = 0; i < channelName.size(); i++) {
                 NewsChannelTable entity = new NewsChannelTable(channelName.get(i), channelId.get(i),
@@ -40,7 +40,7 @@ public class NewsChannelTableManager {
     }
 
     public static List<NewsChannelTable> loadNewsChannels() {
-        Query<NewsChannelTable> build = App.getNewsChannelTableDao()
+        Query<NewsChannelTable> build = Application.getNewsChannelTableDao()
                 .queryBuilder().where(NewsChannelTableDao.Properties.NewsChannelSelect.eq(true))
                 .orderAsc(NewsChannelTableDao.Properties.NewsChannelIndex).build();
         return build.list();

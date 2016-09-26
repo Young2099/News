@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.demo.panguso.mvp_mode.R;
-import com.demo.panguso.mvp_mode.app.App;
+import com.demo.panguso.mvp_mode.app.Application;
 import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 
@@ -59,7 +59,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         holder.mNewsSummaryTitleTv.setText(mNewsList.get(position).getTitle());
         holder.mNewsSummaryDigestTv.setText(mNewsList.get(position).getDigest());
         holder.mTextViewTime.setText(mNewsList.get(position).getPtime());
-        Glide.with(App.getAppContext()).load(mNewsList.get(position).getImgsrc())
+        Glide.with(Application.getAppContext()).load(mNewsList.get(position).getImgsrc())
                 .asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .format(DecodeFormat.PREFER_ARGB_8888)

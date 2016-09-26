@@ -43,6 +43,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/mask_news_detail_photo"
                 android:fitsSystemWindows="true"
+                tools:visibility="visible"
                 android:visibility="gone" />
 
             <android.support.v7.widget.Toolbar

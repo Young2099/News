@@ -13,9 +13,14 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.demo.panguso.mvp_mode.R;
+import com.demo.panguso.mvp_mode.app.Application;
+import com.demo.panguso.mvp_mode.inject.component.ActivityComponent;
+import com.demo.panguso.mvp_mode.inject.component.DaggerActivityComponent;
+import com.demo.panguso.mvp_mode.inject.module.ActivityModule;
 import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.squareup.leakcanary.RefWatcher;
 
 
 /**
@@ -32,29 +37,36 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     private View mNightView = null;
     private WindowManager mWindowManager = null;
     protected T mPresenter;
+
+    protected ActivityComponent mActivityComponent;
+    /**
+     * 初始化布局
+     */
+    protected abstract void initViews();
+
+    protected abstract int getLayoutId();
+
+    protected abstract void initInjector();
 //
-//    /**
-//     * 初始化布局
-//     */
-//    protected abstract void initViews();
-//
-//    protected abstract int getLayoutId();
-//
-//    protected abstract void initInjector();
+//    protected ActivityModule getActivityModule() {
+//        return new ActivityModule(this);
+//    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setNightOrDayMode();
-//        RefWatcher refWatcher = App.getWatcher(this);
-//        refWatcher.watch(this);
-//        int layoutId = getLayoutId();
-//        setContentView(layoutId);
-//        initInjector();
+        mActivityComponent = DaggerActivityComponent.builder()
+                              .applicationComponent(((Application) getApplication()).getApplicationComponent())
+                               .activityModule(new ActivityModule(this))
+                                .build();
+        int layoutId = getLayoutId();
+        setContentView(layoutId);
+        initInjector();
 //        ButterKnife.bind(this);
 //        initToolBar();
-//        initViews();
+        initViews();
 //        if(mIsHasNavigationView){
 //            initDrawerLayout();
 //
@@ -168,7 +180,6 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     }
 
     public void changeToNight() {
-
         getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         initNightView();
         mNightView.setBackgroundResource(R.color.night_mask);
@@ -198,6 +209,14 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         super.onDestroy();
         if (mPresenter != null) {
             mPresenter.onDestory();
+        }
+        RefWatcher refWatcher = Application.getWatcher(this);
+        refWatcher.watch(this);
+        if (isAddView) {
+            //移除夜间模式蒙版
+            mWindowManager.removeViewImmediate(mNightView);
+            mWindowManager = null;
+            mNightView = null;
         }
     }
 }

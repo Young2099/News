@@ -7,7 +7,7 @@ import android.text.Html;
 import android.widget.TextView;
 
 import com.demo.panguso.mvp_mode.R;
-import com.demo.panguso.mvp_mode.app.App;
+import com.demo.panguso.mvp_mode.app.Application;
 import com.demo.panguso.mvp_mode.respository.network.RetrofitManager;
 
 import java.io.File;
@@ -33,7 +33,7 @@ public class URLImageGetter implements Html.ImageGetter {
     private int mPicTotal;
     public Subscription mSubscription;
 
-    private static final String mFilePath = App.getAppContext().getCacheDir().getAbsolutePath();
+    private static final String mFilePath = Application.getAppContext().getCacheDir().getAbsolutePath();
 
     public URLImageGetter(TextView textView, String newsBody, int total) {
         mTextView = textView;
@@ -92,13 +92,13 @@ public class URLImageGetter implements Html.ImageGetter {
     @NonNull
     private Drawable createPicPlaceholder() {
         Drawable drawable;
-        drawable = new ColorDrawable(App.getAppContext().getResources().getColor(R.color.background_color));
+        drawable = new ColorDrawable(Application.getAppContext().getResources().getColor(R.color.background_color));
         drawable.setBounds(0, 0, mPicWidth, mPicWidth / 3);
         return drawable;
     }
 
     private Boolean loadNetPicture(ResponseBody response, String filePath) {
-        File file = new File(App.getAppContext().getCacheDir(), filePath.hashCode() + "");
+        File file = new File(Application.getAppContext().getCacheDir(), filePath.hashCode() + "");
         InputStream in = null;
         FileOutputStream out = null;
         try {

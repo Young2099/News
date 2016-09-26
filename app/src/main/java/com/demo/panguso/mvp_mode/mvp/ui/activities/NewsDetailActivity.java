@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.demo.panguso.mvp_mode.R;
-import com.demo.panguso.mvp_mode.app.App;
+import com.demo.panguso.mvp_mode.app.Application;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.common.URLImageGetter;
 import com.demo.panguso.mvp_mode.inject.component.DaggerNewsDetailComponent;
@@ -73,18 +73,33 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
     URLImageGetter mUrlImageGetter;
 
     @Override
+    protected void initViews() {
+
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_news_detail;
+    }
+
+    @Override
+    protected void initInjector() {
+
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_news_detail);
+//        setContentView(R.layout.activity_news_detail);
+        init();
+    }
+
+    private void init() {
         ButterKnife.bind(this);
         if (getIntent() != null) {
             postId = getIntent().getStringExtra(Constants.NEWS_POST_ID);
         }
-        init();
         setSupportActionBar(mToolbar);
-    }
-
-    private void init() {
         DaggerNewsDetailComponent.builder()
                 .newsDetailModule(new NewsDetailModule(this, postId))
                 .build()
@@ -126,7 +141,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
 
     private void setNewsBody(NewsDetail newsDetail, String newsBody) {
         if (mNewsDetailBodyTv != null) {
-            if (App.isHavePhoto() && newsDetail.getImg().size() >= 2) {
+            if (Application.isHavePhoto() && newsDetail.getImg().size() >= 2) {
                 int total = newsDetail.getImg().size();
                 mUrlImageGetter = new URLImageGetter(mNewsDetailBodyTv, newsBody, total);
                 mNewsDetailBodyTv.setText(Html.fromHtml(newsBody, mUrlImageGetter, null));
@@ -144,7 +159,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
     }
 
     private void setNewsDetailPhoto(String imgsrc) {
-        Glide.with(App.getAppContext()).load(imgsrc).asBitmap()
+        Glide.with(Application.getAppContext()).load(imgsrc).asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .format(DecodeFormat.PREFER_ARGB_8888)
                 .error(R.mipmap.ic_launcher)
@@ -179,7 +194,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
                 && !mUrlImageGetter.mSubscription.isUnsubscribed()) {
             {
                 mUrlImageGetter.mSubscription.unsubscribe();
-                DebugUtil.e(TAG,"UrlImageGetter unsubscribe");
+                DebugUtil.e(TAG, "UrlImageGetter unsubscribe");
             }
         }
     }

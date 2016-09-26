@@ -19,6 +19,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 /**
@@ -58,13 +59,13 @@ public class NewsInteractorImpl implements NewsInteractor<List<NewsSummary>> {
                     }
                 })
                 //对新闻信息根据时间进行排序
-//                .toSortedList(new Func2<NewsSummary, NewsSummary, Integer>() {
-//                    @Override
-//                    public Integer call(NewsSummary newsSummary, NewsSummary newsSummary2) {
-//                        return newsSummary2.getPtime().compareTo(newsSummary.getPtime());
-//                    }
-//                })
-                .toList()
+                .toSortedList(new Func2<NewsSummary, NewsSummary, Integer>() {
+                    @Override
+                    public Integer call(NewsSummary newsSummary, NewsSummary newsSummary2) {
+                        return newsSummary2.getPtime().compareTo(newsSummary.getPtime());
+                    }
+                })
+//                .toList()
                 .subscribe(new Subscriber<List<NewsSummary>>() {
                     @Override
                     public void onCompleted() {

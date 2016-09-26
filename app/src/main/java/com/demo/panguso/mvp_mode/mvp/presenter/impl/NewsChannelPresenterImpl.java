@@ -8,6 +8,8 @@ import com.demo.panguso.mvp_mode.mvp.view.NewsChannelView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import greendao.NewsChannelTable;
 
 /**
@@ -17,6 +19,7 @@ public class NewsChannelPresenterImpl extends BasePresenterImpl<NewsChannelView,
 
     public NewsChannelInteractor<List<NewsChannelTable>> channelInteractor;
 
+    @Inject
     public NewsChannelPresenterImpl(NewsChannelView view) {
         mView = view;
         channelInteractor = new NewsChannelInteractorImpl();
