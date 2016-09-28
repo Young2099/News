@@ -17,8 +17,8 @@
 package com.demo.panguso.mvp_mode.mvp.presenter.base;
 
 
-import com.demo.panguso.mvp_mode.mvp.view.base.BaseView;
 import com.demo.panguso.mvp_mode.listener.RequestCallBack;
+import com.demo.panguso.mvp_mode.mvp.view.base.BaseView;
 
 import rx.Subscription;
 
@@ -32,6 +32,11 @@ public class BasePresenterImpl<T extends BaseView, E> implements BasePresenter, 
     @Override
     public void onCreate() {
 
+    }
+
+    @Override
+    public void attachView( BaseView view) {
+        mView= (T) view;
     }
 
     @Override

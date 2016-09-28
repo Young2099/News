@@ -23,10 +23,8 @@ import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.common.URLImageGetter;
-import com.demo.panguso.mvp_mode.inject.component.DaggerNewsDetailComponent;
-import com.demo.panguso.mvp_mode.inject.module.NewsDetailModule;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsDetail;
-import com.demo.panguso.mvp_mode.mvp.presenter.NewsDetailPresenter;
+import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsDetailPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.view.NewsDetailView;
 import com.demo.panguso.mvp_mode.utils.DebugUtil;
@@ -37,7 +35,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by ${yangfang} on 2016/9/20.
@@ -46,7 +43,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
 
     private static final String TAG = "NewsDetailActivity";
     @Inject
-    NewsDetailPresenter mNewsDetailPresenter;
+    NewsDetailPresenterImpl mNewsDetailPresenter;
     private String postId;
 
     @BindView(R.id.news_detail_photo_iv)
@@ -74,7 +71,14 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
 
     @Override
     protected void initViews() {
-
+        if (getIntent() != null) {
+            postId = getIntent().getStringExtra(Constants.NEWS_POST_ID);
+        }
+        setSupportActionBar(mToolbar);
+        mNewsDetailPresenter.postId(postId);
+        mPresenter = mNewsDetailPresenter;
+        mPresenter.attachView(this);
+        mPresenter.onCreate();
     }
 
     @Override
@@ -84,30 +88,14 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
 
     @Override
     protected void initInjector() {
-
+        mActivityComponent.inject(this);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_news_detail);
-        init();
     }
 
-    private void init() {
-        ButterKnife.bind(this);
-        if (getIntent() != null) {
-            postId = getIntent().getStringExtra(Constants.NEWS_POST_ID);
-        }
-        setSupportActionBar(mToolbar);
-        DaggerNewsDetailComponent.builder()
-                .newsDetailModule(new NewsDetailModule(this, postId))
-                .build()
-                .inject(this);
-//        mNewsDetailPresenter.onCreate();
-        mPresenter = mNewsDetailPresenter;
-        mPresenter.onCreate();
-    }
 
     @Override
     public void showProgress() {

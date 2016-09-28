@@ -32,4 +32,5 @@ public class ActivityModule {
     public Activity providerActivity() {
         return mActivity;
     }
+
 }

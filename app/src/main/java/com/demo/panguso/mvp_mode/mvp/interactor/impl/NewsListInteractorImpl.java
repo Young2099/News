@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -26,7 +28,10 @@ import rx.schedulers.Schedulers;
  * Created by ${yangfang} on 2016/9/20.
  */
 public class NewsListInteractorImpl implements NewsListInteractor<List<NewsSummary>> {
+    @Inject
+    public NewsListInteractorImpl(){
 
+    }
     @Override
     public Subscription setListItem(final RequestCallBack<List<NewsSummary>> listener, String type, final String id, final int startPage) {
         return RetrofitManager.getInstance(HostType.NETEASE_NEWS_VIDEO).getNewsListObservable(type, id, startPage)

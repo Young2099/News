@@ -1,5 +1,6 @@
 package com.demo.panguso.mvp_mode.mvp.ui.fragment;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Build;
@@ -10,26 +11,21 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.Constants;
-import com.demo.panguso.mvp_mode.inject.component.DaggerNewsListComponent;
-import com.demo.panguso.mvp_mode.inject.module.NewsListModule;
 import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
-import com.demo.panguso.mvp_mode.mvp.presenter.NewsListPresenter;
+import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsListPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.base.BaseFragment;
 import com.demo.panguso.mvp_mode.mvp.view.NewsListView;
 import com.demo.panguso.mvp_mode.utils.NetUtil;
-import com.demo.panguso.mvp_mode.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +43,10 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
     @Inject
     NewsRecyclerViewAdapter mNewsRecyclerViewAdapter;
     @Inject
-    NewsListPresenter mNewsPresenter;
+    NewsListPresenterImpl mNewsPresenter;
+
+    @Inject
+    Activity mActivity;
 
     private String channelId;
     private String channelType;
@@ -56,46 +55,39 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
 
     @Override
     public void initInjector() {
+        mFragmentComponent.inject(this);
+    }
 
+    @Override
+    public int getLayoutId() {
+        return R.layout.fragment_news;
+    }
+
+    @Override
+    public void initViews(View view) {
+        mNewsRV = (RecyclerView) view.findViewById(R.id.news_rv);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        mNewsRV.setHasFixedSize(true);
+        mNewsRV.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
+        mNewsPresenter.onItemClicked(channelType, channelId);
+        mPresenter = mNewsPresenter;
+        mPresenter.attachView(this);
+        mPresenter.onCreate();
+        mNewsRecyclerViewAdapter.setOnItemClickListener(this);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initValues();
+        NetUtil.checkNetworkState(mActivity.getString(R.string.internet_error));
+    }
+
+    private void initValues() {
         if (getArguments() != null) {
             channelId = getArguments().getString(Constants.NEWS_ID);
             channelType = getArguments().getString(Constants.NEWS_TYPE);
             startPage = getArguments().getInt(Constants.CHANNEL_POSITION);
-        }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_news, container, false);
-
-        init(view);
-        checkNetState();
-        return view;
-    }
-
-    private void init(View view) {
-        mNewsRV = (RecyclerView) view.findViewById(R.id.news_rv);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-        mNewsRV.setHasFixedSize(true);
-        mNewsRV.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        DaggerNewsListComponent.builder()
-                .newsListModule(new NewsListModule(this, channelId, channelType, startPage))
-                .build()
-                .inject(this);
-        mPresenter = mNewsPresenter;
-        mPresenter.onCreate();
-        mNewsRecyclerViewAdapter.setOnItemClickListener(this);
-    }
-
-    private void checkNetState() {
-        if (!NetUtil.isNetworkAvailable(App.getAppContext())) {
-            ToastUtil.showToast(getActivity(), getString(R.string.internet_error), 0);
         }
     }
 
@@ -147,11 +139,11 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
         intent.putExtra(Constants.NEWS_IMG_RES, newsSummaries.get(position).getImgsrc());
         ImageView newsSummaryPhoto = (ImageView) view.findViewById(R.id.news_summary_photo_iv);
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), newsSummaryPhoto, Constants.TRANSITION_ANIMATION_NEWS_PHOTOS);
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mActivity, newsSummaryPhoto, Constants.TRANSITION_ANIMATION_NEWS_PHOTOS);
             startActivity(intent, options.toBundle());
         } else {
             ActivityOptionsCompat options = ActivityOptionsCompat.makeScaleUpAnimation(view, view.getWidth() / 2, view.getHeight() / 2, 0, 0);
-            ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+            ActivityCompat.startActivity(mActivity, intent, options.toBundle());
         }
     }
 }

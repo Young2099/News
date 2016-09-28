@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.demo.panguso.mvp_mode.app.App;
+
 /**
  * Created by ${yangfang} on 2016/9/13.
  */
@@ -27,5 +29,11 @@ public class NetUtil {
             }
         }
         return false;
+    }
+
+    public static void checkNetworkState(String s) {
+        if (!NetUtil.isNetworkAvailable(App.getAppContext())) {
+            ToastUtil.showToast(App.getAppContext(), s, 0);
+        }
     }
 }

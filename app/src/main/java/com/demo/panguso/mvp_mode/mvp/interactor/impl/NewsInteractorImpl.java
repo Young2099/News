@@ -8,6 +8,8 @@ import com.demo.panguso.mvp_mode.listener.RequestCallBack;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import greendao.NewsChannelTable;
 import rx.Observable;
 import rx.Subscriber;
@@ -19,9 +21,14 @@ import rx.schedulers.Schedulers;
  * Created by ${yangfang} on 2016/9/19.
  */
 public class NewsInteractorImpl implements NewsInteractor<List<NewsChannelTable>> {
+    @Inject
+    public NewsInteractorImpl() {
+
+    }
+
     @Override
     public Subscription loadNewsChannels(final RequestCallBack<List<NewsChannelTable>> callBack) {
-        Log.e("NewsorImpl","999999");
+        Log.e("NewsorImpl", "999999");
         return Observable.create(new Observable.OnSubscribe<List<NewsChannelTable>>() {
             @Override
             public void call(Subscriber<? super List<NewsChannelTable>> subscriber) {

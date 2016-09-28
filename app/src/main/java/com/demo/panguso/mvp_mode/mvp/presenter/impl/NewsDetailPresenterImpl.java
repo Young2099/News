@@ -7,6 +7,8 @@ import com.demo.panguso.mvp_mode.mvp.presenter.NewsDetailPresenter;
 import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.view.NewsDetailView;
 
+import javax.inject.Inject;
+
 /**
  * Created by ${yangfang} on 2016/9/20.
  */
@@ -16,10 +18,9 @@ public class NewsDetailPresenterImpl extends BasePresenterImpl<NewsDetailView, N
     private String postId;
     private Boolean mIsLoad;
 
-    public NewsDetailPresenterImpl(NewsDetailView view, String postId) {
-        mView = view;
-        this.postId = postId;
-        mNewsDetailInteractor = new NewsDetailInteractorImpl();
+    @Inject
+    public NewsDetailPresenterImpl(NewsDetailInteractorImpl mNewsDetailInteractor) {
+        this.mNewsDetailInteractor = mNewsDetailInteractor;
     }
 
     @Override
@@ -48,5 +49,10 @@ public class NewsDetailPresenterImpl extends BasePresenterImpl<NewsDetailView, N
         if (!mIsLoad) {
             mView.showProgress();
         }
+    }
+
+    @Override
+    public void postId(String postId) {
+        this.postId = postId;
     }
 }

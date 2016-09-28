@@ -18,6 +18,8 @@ import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -25,6 +27,11 @@ import butterknife.ButterKnife;
  * Created by ${yangfang} on 2016/9/9.
  */
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.ViewHolder> {
+
+    @Inject
+    public NewsRecyclerViewAdapter(){
+
+    }
 
     private List<NewsSummary> mNewsList = new ArrayList<>();
 

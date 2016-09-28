@@ -1,5 +1,7 @@
 package com.demo.panguso.mvp_mode.mvp.presenter.impl;
 
+import android.util.Log;
+
 import com.demo.panguso.mvp_mode.mvp.interactor.impl.NewsListInteractorImpl;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsListPresenter;
@@ -8,12 +10,13 @@ import com.demo.panguso.mvp_mode.mvp.view.NewsListView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 /**
  * Created by ${yangfang} on 2016/9/20.
  * 在这里去做和activity，fragment做数据处理的交互
  */
 public class NewsListPresenterImpl extends BasePresenterImpl<NewsListView, List<NewsSummary>> implements NewsListPresenter {
-    private NewsListView mView;
     private NewsListInteractorImpl mNewsInteractor;
     private String channelId;
     private String channelType;
@@ -23,13 +26,11 @@ public class NewsListPresenterImpl extends BasePresenterImpl<NewsListView, List<
      */
     private boolean mIsLoaded;
 
-    public NewsListPresenterImpl(NewsListView mView, String channelId, String channelType, int startPage) {
-        mNewsInteractor = new NewsListInteractorImpl();
-        this.mView = mView;
-        this.channelType = channelType;
-        this.channelId = channelId;
-    }
+    @Inject
+    public NewsListPresenterImpl(NewsListInteractorImpl newsListInteractor) {
+        mNewsInteractor = newsListInteractor;
 
+    }
 
     /**
      * 去请求数据
@@ -37,6 +38,7 @@ public class NewsListPresenterImpl extends BasePresenterImpl<NewsListView, List<
     @Override
     public void onCreate() {
         if (mView != null) {
+            Log.e("NewsListPresenterImpl", "//////+++++");
             mSubscription = mNewsInteractor.setListItem(this, channelType, channelId, startPage);
         }
     }
@@ -68,11 +70,11 @@ public class NewsListPresenterImpl extends BasePresenterImpl<NewsListView, List<
         }
     }
 
-//    @Override
-//    public void onItemClicked(Context context, String postId, String imgSrc) {
-//        Intent intent = new Intent(context, NewsDetailActivity.class);
-//        intent.putExtra(Constants.NEWS_POST_ID, postId);
-//        intent.putExtra(Constants.NEWS_IMG_RES, imgSrc);
-//        context.startActivity(intent);
-//    }
+    @Override
+    public void onItemClicked(String newsType, String newsId) {
+        this.channelType = newsType;
+        this.channelId = newsId;
+        Log.e("NewsListPresenterImpl", "channelType" + channelType);
+    }
+
 }

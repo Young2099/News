@@ -31,7 +31,7 @@ public class FragmentModule {
 
     @Provides
     @PerFragment
-    public Activity privideActivity() {
+    public Activity provideActivity() {
         return mFragment.getActivity();
     }
 

@@ -22,6 +22,8 @@ import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.squareup.leakcanary.RefWatcher;
 
+import butterknife.ButterKnife;
+
 
 /**
  * Created by ${yangfang} on 2016/9/7.
@@ -39,6 +41,11 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     protected T mPresenter;
 
     protected ActivityComponent mActivityComponent;
+
+    public ActivityComponent getmActivityComponent() {
+        return mActivityComponent;
+    }
+
     /**
      * 初始化布局
      */
@@ -47,11 +54,6 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     protected abstract int getLayoutId();
 
     protected abstract void initInjector();
-//
-//    protected ActivityModule getActivityModule() {
-//        return new ActivityModule(this);
-//    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +66,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         int layoutId = getLayoutId();
         setContentView(layoutId);
         initInjector();
-//        ButterKnife.bind(this);
+        ButterKnife.bind(this);
 //        initToolBar();
         initViews();
 //        if(mIsHasNavigationView){

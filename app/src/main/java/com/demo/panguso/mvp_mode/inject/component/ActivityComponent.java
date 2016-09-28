@@ -6,6 +6,8 @@ import android.content.Context;
 import com.demo.panguso.mvp_mode.inject.module.ActivityModule;
 import com.demo.panguso.mvp_mode.inject.scope.ContextLife;
 import com.demo.panguso.mvp_mode.inject.scope.PerActivity;
+import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsActivity;
+import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
 
 import dagger.Component;
 
@@ -21,4 +23,8 @@ public interface ActivityComponent {
 
     @ContextLife("Application")
     Context getApplicationContext();
+
+    void inject(NewsActivity newsActivity);
+
+    void inject(NewsDetailActivity newsDetailActivity);
 }

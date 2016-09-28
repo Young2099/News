@@ -16,9 +16,7 @@ import android.view.MenuItem;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
-import com.demo.panguso.mvp_mode.inject.component.DaggerNewsComponent;
-import com.demo.panguso.mvp_mode.inject.module.NewsModule;
-import com.demo.panguso.mvp_mode.mvp.presenter.NewsPresenter;
+import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.NewsListFragment;
@@ -31,7 +29,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import greendao.NewsChannelTable;
 
@@ -51,11 +48,20 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     FloatingActionButton mFab;
 
     @Inject
-    NewsPresenter mNewsChannelPresenter;
+    NewsPresenterImpl mNewsPresenter;
     private ArrayList<Fragment> mNewsFragmentList = new ArrayList<>();
-    protected void initViews() {
-//        mBaseNavView = mNavView;
 
+    protected void initViews() {
+        setSupportActionBar(mToolbar);
+        //适配
+        setStatusBarTranslucent();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        mNavView.setNavigationItemSelectedListener(this);
+        mPresenter = mNewsPresenter;
+        mPresenter.attachView(this);
+        mPresenter.onCreate();
     }
 
     @Override
@@ -65,36 +71,19 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     protected void initInjector() {
-
+        mActivityComponent.inject(this);
     }
-
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        init();
+
     }
 
-    private void init() {
-        ButterKnife.bind(this);
-        setSupportActionBar(mToolbar);
-        //适配
-        setStatusBarTranslucent();
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
-        mDrawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-        mNavView.setNavigationItemSelectedListener(this);
-        DaggerNewsComponent.builder().newsModule(new NewsModule(this))
-                .build()
-                .inject(this);
-//        mNewsChannelPresenter.onCreate();
-        mPresenter = mNewsChannelPresenter;
-        mPresenter.onCreate();
-    }
 
     @OnClick(R.id.fab)
-    public void onClick(){
+    public void onClick() {
     }
 
     @Override

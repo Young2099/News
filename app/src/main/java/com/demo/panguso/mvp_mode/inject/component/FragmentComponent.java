@@ -6,6 +6,7 @@ import android.content.Context;
 import com.demo.panguso.mvp_mode.inject.module.FragmentModule;
 import com.demo.panguso.mvp_mode.inject.scope.ContextLife;
 import com.demo.panguso.mvp_mode.inject.scope.PerFragment;
+import com.demo.panguso.mvp_mode.mvp.ui.fragment.NewsListFragment;
 
 import dagger.Component;
 
@@ -23,4 +24,6 @@ public interface FragmentComponent {
     Context getApplicationContext();
 
     Activity getActivity();
+
+    void inject(NewsListFragment newsListFragment);
 }
