@@ -17,17 +17,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.demo.panguso.mvp_mode.R;
-import com.demo.panguso.mvp_mode.app.Application;
+import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.Constants;
-import com.demo.panguso.mvp_mode.inject.component.DaggerNewsComponent;
-import com.demo.panguso.mvp_mode.inject.module.NewsModule;
+import com.demo.panguso.mvp_mode.inject.component.DaggerNewsListComponent;
+import com.demo.panguso.mvp_mode.inject.module.NewsListModule;
 import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
-import com.demo.panguso.mvp_mode.mvp.presenter.NewsPresenter;
+import com.demo.panguso.mvp_mode.mvp.presenter.NewsListPresenter;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.base.BaseFragment;
-import com.demo.panguso.mvp_mode.mvp.view.NewsView;
+import com.demo.panguso.mvp_mode.mvp.view.NewsListView;
 import com.demo.panguso.mvp_mode.utils.NetUtil;
 import com.demo.panguso.mvp_mode.utils.ToastUtil;
 
@@ -39,7 +39,7 @@ import javax.inject.Inject;
 /**
  * Created by ${yangfang} on 2016/9/9.
  */
-public class NewsListFragment extends BaseFragment implements NewsView, OnItemClickListener {
+public class NewsListFragment extends BaseFragment implements NewsListView, OnItemClickListener {
 
     RecyclerView mNewsRV;
     ProgressBar mProgressBar;
@@ -47,7 +47,7 @@ public class NewsListFragment extends BaseFragment implements NewsView, OnItemCl
     @Inject
     NewsRecyclerViewAdapter mNewsRecyclerViewAdapter;
     @Inject
-    NewsPresenter mNewsPresenter;
+    NewsListPresenter mNewsPresenter;
 
     private String channelId;
     private String channelType;
@@ -84,8 +84,8 @@ public class NewsListFragment extends BaseFragment implements NewsView, OnItemCl
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         mNewsRV.setHasFixedSize(true);
         mNewsRV.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        DaggerNewsComponent.builder()
-                .newsModule(new NewsModule(this, channelId, channelType, startPage))
+        DaggerNewsListComponent.builder()
+                .newsListModule(new NewsListModule(this, channelId, channelType, startPage))
                 .build()
                 .inject(this);
         mPresenter = mNewsPresenter;
@@ -94,7 +94,7 @@ public class NewsListFragment extends BaseFragment implements NewsView, OnItemCl
     }
 
     private void checkNetState() {
-        if (!NetUtil.isNetworkAvailable(Application.getAppContext())) {
+        if (!NetUtil.isNetworkAvailable(App.getAppContext())) {
             ToastUtil.showToast(getActivity(), getString(R.string.internet_error), 0);
         }
     }
@@ -112,7 +112,7 @@ public class NewsListFragment extends BaseFragment implements NewsView, OnItemCl
     @Override
     public void showErrorMsg(String message) {
         mProgressBar.setVisibility(View.GONE);
-        if (NetUtil.isNetworkAvailable(Application.getAppContext())) {
+        if (NetUtil.isNetworkAvailable(App.getAppContext())) {
             Snackbar.make(mNewsRV, message, Snackbar.LENGTH_LONG).show();
         }
     }

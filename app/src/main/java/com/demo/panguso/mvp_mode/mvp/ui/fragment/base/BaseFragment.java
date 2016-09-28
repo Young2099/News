@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import com.demo.panguso.mvp_mode.app.Application;
+import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.inject.component.DaggerFragmentComponent;
 import com.demo.panguso.mvp_mode.inject.component.FragmentComponent;
 import com.demo.panguso.mvp_mode.inject.module.FragmentModule;
@@ -26,7 +26,7 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentComponent = DaggerFragmentComponent.builder()
-                .applicationComponent(((Application) getActivity().getApplication()).getApplicationComponent())
+                .applicationComponent(((App) getActivity().getApplication()).getApplicationComponent())
                 .fragmentModule(new FragmentModule(this))
                 .build();
         initInjector();
@@ -35,7 +35,7 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        RefWatcher refWatcher = Application.getWatcher(getActivity());
+        RefWatcher refWatcher = App.getWatcher(getActivity());
         refWatcher.watch(this);
         if (mPresenter != null) {
             mPresenter.onDestory();

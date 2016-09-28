@@ -1,5 +1,6 @@
 package com.demo.panguso.mvp_mode.utils;
 
+import android.app.Activity;
 import android.util.Log;
 
 import java.text.ParseException;
@@ -24,6 +25,15 @@ public class MyUtils {
             return before;
         }
         return after;
+    }
+
+    public static int getStatusBarHeight(Activity activity) {
+        int height = 0;
+        int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            height = activity.getResources().getDimensionPixelSize(resourceId);
+        }
+        return height;
     }
 
 

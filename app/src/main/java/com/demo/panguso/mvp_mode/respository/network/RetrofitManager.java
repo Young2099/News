@@ -3,7 +3,7 @@ package com.demo.panguso.mvp_mode.respository.network;
 import android.util.Log;
 import android.util.SparseArray;
 
-import com.demo.panguso.mvp_mode.app.Application;
+import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.ApiConstants;
 import com.demo.panguso.mvp_mode.common.HostType;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsDetail;
@@ -73,7 +73,7 @@ public class RetrofitManager {
         if (mOkHttpClient == null) {
             synchronized (RetrofitManager.class) {
                 //设置缓存路径
-                Cache cache = new Cache(new File(Application.getAppContext().getCacheDir(), "okhttp_cache"),
+                Cache cache = new Cache(new File(App.getAppContext().getCacheDir(), "okhttp_cache"),
                         1024 * 1024 * 100);
                 if (mOkHttpClient == null) {
                     mOkHttpClient = new OkHttpClient.Builder().cache(cache)
@@ -98,14 +98,14 @@ public class RetrofitManager {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
-            if (!NetUtil.isNetworkAvailable(Application.getAppContext())) {
+            if (!NetUtil.isNetworkAvailable(App.getAppContext())) {
                 request = request.newBuilder()
                         .cacheControl(CacheControl.FORCE_CACHE)
                         .build();
 
             }
             Response response = chain.proceed(request);
-            if (NetUtil.isNetworkAvailable(Application.getAppContext())) {
+            if (NetUtil.isNetworkAvailable(App.getAppContext())) {
                 //有网读取接口的@Headers里的配置，进行统一设置
                 String cacheControl = request.cacheControl().toString();
                 return response.newBuilder().header("Cache-Control", cacheControl)
@@ -182,7 +182,7 @@ public class RetrofitManager {
      * @return
      */
     private String getCacheControl() {
-        return NetUtil.isNetworkAvailable(Application.getAppContext()) ? CACHE_CONTROL_AGE : CACHE_CONTROL_CACHE;
+        return NetUtil.isNetworkAvailable(App.getAppContext()) ? CACHE_CONTROL_AGE : CACHE_CONTROL_CACHE;
     }
 
     /**

@@ -24,14 +24,14 @@ import greendao.NewsChannelTableDao;
 /**
  * Created by ${yangfang} on 2016/9/12.
  */
-public class Application extends android.app.Application {
+public class App extends android.app.Application {
     private RefWatcher refWatcher;
     private static DaoSession mDaoSession;
     private static ApplicationComponent mAppComponent;
 
     //内存泄露检测
     public static RefWatcher getWatcher(Context context) {
-        Application application = (Application) context.getApplicationContext();
+        App application = (App) context.getApplicationContext();
         return application.refWatcher;
     }
 

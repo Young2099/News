@@ -16,13 +16,13 @@ import android.view.MenuItem;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
-import com.demo.panguso.mvp_mode.inject.component.DaggerNewsChannelComponent;
-import com.demo.panguso.mvp_mode.inject.module.NewsChannelModule;
-import com.demo.panguso.mvp_mode.mvp.presenter.NewsChannelPresenter;
+import com.demo.panguso.mvp_mode.inject.component.DaggerNewsComponent;
+import com.demo.panguso.mvp_mode.inject.module.NewsModule;
+import com.demo.panguso.mvp_mode.mvp.presenter.NewsPresenter;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.NewsListFragment;
-import com.demo.panguso.mvp_mode.mvp.view.NewsChannelView;
+import com.demo.panguso.mvp_mode.mvp.view.NewsView;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import greendao.NewsChannelTable;
 
-public class NewsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, NewsChannelView {
+public class NewsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, NewsView {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -51,7 +51,7 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     FloatingActionButton mFab;
 
     @Inject
-    NewsChannelPresenter mNewsChannelPresenter;
+    NewsPresenter mNewsChannelPresenter;
     private ArrayList<Fragment> mNewsFragmentList = new ArrayList<>();
     protected void initViews() {
 //        mBaseNavView = mNavView;
@@ -85,7 +85,7 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         mNavView.setNavigationItemSelectedListener(this);
-        DaggerNewsChannelComponent.builder().newsChannelModule(new NewsChannelModule(this))
+        DaggerNewsComponent.builder().newsModule(new NewsModule(this))
                 .build()
                 .inject(this);
 //        mNewsChannelPresenter.onCreate();

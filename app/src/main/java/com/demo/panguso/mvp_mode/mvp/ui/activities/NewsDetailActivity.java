@@ -20,7 +20,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.demo.panguso.mvp_mode.R;
-import com.demo.panguso.mvp_mode.app.Application;
+import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.common.URLImageGetter;
 import com.demo.panguso.mvp_mode.inject.component.DaggerNewsDetailComponent;
@@ -141,7 +141,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
 
     private void setNewsBody(NewsDetail newsDetail, String newsBody) {
         if (mNewsDetailBodyTv != null) {
-            if (Application.isHavePhoto() && newsDetail.getImg().size() >= 2) {
+            if (App.isHavePhoto() && newsDetail.getImg().size() >= 2) {
                 int total = newsDetail.getImg().size();
                 mUrlImageGetter = new URLImageGetter(mNewsDetailBodyTv, newsBody, total);
                 mNewsDetailBodyTv.setText(Html.fromHtml(newsBody, mUrlImageGetter, null));
@@ -159,7 +159,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
     }
 
     private void setNewsDetailPhoto(String imgsrc) {
-        Glide.with(Application.getAppContext()).load(imgsrc).asBitmap()
+        Glide.with(App.getAppContext()).load(imgsrc).asBitmap()
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .format(DecodeFormat.PREFER_ARGB_8888)
                 .error(R.mipmap.ic_launcher)

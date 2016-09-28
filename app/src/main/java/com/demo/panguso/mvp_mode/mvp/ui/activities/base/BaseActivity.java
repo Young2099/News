@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.demo.panguso.mvp_mode.R;
-import com.demo.panguso.mvp_mode.app.Application;
+import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.inject.component.ActivityComponent;
 import com.demo.panguso.mvp_mode.inject.component.DaggerActivityComponent;
 import com.demo.panguso.mvp_mode.inject.module.ActivityModule;
@@ -58,7 +58,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         super.onCreate(savedInstanceState);
         setNightOrDayMode();
         mActivityComponent = DaggerActivityComponent.builder()
-                              .applicationComponent(((Application) getApplication()).getApplicationComponent())
+                              .applicationComponent(((App) getApplication()).getApplicationComponent())
                                .activityModule(new ActivityModule(this))
                                 .build();
         int layoutId = getLayoutId();
@@ -210,7 +210,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         if (mPresenter != null) {
             mPresenter.onDestory();
         }
-        RefWatcher refWatcher = Application.getWatcher(this);
+        RefWatcher refWatcher = App.getWatcher(this);
         refWatcher.watch(this);
         if (isAddView) {
             //移除夜间模式蒙版

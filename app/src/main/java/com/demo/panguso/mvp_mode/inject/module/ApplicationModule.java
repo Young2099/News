@@ -1,8 +1,8 @@
 package com.demo.panguso.mvp_mode.inject.module;
 
-import android.app.Application;
 import android.content.Context;
 
+import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.inject.scope.ContextLife;
 import com.demo.panguso.mvp_mode.inject.scope.PerApp;
 
@@ -15,10 +15,10 @@ import dagger.Provides;
  */
 @Module
 public class ApplicationModule {
-    private Application mApplication;
+    private App mApplication;
 
-    public ApplicationModule(Application context) {
-        mApplication = context;
+    public ApplicationModule(App application) {
+        mApplication = application;
     }
 
     @Provides

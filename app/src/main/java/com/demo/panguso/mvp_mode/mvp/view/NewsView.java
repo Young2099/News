@@ -1,13 +1,14 @@
 package com.demo.panguso.mvp_mode.mvp.view;
 
-import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.mvp.view.base.BaseView;
 
 import java.util.List;
 
+import greendao.NewsChannelTable;
+
 /**
- * Created by ${yangfang} on 2016/9/9.
+ * Created by ${yangfang} on 2016/9/19.
  */
-public interface NewsView extends BaseView{
-    void setItems(List<NewsSummary> items);
+public interface NewsView extends BaseView {
+    void initViewPager(List<NewsChannelTable> list);
 }
