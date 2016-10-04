@@ -4,6 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,12 +35,12 @@ import butterknife.ButterKnife;
 public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.ViewHolder> {
 
     @Inject
-    public NewsRecyclerViewAdapter(){
+    public NewsRecyclerViewAdapter() {
 
     }
 
     private List<NewsSummary> mNewsList = new ArrayList<>();
-
+    private int mLastPosition = -1;
     private OnItemClickListener onItemClickListener;
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -42,7 +48,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     }
 
 
-//    public List<NewsSummary> getmNewsList(){
+    //    public List<NewsSummary> getmNewsList(){
 //        return mNewsList;
 //    }
     @Override
@@ -50,19 +56,51 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news, parent, false);
         final ViewHolder holder = new ViewHolder(view);
         //这是给每一条新闻详情消息添加自定义的点击事件
-        if(onItemClickListener != null){
+        setItemOnclick(holder);
+        return holder;
+    }
+
+    private void setItemOnclick(final ViewHolder holder) {
+        if (onItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onItemClickListener.onItemClick(holder.itemView,holder.getLayoutPosition());
+                    onItemClickListener.onItemClick(holder.itemView, holder.getLayoutPosition());
                 }
             });
         }
-        return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        setItemValues(holder, position);
+        setItemAppearAnimation(holder, position);
+    }
+
+    private void setItemAppearAnimation(ViewHolder holder, int position) {
+        if (position > mLastPosition) {
+            Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(),
+                    R.anim.item_bottom);
+//            AnimationSet animation = new AnimationSet(true);
+//            TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0.5f,
+//                    Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1.0f);
+//            AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
+//            animation.addAnimation(translateAnimation);
+//            animation.addAnimation(alphaAnimation);
+            holder.itemView.startAnimation(animation);
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        if (holder.itemView.getAnimation() != null &&
+                holder.itemView.getAnimation().hasStarted()) {
+            holder.itemView.clearAnimation();
+        }
+    }
+
+    private void setItemValues(ViewHolder holder, int position) {
         holder.mNewsSummaryTitleTv.setText(mNewsList.get(position).getTitle());
         holder.mNewsSummaryDigestTv.setText(mNewsList.get(position).getDigest());
         holder.mTextViewTime.setText(mNewsList.get(position).getPtime());
@@ -71,7 +109,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .format(DecodeFormat.PREFER_ARGB_8888)
 //                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_add)
+                .error(R.mipmap.ic_load_fail)
                 .into(holder.mImageViewPhotoIv);
     }
 

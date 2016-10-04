@@ -52,6 +52,7 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     private ArrayList<Fragment> mNewsFragmentList = new ArrayList<>();
 
     protected void initViews() {
+        mToolbar.setTitle("新闻");
         setSupportActionBar(mToolbar);
         //适配
         setStatusBarTranslucent();

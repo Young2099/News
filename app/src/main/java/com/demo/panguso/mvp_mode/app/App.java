@@ -119,7 +119,6 @@ public class App extends android.app.Application {
         } else {
             refWatcher = installLeakCanary();
         }
-
     }
 
     /**
