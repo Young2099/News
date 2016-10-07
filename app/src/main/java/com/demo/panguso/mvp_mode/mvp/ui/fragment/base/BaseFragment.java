@@ -24,6 +24,7 @@ public abstract class BaseFragment<T extends com.demo.panguso.mvp_mode.mvp.prese
 
     protected T mPresenter;
     protected FragmentComponent mFragmentComponent;
+    private View mFragmentView;
 
     public FragmentComponent getmFragmentComponent() {
         return mFragmentComponent;
@@ -48,10 +49,12 @@ public abstract class BaseFragment<T extends com.demo.panguso.mvp_mode.mvp.prese
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(getLayoutId(), container, false);
-        ButterKnife.bind(this, view);
-        initViews(view);
-        return view;
+        if (mFragmentView == null) {
+            mFragmentView = inflater.inflate(getLayoutId(), container, false);
+            ButterKnife.bind(this, mFragmentView);
+            initViews(mFragmentView);
+        }
+        return mFragmentView;
     }
 
     @Override

@@ -22,7 +22,7 @@ public class NewsChannelTableManager {
      * 首次打开程序初始化
      */
     public static void initDB() {
-        Log.e("NewsChannelTableManager",".P.P.P.P");
+        Log.e("NewsChannelTableManager", ".P.P.P.P");
         if (!SharedPreferencesUtil.getIsBoolean()) {
             NewsChannelTableDao dao = App.getNewsChannelTableDao();
             List<String> channelName = Arrays.asList(App.getAppContext().getResources()
@@ -44,5 +44,12 @@ public class NewsChannelTableManager {
                 .queryBuilder().where(NewsChannelTableDao.Properties.NewsChannelSelect.eq(true))
                 .orderAsc(NewsChannelTableDao.Properties.NewsChannelIndex).build();
         return build.list();
+    }
+
+    public static List<NewsChannelTable> loadNewsChannelMore() {
+        Query<NewsChannelTable> newsChannelTableQuery = App.getNewsChannelTableDao().queryBuilder()
+                .where(NewsChannelTableDao.Properties.NewsChannelSelect.eq(false))
+                .orderAsc(NewsChannelTableDao.Properties.NewsChannelIndex).build();
+        return newsChannelTableQuery.list();
     }
 }

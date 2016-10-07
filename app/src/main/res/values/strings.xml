@@ -15,4 +15,6 @@
 
     <!-- 共享过度动画-->
     <string name="transition_photos">transition_animation_news_photo</string>
+    <string name="no_more">没有更多了</string>
+    <string name="loading">加载中</string>
 </resources>

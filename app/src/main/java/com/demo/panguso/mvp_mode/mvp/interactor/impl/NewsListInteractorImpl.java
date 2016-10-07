@@ -1,5 +1,7 @@
 package com.demo.panguso.mvp_mode.mvp.interactor.impl;
 
+import android.util.Log;
+
 import com.demo.panguso.mvp_mode.common.ApiConstants;
 import com.demo.panguso.mvp_mode.common.HostType;
 import com.demo.panguso.mvp_mode.listener.RequestCallBack;
@@ -36,7 +38,6 @@ public class NewsListInteractorImpl implements NewsListInteractor<List<NewsSumma
     public Subscription setListItem(final RequestCallBack<List<NewsSummary>> listener, String type, final String id, final int startPage) {
         return RetrofitManager.getInstance(HostType.NETEASE_NEWS_VIDEO).getNewsListObservable(type, id, startPage)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .flatMap(new Func1<Map<String, List<NewsSummary>>, Observable<NewsSummary>>() {
                     @Override
@@ -71,6 +72,7 @@ public class NewsListInteractorImpl implements NewsListInteractor<List<NewsSumma
                     }
                 })
 //                .toList()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<NewsSummary>>() {
                     @Override
                     public void onCompleted() {

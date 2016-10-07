@@ -13,10 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/BaseAppTheme">
         <activity
+            android:name=".mvp.ui.activities.NewsActivity"
             android:launchMode="singleTask"
-            android:theme="@style/BaseAppTheme.NoTrans"
-            android:name=".mvp.ui.activities.NewsActivity">
-
+            android:theme="@style/BaseAppTheme.NoTrans">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,6 +27,7 @@
             android:theme="@style/BaseAppTheme.NoTrans" />
         <activity android:name=".mvp.ui.activities.SplashActivity" />
         <activity android:name=".mvp.ui.activities.PhotoActivity" />
+        <activity android:name=".mvp.ui.activities.base.NewsChannelActivity"></activity>
     </application>
 
 </manifest>

@@ -2,6 +2,7 @@ package com.demo.panguso.mvp_mode.mvp.presenter.impl;
 
 import android.util.Log;
 
+import com.demo.panguso.mvp_mode.common.LoadNewsType;
 import com.demo.panguso.mvp_mode.mvp.interactor.impl.NewsListInteractorImpl;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsListPresenter;
@@ -24,7 +25,8 @@ public class NewsListPresenterImpl extends BasePresenterImpl<NewsListView, List<
     /**
      * 新闻页面首次加载
      */
-    private boolean mIsLoaded;
+    private boolean mIsFirstLoaded;
+    private boolean mIsRefresh = true;
 
     @Inject
     public NewsListPresenterImpl(NewsListInteractorImpl newsListInteractor) {
@@ -39,7 +41,7 @@ public class NewsListPresenterImpl extends BasePresenterImpl<NewsListView, List<
     public void onCreate() {
         if (mView != null) {
             Log.e("NewsListPresenterImpl", "//////+++++");
-            mSubscription = mNewsInteractor.setListItem(this, channelType, channelId, startPage);
+            loadNewsData();
         }
     }
 
@@ -50,9 +52,15 @@ public class NewsListPresenterImpl extends BasePresenterImpl<NewsListView, List<
 
     @Override
     public void success(List<NewsSummary> data) {
-        mIsLoaded = true;
+        Log.e("NewsSuccess",":"+data.size());
+        mIsFirstLoaded = true;
+        if (data != null) {
+            startPage += 20;
+        }
+        int loadType = mIsRefresh ? LoadNewsType.TYPE_REFRESH_SUCCESS : LoadNewsType
+                .TYPE_LOAD_MORE_SUCCESS;
         if (mView != null) {
-            mView.setItems(data);
+            mView.setItems(data, loadType);
             mView.hideProgress();
         }
 
@@ -60,12 +68,17 @@ public class NewsListPresenterImpl extends BasePresenterImpl<NewsListView, List<
 
     @Override
     public void onError(String errorMsg) {
-
+        super.onError(errorMsg);
+        if (mView != null) {
+            int loadType = mIsRefresh ? LoadNewsType.TYPE_REFRESH_ERROR :
+                    LoadNewsType.TYPE_LOAD_MORE_ERROR;
+            mView.setItems(null, loadType);
+        }
     }
 
     @Override
     public void beforeRequest() {
-        if (!mIsLoaded) {
+        if (!mIsFirstLoaded) {
             mView.showProgress();
         }
     }
@@ -75,6 +88,24 @@ public class NewsListPresenterImpl extends BasePresenterImpl<NewsListView, List<
         this.channelType = newsType;
         this.channelId = newsId;
         Log.e("NewsListPresenterImpl", "channelType" + channelType);
+    }
+
+    @Override
+    public void resfreshData() {
+        startPage = 0;
+        mIsRefresh = true;
+        loadNewsData();
+    }
+
+    private void loadNewsData() {
+        Log.e("StartPage",""+startPage);
+        mSubscription = mNewsInteractor.setListItem(this,channelType,channelId,startPage);
+    }
+
+    @Override
+    public void loadMore() {
+        mIsRefresh  = false;
+        loadNewsData();
     }
 
 }

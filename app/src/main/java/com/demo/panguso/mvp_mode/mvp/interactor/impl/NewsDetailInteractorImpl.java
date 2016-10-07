@@ -33,7 +33,6 @@ public class NewsDetailInteractorImpl implements NewsDetailInteractor<NewsDetail
     public Subscription loadDetailNews(final RequestCallBack<NewsDetail> listener, final String id) {
         return RetrofitManager.getInstance(HostType.NETEASE_NEWS_VIDEO).getNewsDetailObservable(id)
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
                 .map(new Func1<Map<String, NewsDetail>, NewsDetail>() {
                     @Override
@@ -51,7 +50,9 @@ public class NewsDetailInteractorImpl implements NewsDetailInteractor<NewsDetail
                         }
                         return newsDetail;
                     }
-                }).subscribe(new Subscriber<NewsDetail>() {
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<NewsDetail>() {
                     @Override
                     public void onCompleted() {
 

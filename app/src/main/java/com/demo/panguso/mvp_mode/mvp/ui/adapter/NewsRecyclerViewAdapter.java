@@ -32,13 +32,16 @@ import butterknife.ButterKnife;
 /**
  * Created by ${yangfang} on 2016/9/9.
  */
-public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerViewAdapter.ViewHolder> {
+public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Inject
     public NewsRecyclerViewAdapter() {
 
     }
 
+    public static final int TYPE_ITEM = 0;
+    public static final int TYPE_FOOTER = 1;
+    private boolean mIsShowFooter;
     private List<NewsSummary> mNewsList = new ArrayList<>();
     private int mLastPosition = -1;
     private OnItemClickListener onItemClickListener;
@@ -48,19 +51,31 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     }
 
 
-    //    public List<NewsSummary> getmNewsList(){
-//        return mNewsList;
-//    }
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news, parent, false);
-        final ViewHolder holder = new ViewHolder(view);
-        //这是给每一条新闻详情消息添加自定义的点击事件
-        setItemOnclick(holder);
-        return holder;
+    public List<NewsSummary> getmNewsList() {
+        return mNewsList;
     }
 
-    private void setItemOnclick(final ViewHolder holder) {
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_FOOTER) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_footer, parent, false);
+            return new FooterViewHolder(view);
+        } else if (viewType == TYPE_ITEM) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news, parent, false);
+            ItemViewHolder itemViewHolder = new ItemViewHolder(view);
+            setItemOnclick(itemViewHolder);
+            return itemViewHolder;
+        }
+        throw new RuntimeException("virteu");
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        setItemValues(holder, position);
+        setItemAppearAnimation(holder, position);
+    }
+
+    private void setItemOnclick(final RecyclerView.ViewHolder holder) {
         if (onItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -72,12 +87,15 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        setItemValues(holder, position);
-        setItemAppearAnimation(holder, position);
+    public int getItemViewType(int position) {
+        if (mIsShowFooter && (getItemCount() - 1) == position) {
+            return TYPE_FOOTER;
+        } else {
+            return TYPE_ITEM;
+        }
     }
 
-    private void setItemAppearAnimation(ViewHolder holder, int position) {
+    private void setItemAppearAnimation(RecyclerView.ViewHolder holder, int position) {
         if (position > mLastPosition) {
             Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(),
                     R.anim.item_bottom);
@@ -88,11 +106,12 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
 //            animation.addAnimation(translateAnimation);
 //            animation.addAnimation(alphaAnimation);
             holder.itemView.startAnimation(animation);
+            mLastPosition = position;
         }
     }
 
     @Override
-    public void onViewDetachedFromWindow(ViewHolder holder) {
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         if (holder.itemView.getAnimation() != null &&
                 holder.itemView.getAnimation().hasStarted()) {
@@ -100,29 +119,59 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         }
     }
 
-    private void setItemValues(ViewHolder holder, int position) {
-        holder.mNewsSummaryTitleTv.setText(mNewsList.get(position).getTitle());
-        holder.mNewsSummaryDigestTv.setText(mNewsList.get(position).getDigest());
-        holder.mTextViewTime.setText(mNewsList.get(position).getPtime());
-        Glide.with(App.getAppContext()).load(mNewsList.get(position).getImgsrc())
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .format(DecodeFormat.PREFER_ARGB_8888)
+    private void setItemValues(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ItemViewHolder) {
+            String title = mNewsList.get(position).getLtitle();
+            if (title == null) {
+                title = mNewsList.get(position).getTitle();
+            }
+            String ptime = mNewsList.get(position).getPtime();
+            String digest = mNewsList.get(position).getDigest();
+            String imgSrc = mNewsList.get(position).getImgsrc();
+
+            ((ItemViewHolder) holder).mNewsSummaryTitleTv.setText(title);
+            ((ItemViewHolder) holder).mTextViewTime.setText(ptime);
+            ((ItemViewHolder) holder).mNewsSummaryDigestTv.setText(digest);
+            Glide.with(App.getAppContext()).load(imgSrc)
+                    .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .format(DecodeFormat.PREFER_ARGB_8888)
 //                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_load_fail)
-                .into(holder.mImageViewPhotoIv);
+                    .error(R.mipmap.ic_load_fail)
+                    .into(((ItemViewHolder) holder).mImageViewPhotoIv);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mNewsList.size();
+        int itemSize = mNewsList.size();
+        if (mIsShowFooter) {
+            itemSize += 1;
+        }
+        return itemSize;
+    }
+
+    public void showFooter() {
+        mIsShowFooter = true;
+        notifyItemInserted(getItemCount()+1);
+    }
+
+    public void hideFooter() {
+        mIsShowFooter = false;
+        notifyItemRemoved(getItemCount());
     }
 
     public void setItems(List<NewsSummary> items) {
         this.mNewsList = items;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public void addMore(List<NewsSummary> newsSummaries) {
+        int startPosition = newsSummaries.size();
+        mNewsList.addAll(newsSummaries);
+        notifyItemRangeInserted(startPosition, mNewsList.size());
+    }
+
+    class ItemViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.news_summary_title_tv)
         TextView mNewsSummaryTitleTv;
         @BindView(R.id.news_summary_photo_iv)
@@ -132,10 +181,15 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<NewsRecyclerVi
         @BindView(R.id.news_summary_ptime_tv)
         TextView mTextViewTime;
 
-        public ViewHolder(View itemView) {
+        public ItemViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
     }
 
+    private class FooterViewHolder extends RecyclerView.ViewHolder {
+        public FooterViewHolder(View view) {
+            super(view);
+        }
+    }
 }

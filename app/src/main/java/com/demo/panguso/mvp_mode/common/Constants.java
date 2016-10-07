@@ -17,4 +17,7 @@ public class Constants {
     public static final String NEWS_IMG_RES = "news_img_res";
     public static final String TRANSITION_ANIMATION_NEWS_PHOTOS = "transition_animation_news_photos";
     public static final String SHOW_NEWS_PHOTO = "show_news_photo";
+
+    public static final int NEWS_CHANNEL_MINE = 0;
+    public static final int NEWS_CHANNEL_MORE = 1;
 }
