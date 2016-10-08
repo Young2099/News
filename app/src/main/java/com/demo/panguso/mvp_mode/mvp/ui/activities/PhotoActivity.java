@@ -37,6 +37,11 @@ public class PhotoActivity extends BaseActivity {
     }
 
     @Override
+    protected void initSupportActionBar() {
+
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }

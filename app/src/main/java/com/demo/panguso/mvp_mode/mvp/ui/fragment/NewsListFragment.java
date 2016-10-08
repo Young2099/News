@@ -20,8 +20,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
@@ -41,8 +41,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+
 import static android.support.v7.widget.RecyclerView.LayoutManager;
-import static android.support.v7.widget.RecyclerView.OnScrollListener;
+
 /**
  * Created by ${yangfang} on 2016/9/9.
  */
@@ -62,6 +64,9 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
     RecyclerView mNewsRV;
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
+    @BindView(R.id.empty_view)
+    TextView mEmptyView;
+
     private boolean mIsRefreshing = false;
     private String channelId;
     private String channelType;
@@ -91,6 +96,12 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
         mNewsRV.setHasFixedSize(true);
         mNewsRV.setLayoutManager(new WrapperLinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mNewsRV.setItemAnimator(new DefaultItemAnimator());
+        mNewsRV.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                return false;
+            }
+        });
 
         mNewsRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -103,15 +114,16 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
                 if (!mIsAllLoaded && visibileItemCount > 0 && newState == RecyclerView.SCROLL_STATE_IDLE
                         && lastVisibleItemPosition >= totalItmeCount - 1) {
                     mNewsPresenter.loadMore();
-                    mSwipeRefreshLayout.setRefreshing(false);
                     mNewsRecyclerViewAdapter.showFooter();
-                    mNewsRV.scrollToPosition(mNewsRecyclerViewAdapter.getItemCount() - 1);
+//                    mNewsRV.scrollToPosition(mNewsRecyclerViewAdapter.getItemCount() - 1);
                 }
             }
         });
         mNewsRecyclerViewAdapter.setOnItemClickListener(this);
         mNewsRV.setAdapter(mNewsRecyclerViewAdapter);
     }
+
+
 
     private void initSwifreshLayout() {
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -124,6 +136,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
         mPresenter.attachView(this);
         mPresenter.onCreate();
     }
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -171,6 +184,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
                 mSwipeRefreshLayout.setRefreshing(false);
                 mNewsRecyclerViewAdapter.setItems(items);
                 mNewsRecyclerViewAdapter.notifyDataSetChanged();
+                checkIsEmpty(items);
                 break;
             case LoadNewsType.TYPE_REFRESH_ERROR:
                 mSwipeRefreshLayout.setRefreshing(false);
@@ -187,6 +201,16 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
             case LoadNewsType.TYPE_LOAD_MORE_ERROR:
                 mNewsRecyclerViewAdapter.hideFooter();
                 break;
+        }
+    }
+
+    private void checkIsEmpty(List<NewsSummary> newsSummaries) {
+        if (newsSummaries == null && mNewsRecyclerViewAdapter.getmNewsList() == null) {
+            mNewsRV.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            mNewsRV.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
         }
     }
 
@@ -221,6 +245,13 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
         mNewsPresenter.resfreshData();
     }
 
+
+    @OnClick(R.id.empty_view)
+    public void onClick() {
+        mSwipeRefreshLayout.setRefreshing(true);
+        mNewsPresenter.resfreshData();
+    }
+
     private class WrapperLinearLayoutManager extends LinearLayoutManager {
 
         public WrapperLinearLayoutManager(Context context) {
@@ -234,6 +265,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
         public WrapperLinearLayoutManager(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
             super(context, attrs, defStyleAttr, defStyleRes);
         }
+
         @Override
         public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
             try {

@@ -1,5 +1,6 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -52,8 +53,8 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     private ArrayList<Fragment> mNewsFragmentList = new ArrayList<>();
 
     protected void initViews() {
-        mToolbar.setTitle("新闻");
-        setSupportActionBar(mToolbar);
+//        mToolbar.setTitle("新闻");
+//        setSupportActionBar(mToolbar);
         //适配
         setStatusBarTranslucent();
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
@@ -62,7 +63,6 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         mNavView.setNavigationItemSelectedListener(this);
         mPresenter = mNewsPresenter;
         mPresenter.attachView(this);
-        mPresenter.onCreate();
     }
 
     @Override
@@ -75,11 +75,9 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         mActivityComponent.inject(this);
     }
 
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    protected void initSupportActionBar() {
+        setSupportActionBar(mToolbar);
     }
 
 
@@ -164,9 +162,10 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.nav_night_mode) {
-            changeDayOrNight();
-            return true;
+        if (id == R.id.action_about) {
+            Intent intent = new Intent(this, NewsChannelActivity.class);
+            startActivity(intent);
+
         }
         return super.onOptionsItemSelected(item);
     }

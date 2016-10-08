@@ -74,11 +74,9 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
         if (getIntent() != null) {
             postId = getIntent().getStringExtra(Constants.NEWS_POST_ID);
         }
-        setSupportActionBar(mToolbar);
         mNewsDetailPresenter.postId(postId);
         mPresenter = mNewsDetailPresenter;
         mPresenter.attachView(this);
-        mPresenter.onCreate();
     }
 
     @Override
@@ -89,6 +87,11 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
     @Override
     protected void initInjector() {
         mActivityComponent.inject(this);
+    }
+
+    @Override
+    protected void initSupportActionBar() {
+        setSupportActionBar(mToolbar);
     }
 
     @Override

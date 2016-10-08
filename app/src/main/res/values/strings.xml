@@ -17,4 +17,11 @@
     <string name="transition_photos">transition_animation_news_photo</string>
     <string name="no_more">没有更多了</string>
     <string name="loading">加载中</string>
+    <string name="retry_refresh_news">重新加载</string>
+
+    <!--新闻pdao-->
+    <string name="channel_manage">频道管理</string>
+    <string name="channel_explain">点击可增删/长按并拖拽可删除</string>
+    <string name="my_channel">我的频道</string>
+    <string name="more_channel">更多频道</string>
 </resources>

@@ -5,4 +5,5 @@
     <dimen name="title_margin">24dp</dimen>
     <dimen name="item_margin">8dp</dimen>
     <dimen name="medium">14dp</dimen>
+    <dimen name="big_medium">20sp</dimen>
 </resources>

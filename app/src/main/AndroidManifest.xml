@@ -11,11 +11,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/BaseAppTheme">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".mvp.ui.activities.NewsActivity"
             android:launchMode="singleTask"
-            android:theme="@style/BaseAppTheme.NoTrans">
+            android:theme="@style/AppTheme.NoTrans">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,10 +24,13 @@
         </activity>
         <activity
             android:name=".mvp.ui.activities.NewsDetailActivity"
-            android:theme="@style/BaseAppTheme.NoTrans" />
+            android:theme="@style/AppTheme.NoTrans" />
         <activity android:name=".mvp.ui.activities.SplashActivity" />
         <activity android:name=".mvp.ui.activities.PhotoActivity" />
-        <activity android:name=".mvp.ui.activities.base.NewsChannelActivity"></activity>
+        <activity
+            android:name=".mvp.ui.activities.NewsChannelActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

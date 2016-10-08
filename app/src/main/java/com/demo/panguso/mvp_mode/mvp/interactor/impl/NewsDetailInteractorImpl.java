@@ -38,16 +38,7 @@ public class NewsDetailInteractorImpl implements NewsDetailInteractor<NewsDetail
                     @Override
                     public NewsDetail call(Map<String, NewsDetail> stringNewsDetailMap) {
                         NewsDetail newsDetail = stringNewsDetailMap.get(id);
-                        List<NewsDetail.ImgBean> imgSrcs = newsDetail.getImg();
-                        if (imgSrcs != null && imgSrcs.size() >= 2 && App.isHavePhoto()) {
-                            String newsBody = newsDetail.getBody();
-                            for (int i = 1; i < imgSrcs.size(); i++) {
-                                String oldChars = "<!--IMG#" + i + "-->";
-                                String newChars = "<img src=\"" + imgSrcs.get(i).getSrc() + "\" />";
-                                newsBody = newsBody.replace(oldChars, newChars);
-                            }
-                            newsDetail.setBody(newsBody);
-                        }
+                        changeNewsDetail(newsDetail);
                         return newsDetail;
                     }
                 })
@@ -68,5 +59,18 @@ public class NewsDetailInteractorImpl implements NewsDetailInteractor<NewsDetail
                         listener.success(detail);
                     }
                 });
+    }
+
+    private void changeNewsDetail(NewsDetail newsDetail) {
+        List<NewsDetail.ImgBean> imgSrcs = newsDetail.getImg();
+        if (imgSrcs != null && imgSrcs.size() >= 2 && App.isHavePhoto()) {
+            String newsBody = newsDetail.getBody();
+            for (int i = 1; i < imgSrcs.size(); i++) {
+                String oldChars = "<!--IMG#" + i + "-->";
+                String newChars = "<img src=\"" + imgSrcs.get(i).getSrc() + "\" />";
+                newsBody = newsBody.replace(oldChars, newChars);
+            }
+            newsDetail.setBody(newsBody);
+        }
     }
 }

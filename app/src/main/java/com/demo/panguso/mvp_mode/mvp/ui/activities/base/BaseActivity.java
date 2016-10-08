@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by ${yangfang} on 2016/9/7.
+ *
  */
 public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity {
 
@@ -54,6 +55,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     protected abstract int getLayoutId();
 
     protected abstract void initInjector();
+    protected abstract void initSupportActionBar();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         setContentView(layoutId);
         initInjector();
         ButterKnife.bind(this);
+        initSupportActionBar();
 //        initToolBar();
         initViews();
 //        if(mIsHasNavigationView){
@@ -74,6 +77,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 //
 //        }
 //        initNightModeSwitch();
+        mPresenter.onCreate();
     }
 
     //TODO:适配4.4
@@ -150,10 +154,10 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 //        });
 //    }
 //
-//    private void initToolBar() {
-//        toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//    }
+    private void initToolBar() {
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
 //
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {

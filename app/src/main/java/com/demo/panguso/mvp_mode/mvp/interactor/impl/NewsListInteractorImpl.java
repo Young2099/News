@@ -1,13 +1,12 @@
 package com.demo.panguso.mvp_mode.mvp.interactor.impl;
 
-import android.util.Log;
-
 import com.demo.panguso.mvp_mode.common.ApiConstants;
 import com.demo.panguso.mvp_mode.common.HostType;
 import com.demo.panguso.mvp_mode.listener.RequestCallBack;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.mvp.interactor.NewsListInteractor;
 import com.demo.panguso.mvp_mode.respository.network.RetrofitManager;
+import com.demo.panguso.mvp_mode.utils.TransformUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,10 +20,8 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.functions.Func2;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by ${yangfang} on 2016/9/20.
@@ -37,8 +34,8 @@ public class NewsListInteractorImpl implements NewsListInteractor<List<NewsSumma
     @Override
     public Subscription setListItem(final RequestCallBack<List<NewsSummary>> listener, String type, final String id, final int startPage) {
         return RetrofitManager.getInstance(HostType.NETEASE_NEWS_VIDEO).getNewsListObservable(type, id, startPage)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
+//                .subscribeOn(Schedulers.io())
+//                .unsubscribeOn(Schedulers.io())
                 .flatMap(new Func1<Map<String, List<NewsSummary>>, Observable<NewsSummary>>() {
                     @Override
                     public Observable<NewsSummary> call(Map<String, List<NewsSummary>> stringListMap) {
@@ -64,6 +61,7 @@ public class NewsListInteractorImpl implements NewsListInteractor<List<NewsSumma
                         return newsSummary;
                     }
                 })
+                .distinct()
                 //对新闻信息根据时间进行排序
                 .toSortedList(new Func2<NewsSummary, NewsSummary, Integer>() {
                     @Override
@@ -72,7 +70,7 @@ public class NewsListInteractorImpl implements NewsListInteractor<List<NewsSumma
                     }
                 })
 //                .toList()
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(TransformUtils.<List<NewsSummary>>defaultSchedulers() )
                 .subscribe(new Subscriber<List<NewsSummary>>() {
                     @Override
                     public void onCompleted() {
