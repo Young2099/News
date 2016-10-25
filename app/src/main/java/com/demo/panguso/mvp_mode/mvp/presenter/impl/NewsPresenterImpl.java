@@ -28,6 +28,10 @@ public class NewsPresenterImpl extends BasePresenterImpl<NewsView,List<NewsChann
     @Override
     public void onCreate() {
         super.onCreate();
+        loadNewsChannels();
+    }
+
+    private void loadNewsChannels() {
         mSubscription = channelInteractor.loadNewsChannels(this);
     }
 
@@ -40,5 +44,13 @@ public class NewsPresenterImpl extends BasePresenterImpl<NewsView,List<NewsChann
     public void success(List<NewsChannelTable> data) {
         super.success(data);
         mView.initViewPager(data);
+    }
+
+    /**
+     * 我的频道修改后，返回修复记忆的位置
+     */
+    @Override
+    public void onChangedDb() {
+        loadNewsChannels();
     }
 }

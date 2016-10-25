@@ -1,7 +1,11 @@
 package com.demo.panguso.mvp_mode.utils;
 
 import android.app.Activity;
+import android.view.View;
+import android.support.design.widget.TabLayout;
 import android.util.Log;
+
+import com.demo.panguso.mvp_mode.app.App;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,6 +16,8 @@ import java.util.Locale;
  * Created by ${yangfang} on 2016/9/14.
  */
 public class MyUtils {
+
+    private static int screenWidth;
 
     public static String formatDate(String before) {
 
@@ -37,4 +43,30 @@ public class MyUtils {
     }
 
 
+    public static void dynamicSetTabLayoutMode(TabLayout tabLayout) {
+        int tabWith = caculateTabWith(tabLayout);
+        int screenWidth = getScreenWidth();
+        if (tabWith <= screenWidth) {
+            //小于就不滑动
+            tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        } else {
+            //大于就滑动，tabLayout的数量
+            tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        }
+    }
+
+    private static int caculateTabWith(TabLayout mTabs) {
+        int tabWidth = 0;
+        for (int i = 0; i < mTabs.getChildCount(); i++) {
+            View view = mTabs.getChildAt(i);
+            view.measure(0, 0);//这里是通知view测量，以便于能够保证获取到宽高
+            tabWidth += view.getMeasuredWidth();
+        }
+        return tabWidth;
+    }
+
+    public static int getScreenWidth() {
+        //屏幕的宽度获取
+        return App.getAppContext().getResources().getDisplayMetrics().widthPixels;
+    }
 }

@@ -90,11 +90,6 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
     }
 
     @Override
-    protected void initSupportActionBar() {
-        setSupportActionBar(mToolbar);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }

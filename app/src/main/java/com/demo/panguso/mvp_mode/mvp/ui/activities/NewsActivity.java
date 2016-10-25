@@ -13,15 +13,20 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
+import com.demo.panguso.mvp_mode.listener.ChannelItemMoveEvent;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.NewsListFragment;
 import com.demo.panguso.mvp_mode.mvp.view.NewsView;
+import com.demo.panguso.mvp_mode.utils.MyUtils;
+import com.demo.panguso.mvp_mode.utils.RxBus;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 
 import java.util.ArrayList;
@@ -32,6 +37,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 import greendao.NewsChannelTable;
+import rx.Subscription;
+import rx.functions.Action1;
+
 
 public class NewsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, NewsView {
 
@@ -47,10 +55,23 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     DrawerLayout mDrawerLayout;
     @BindView(R.id.fab)
     FloatingActionButton mFab;
+    @BindView(R.id.add_channel_iv)
+    ImageView mAddChannel;
+
+    private String mCurrentViewPagerName;
+    private List<String> mChannelNames;
 
     @Inject
     NewsPresenterImpl mNewsPresenter;
     private ArrayList<Fragment> mNewsFragmentList = new ArrayList<>();
+
+    private Subscription mChannelChangeSubscription = RxBus.getInstance().toObservable(ChannelItemMoveEvent.class)
+            .subscribe(new Action1<ChannelItemMoveEvent>() {
+                @Override
+                public void call(ChannelItemMoveEvent channelItemMoveEvent) {
+                    mNewsPresenter.onChangedDb();
+                }
+            });
 
     protected void initViews() {
 //        mToolbar.setTitle("新闻");
@@ -66,6 +87,14 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!mChannelChangeSubscription.isUnsubscribed()) {
+            mChannelChangeSubscription.unsubscribe();
+        }
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_news;
     }
@@ -75,18 +104,20 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         mActivityComponent.inject(this);
     }
 
-    @Override
-    protected void initSupportActionBar() {
-        setSupportActionBar(mToolbar);
-    }
 
-
-    @OnClick(R.id.fab)
-    public void onClick() {
+    @OnClick({R.id.fab, R.id.add_channel_iv})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.add_channel_iv:
+                Intent intent = new Intent(this, NewsChannelActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 
     @Override
     public void initViewPager(List<NewsChannelTable> list) {
+        mNewsFragmentList.clear();
         List<String> channelName = new ArrayList<>();
         if (list != null) {
             for (NewsChannelTable channelTable : list) {
@@ -95,10 +126,34 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
                 channelName.add(channelTable.getNewsChannelName());
             }
         }
-        mTabs.setTabMode(TabLayout.MODE_FIXED);
         NewsFragmetPagerAdapter adapter = new NewsFragmetPagerAdapter(getSupportFragmentManager(), channelName, mNewsFragmentList);
-        mViewPager.setAdapter(adapter);
         mTabs.setupWithViewPager(mViewPager);
+        mViewPager.setAdapter(adapter);
+        MyUtils.dynamicSetTabLayoutMode(mTabs);
+        setPageChangeListener();
+        mChannelNames = channelName;
+        int currentViewPagerPosition = getCurrentViewPagerPosition();
+        mViewPager.setCurrentItem(currentViewPagerPosition,false);
+    }
+
+    private void setPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                mCurrentViewPagerName = mChannelNames.get(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     private NewsListFragment createListFragment(NewsChannelTable channelTable) {
@@ -163,8 +218,6 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_about) {
-            Intent intent = new Intent(this, NewsChannelActivity.class);
-            startActivity(intent);
 
         }
         return super.onOptionsItemSelected(item);
@@ -181,5 +234,16 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         recreate();
     }
 
-
+    //得到当前所NewsActivity所展示的页面
+    public int getCurrentViewPagerPosition() {
+        int position = 0;
+        if (mCurrentViewPagerName != null) {
+            for (int i = 0; i < mChannelNames.size(); i++) {
+                if (mCurrentViewPagerName.equals(mChannelNames.get(i))) {
+                    position = i;
+                }
+            }
+        }
+        return position;
+    }
 }

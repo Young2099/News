@@ -10,7 +10,10 @@ import android.widget.TextView;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
+import com.demo.panguso.mvp_mode.listener.ChannelItemMoveEvent;
+import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
 import com.demo.panguso.mvp_mode.mvp.view.ItemDragHelperCallback;
+import com.demo.panguso.mvp_mode.utils.RxBus;
 
 import java.util.Collections;
 import java.util.List;
@@ -27,8 +30,13 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
     private static final int IS_CHANEL_FIXED = 0;
     private static final int IS_CHANEL_NO_FIXED = 1;
     private ItemDragHelperCallback mItemDragHelperCallback;
+    private OnItemClickListener mOnItemClickListener;
 
-    private void setItemDragHelperCallback(ItemDragHelperCallback itemDragHelperCallback) {
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+        mOnItemClickListener = onItemClickListener;
+    }
+
+    public void setItemDragHelperCallback(ItemDragHelperCallback itemDragHelperCallback) {
         mItemDragHelperCallback = itemDragHelperCallback;
     }
 
@@ -38,10 +46,22 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
 
     @Override
     public NewsChannelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_channel, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_channel, parent,false);
         NewsChannelViewHolder newsChannelViewHolder = new NewsChannelViewHolder(view);
         handleLongPress(newsChannelViewHolder);
+        handleOnClick(newsChannelViewHolder);
         return newsChannelViewHolder;
+    }
+
+    private void handleOnClick(final NewsChannelViewHolder newsChannelViewHolder) {
+        if(mOnItemClickListener != null){
+            newsChannelViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mOnItemClickListener.onItemClick(view,newsChannelViewHolder.getLayoutPosition());
+                }
+            });
+        }
     }
 
     private void handleLongPress(final NewsChannelViewHolder newsChannelViewHolder) {
@@ -86,6 +106,12 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
         return mNewsChannelTables.size();
     }
 
+    /**
+     * 回调接口
+     * @param formPosition
+     * @param toPosition
+     * @return
+     */
     @Override
     public boolean onItemMoved(int formPosition, int toPosition) {
         if (mNewsChannelTables.get(formPosition).getNewsChannelFixed() || mNewsChannelTables.get(toPosition).getNewsChannelFixed()) {
@@ -93,7 +119,18 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
         }
         Collections.swap(mNewsChannelTables, formPosition, toPosition);
         notifyItemMoved(formPosition, toPosition);
+        RxBus.getInstance().post(new ChannelItemMoveEvent(formPosition,toPosition));
         return true;
+    }
+
+    public void add(int itemCount, NewsChannelTable newsChannel) {
+        mNewsChannelTables.add(itemCount,newsChannel);
+        notifyItemInserted(itemCount);
+    }
+
+    public void delete(int layoutPosition) {
+        mNewsChannelTables.remove(layoutPosition);
+        notifyItemRemoved(layoutPosition);
     }
 
     class NewsChannelViewHolder extends RecyclerView.ViewHolder {
@@ -104,5 +141,9 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public List<NewsChannelTable> getData(){
+        return mNewsChannelTables;
     }
 }

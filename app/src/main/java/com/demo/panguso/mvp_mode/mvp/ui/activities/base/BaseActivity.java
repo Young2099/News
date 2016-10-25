@@ -18,6 +18,8 @@ import com.demo.panguso.mvp_mode.inject.component.ActivityComponent;
 import com.demo.panguso.mvp_mode.inject.component.DaggerActivityComponent;
 import com.demo.panguso.mvp_mode.inject.module.ActivityModule;
 import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter;
+import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
+import com.demo.panguso.mvp_mode.mvp.ui.activities.PhotoActivity;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.squareup.leakcanary.RefWatcher;
@@ -55,7 +57,6 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     protected abstract int getLayoutId();
 
     protected abstract void initInjector();
-    protected abstract void initSupportActionBar();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -69,8 +70,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         setContentView(layoutId);
         initInjector();
         ButterKnife.bind(this);
-        initSupportActionBar();
-//        initToolBar();
+        initToolBar();
         initViews();
 //        if(mIsHasNavigationView){
 //            initDrawerLayout();
@@ -82,7 +82,11 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
     //TODO:适配4.4
     protected void setStatusBarTranslucent() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT&&
+                !(this instanceof NewsDetailActivity || this instanceof PhotoActivity
+                        ))
+                || (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT
+                && this instanceof NewsDetailActivity)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             SystemBarTintManager tintManager = new SystemBarTintManager(this);
             tintManager.setStatusBarTintEnabled(true);

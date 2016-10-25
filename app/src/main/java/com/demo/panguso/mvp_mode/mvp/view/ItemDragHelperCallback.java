@@ -13,7 +13,6 @@ import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsChannelAdapter;
 public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
     private OnItemMoveListener mOnItemMoveListener;
     private boolean mIsLongPressEnabled;
-    private RecyclerView dragFlags;
 
     public void setLongPressEnabled(boolean LongPressEnabled) {
         this.mIsLongPressEnabled = LongPressEnabled;
@@ -53,12 +52,9 @@ public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-        if (isDifferentItemViewType(viewHolder, target)) {
-            return false;
-        }
         int fromPosition = viewHolder.getAdapterPosition();
         int toPosition = target.getAdapterPosition();
-        return mOnItemMoveListener.onItemMoved(fromPosition, toPosition);
+        return !isDifferentItemViewType(viewHolder, target) && mOnItemMoveListener.onItemMoved(fromPosition, toPosition);
 
     }
 
@@ -69,5 +65,10 @@ public class ItemDragHelperCallback extends ItemTouchHelper.Callback {
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
+    }
+
+    @Override
+    public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        super.clearView(recyclerView, viewHolder);
     }
 }

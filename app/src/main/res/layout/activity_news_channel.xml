@@ -5,15 +5,17 @@
     android:id="@+id/activity_news_channel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="true"
+    android:background="@color/container_background"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context="com.demo.panguso.mvp_mode.mvp.ui.activities.NewsChannelActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/action_bar"
-        android:background="@color/colorPrimary"
+        android:theme="@style/AppTheme.AppBarOverlay"
         app:navigationIcon="@mipmap/ic_arrow_back"
-        app:popupTheme="@style/AppTheme.PopupOverlay"
         app:title="@string/channel_manage" />
 
     <TextView
@@ -21,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:gravity="center"
+        android:layout_gravity="center"
         android:text="@string/channel_explain"
         android:textColor="@color/secondary_text"
         android:textSize="@dimen/medium" />
@@ -43,6 +45,6 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/news_channel_more_rv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:overScrollMode="never" />
 </LinearLayout>
