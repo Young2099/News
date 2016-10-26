@@ -7,4 +7,5 @@
     <dimen name="medium">14sp</dimen>
     <dimen name="big_medium">20sp</dimen>
     <dimen name="big_small">16sp</dimen>
+    <dimen name="toolbar_padding_top">0dp</dimen>
 </resources>

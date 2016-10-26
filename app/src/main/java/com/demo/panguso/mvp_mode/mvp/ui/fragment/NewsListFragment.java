@@ -142,7 +142,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initValues();
-        NetUtil.checkNetworkState(mActivity.getString(R.string.internet_error));
+//        NetUtil.checkNetworkState(mActivity.getString(R.string.internet_error));
     }
 
     private void initValues() {

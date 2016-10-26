@@ -20,7 +20,6 @@ public class NewsFragmetPagerAdapter extends FragmentPagerAdapter {
         list = mNewsFragmentList;
         titles = channelName;
     }
-
     @Override
     public Fragment getItem(int position) {
         return list.get(position);

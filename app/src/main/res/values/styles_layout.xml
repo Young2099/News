@@ -4,7 +4,8 @@
     <style name="action_bar">
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
     </style>
     <!--新闻频道-->
     <style name="news_summary_card_view">

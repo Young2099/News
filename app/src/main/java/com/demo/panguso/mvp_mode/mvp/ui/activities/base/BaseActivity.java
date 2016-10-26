@@ -18,8 +18,6 @@ import com.demo.panguso.mvp_mode.inject.component.ActivityComponent;
 import com.demo.panguso.mvp_mode.inject.component.DaggerActivityComponent;
 import com.demo.panguso.mvp_mode.inject.module.ActivityModule;
 import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter;
-import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
-import com.demo.panguso.mvp_mode.mvp.ui.activities.PhotoActivity;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.squareup.leakcanary.RefWatcher;
@@ -29,7 +27,6 @@ import butterknife.ButterKnife;
 
 /**
  * Created by ${yangfang} on 2016/9/7.
- *
  */
 public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity {
 
@@ -63,9 +60,9 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
         super.onCreate(savedInstanceState);
         setNightOrDayMode();
         mActivityComponent = DaggerActivityComponent.builder()
-                              .applicationComponent(((App) getApplication()).getApplicationComponent())
-                               .activityModule(new ActivityModule(this))
-                                .build();
+                .applicationComponent(((App) getApplication()).getApplicationComponent())
+                .activityModule(new ActivityModule(this))
+                .build();
         int layoutId = getLayoutId();
         setContentView(layoutId);
         initInjector();
@@ -82,12 +79,10 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
     //TODO:适配4.4
     protected void setStatusBarTranslucent() {
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT&&
-                !(this instanceof NewsDetailActivity || this instanceof PhotoActivity
-                        ))
-                || (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT
-                && this instanceof NewsDetailActivity)) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)) {
+            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
             SystemBarTintManager tintManager = new SystemBarTintManager(this);
             tintManager.setStatusBarTintEnabled(true);
             tintManager.setStatusBarTintResource(R.color.colorPrimary);
@@ -105,7 +100,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
     }
 
-//    private void initNightModeSwitch() {
+    //    private void initNightModeSwitch() {
 //        if(this instanceof NewsActivity || this instanceof PhotoActivity){
 //            SwitchCompat dayNightSwitch = mBaseNavView.getMenu().findItem(R.)
 //        }
@@ -160,6 +155,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 //
     private void initToolBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("新闻");
         setSupportActionBar(toolbar);
     }
 //

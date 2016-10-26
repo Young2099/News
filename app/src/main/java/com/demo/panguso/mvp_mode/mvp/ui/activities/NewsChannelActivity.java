@@ -1,5 +1,6 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities;
 
+import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,7 +47,15 @@ public class NewsChannelActivity extends BaseActivity implements NewsChannelView
     protected void initViews() {
         mPresenter = mChannelPresenter;
         mPresenter.attachView(this);
+        mToolbar.setTitle("频道管理");
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
 
     private Subscription mSubscription = RxBus.getInstance().toObservable(ChannelItemMoveEvent.class)
             .subscribe(new Action1<ChannelItemMoveEvent>() {
