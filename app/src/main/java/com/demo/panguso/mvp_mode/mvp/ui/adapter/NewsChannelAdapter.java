@@ -32,7 +32,7 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
     private ItemDragHelperCallback mItemDragHelperCallback;
     private OnItemClickListener mOnItemClickListener;
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
     }
 
@@ -46,7 +46,7 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
 
     @Override
     public NewsChannelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_channel, parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_channel, parent, false);
         NewsChannelViewHolder newsChannelViewHolder = new NewsChannelViewHolder(view);
         handleLongPress(newsChannelViewHolder);
         handleOnClick(newsChannelViewHolder);
@@ -54,11 +54,11 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
     }
 
     private void handleOnClick(final NewsChannelViewHolder newsChannelViewHolder) {
-        if(mOnItemClickListener != null){
+        if (mOnItemClickListener != null) {
             newsChannelViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mOnItemClickListener.onItemClick(view,newsChannelViewHolder.getLayoutPosition());
+                    mOnItemClickListener.onItemClick(view, newsChannelViewHolder.getLayoutPosition());
                 }
             });
         }
@@ -107,7 +107,8 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
     }
 
     /**
-     * 回调接口
+     * 回调接口,这是我的频道的长按调换顺序的动作
+     *
      * @param formPosition
      * @param toPosition
      * @return
@@ -119,12 +120,17 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
         }
         Collections.swap(mNewsChannelTables, formPosition, toPosition);
         notifyItemMoved(formPosition, toPosition);
-        RxBus.getInstance().post(new ChannelItemMoveEvent(formPosition,toPosition));
+        RxBus.getInstance().post(new ChannelItemMoveEvent(formPosition, toPosition));
         return true;
     }
 
+    /**
+     * 当我的频道和更多频道进行增加，递减的动作
+     * @param itemCount
+     * @param newsChannel
+     */
     public void add(int itemCount, NewsChannelTable newsChannel) {
-        mNewsChannelTables.add(itemCount,newsChannel);
+        mNewsChannelTables.add(itemCount, newsChannel);
         notifyItemInserted(itemCount);
     }
 
@@ -143,7 +149,7 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
         }
     }
 
-    public List<NewsChannelTable> getData(){
+    public List<NewsChannelTable> getData() {
         return mNewsChannelTables;
     }
 }

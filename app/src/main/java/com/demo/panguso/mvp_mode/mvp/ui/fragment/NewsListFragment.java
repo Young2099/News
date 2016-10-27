@@ -27,7 +27,6 @@ import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.common.LoadNewsType;
-import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsListPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
@@ -48,7 +47,7 @@ import static android.support.v7.widget.RecyclerView.LayoutManager;
 /**
  * Created by ${yangfang} on 2016/9/9.
  */
-public class NewsListFragment extends BaseFragment implements NewsListView, OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class NewsListFragment extends BaseFragment implements NewsListView, NewsRecyclerViewAdapter.OnNewsListItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     @Inject
     NewsRecyclerViewAdapter mNewsRecyclerViewAdapter;
@@ -124,7 +123,6 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
     }
 
 
-
     private void initSwifreshLayout() {
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeColors(ContextCompat.getColor(mActivity, R.color.colorPrimary));
@@ -177,6 +175,11 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
         super.onDestroy();
     }
 
+    /**
+     * 回调接口加载数据
+     * @param items
+     * @param loadType
+     */
     @Override
     public void setItems(List<NewsSummary> items, @LoadNewsType.checker int loadType) {
         switch (loadType) {
@@ -214,16 +217,16 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
         }
     }
 
-    /**
-     * 针对每个Itme设置的点击事件
-     *
-     * @param itemView
-     * @param layoutPosition
-     */
-    @Override
-    public void onItemClick(View itemView, int layoutPosition) {
-        startNewDetailActivity(itemView, layoutPosition);
-    }
+//    /**
+//     * 针对每个Itme设置的点击事件
+//     *
+//     * @param itemView
+//     * @param layoutPosition
+//     */
+//    @Override
+//    public void onItemClick(View itemView, int layoutPosition) {
+//        startNewDetailActivity(itemView, layoutPosition);
+//    }
 
     private void startNewDetailActivity(View view, int position) {
         List<NewsSummary> newsSummaryList = mNewsRecyclerViewAdapter.getmNewsList();
@@ -250,6 +253,15 @@ public class NewsListFragment extends BaseFragment implements NewsListView, OnIt
     public void onClick() {
         mSwipeRefreshLayout.setRefreshing(true);
         mNewsPresenter.resfreshData();
+    }
+
+    @Override
+    public void onItemClick(View view, int position, boolean isPhoto) {
+        if (isPhoto) {
+            // TODO: 2016/10/27
+        } else {
+            startNewDetailActivity(view, position);
+        }
     }
 
     private class WrapperLinearLayoutManager extends LinearLayoutManager {

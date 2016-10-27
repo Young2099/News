@@ -332,7 +332,7 @@ public class NewsSummary {
         }
     }
 
-    private class ImgextraBean {
+    public class ImgextraBean {
         private String imgsrc;
 
         public String getImgsrc() {
@@ -342,5 +342,7 @@ public class NewsSummary {
         public void setImgsrc(String imgsrc) {
             this.imgsrc = imgsrc;
         }
+
+
     }
 }
