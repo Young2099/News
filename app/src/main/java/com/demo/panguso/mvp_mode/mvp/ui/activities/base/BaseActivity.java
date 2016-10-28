@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity<T extends BasePresenter> extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
-    private Toolbar toolbar;
+    public Toolbar toolbar;
     private Class mClass;
     public NavigationView mBaseNavView;
     protected boolean mIsHasNavigationView;
@@ -74,7 +74,9 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 //
 //        }
 //        initNightModeSwitch();
-        mPresenter.onCreate();
+        if (mPresenter != null) {
+            mPresenter.onCreate();
+        }
     }
 
     //TODO:适配4.4

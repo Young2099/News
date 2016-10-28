@@ -167,6 +167,8 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 imgSrcMiddle = mAdsBeen.get(1).getImgsrc();
                 imgSrcRight = mAdsBeen.get(2).getImgsrc();
                 layoutParams.height = mPhotoTreeHeight;
+                holder.mNewsSummaryTitleTv.setText(App.getAppContext()
+                        .getString(R.string.photos,mAdsBeen.get(0).getTitle()));
             } else if (size >= 2) {
                 imgSrcLeft = mAdsBeen.get(0).getImgsrc();
                 imgSrcMiddle = mAdsBeen.get(1).getImgsrc();
@@ -182,6 +184,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 imgSrcMiddle = newsSummary.getImgextra().get(1).getImgsrc();
                 imgSrcRight = newsSummary.getImgextra().get(2).getImgsrc();
                 layoutParams.height = mPhotoTreeHeight;
+
             } else if (size >= 2) {
                 imgSrcLeft = newsSummary.getImgextra().get(0).getImgsrc();
                 imgSrcMiddle = newsSummary.getImgextra().get(1).getImgsrc();

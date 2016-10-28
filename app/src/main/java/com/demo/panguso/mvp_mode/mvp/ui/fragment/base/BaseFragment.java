@@ -12,7 +12,7 @@ import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.inject.component.DaggerFragmentComponent;
 import com.demo.panguso.mvp_mode.inject.component.FragmentComponent;
 import com.demo.panguso.mvp_mode.inject.module.FragmentModule;
-
+import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter;
 import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.ButterKnife;
@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 /**
  * Created by ${yangfang} on 2016/9/9.
  */
-public abstract class BaseFragment<T extends com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter> extends Fragment {
+public abstract class BaseFragment<T extends BasePresenter> extends Fragment {
 
     protected T mPresenter;
     protected FragmentComponent mFragmentComponent;

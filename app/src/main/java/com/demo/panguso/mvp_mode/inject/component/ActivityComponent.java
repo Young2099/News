@@ -9,6 +9,7 @@ import com.demo.panguso.mvp_mode.inject.scope.PerActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsChannelActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
+import com.demo.panguso.mvp_mode.mvp.ui.activities.PhotoDetailActivity;
 
 import dagger.Component;
 
@@ -31,4 +32,5 @@ public interface ActivityComponent {
     void inject(NewsDetailActivity newsDetailActivity);
 
     void inject(NewsChannelActivity newsChannelActivity);
+    void inject(PhotoDetailActivity photoDetailActivity);
 }

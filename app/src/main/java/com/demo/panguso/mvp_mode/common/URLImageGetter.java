@@ -91,6 +91,7 @@ public class URLImageGetter implements Html.ImageGetter {
     @SuppressWarnings("deprecation")
     @NonNull
     private Drawable createPicPlaceholder() {
+
         Drawable drawable;
         drawable = new ColorDrawable(App.getAppContext().getResources().getColor(R.color.background_color));
         drawable.setBounds(0, 0, mPicWidth, mPicWidth / 3);

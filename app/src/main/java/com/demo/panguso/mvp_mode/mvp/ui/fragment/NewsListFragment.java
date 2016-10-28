@@ -28,13 +28,16 @@ import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.common.LoadNewsType;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
+import com.demo.panguso.mvp_mode.mvp.bean.PhotoDetail;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsListPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
+import com.demo.panguso.mvp_mode.mvp.ui.activities.PhotoDetailActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.base.BaseFragment;
 import com.demo.panguso.mvp_mode.mvp.view.NewsListView;
 import com.demo.panguso.mvp_mode.utils.NetUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -177,6 +180,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
 
     /**
      * 回调接口加载数据
+     *
      * @param items
      * @param loadType
      */
@@ -258,10 +262,63 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
     @Override
     public void onItemClick(View view, int position, boolean isPhoto) {
         if (isPhoto) {
-            // TODO: 2016/10/27
+            PhotoDetail photoDetail = getPhotoDetail(position);
+            startNewsPhotoDetailActivity(photoDetail);
         } else {
             startNewDetailActivity(view, position);
         }
+    }
+
+    /**
+     * 打开图片详情的页面
+     *
+     * @param photoDetail
+     */
+    private void startNewsPhotoDetailActivity(PhotoDetail photoDetail) {
+        Intent intent = new Intent(getActivity(), PhotoDetailActivity.class);
+        intent.putExtra(Constants.PHOTO_DETAIL, photoDetail);
+        startActivity(intent);
+    }
+
+    /**
+     * 获取图片新闻的数据
+     *
+     * @param position
+     * @return
+     */
+    private PhotoDetail getPhotoDetail(int position) {
+        NewsSummary newsSummary = mNewsRecyclerViewAdapter.getmNewsList().get(position);
+        PhotoDetail photoDetail = new PhotoDetail();
+        photoDetail.setTitle(newsSummary.getTitle());
+        setPictures(newsSummary, photoDetail);
+        return photoDetail;
+    }
+
+    private void setPictures(NewsSummary newsSummary, PhotoDetail photoDetail) {
+        List<PhotoDetail.Picture> picturesList = new ArrayList<>();
+        //newSummary里面的图片地址和title
+        if (newsSummary.getAds() != null) {
+            for (NewsSummary.AdsBean entity : newsSummary.getAds()) {
+                setValuesAndAddToList(picturesList, entity.getTitle(), entity.getImgsrc());
+            }
+        } else if (newsSummary.getImgextra() != null) {
+            for (NewsSummary.ImgextraBean entity : newsSummary.getImgextra()) {
+                setValuesAndAddToList(picturesList, null, entity.getImgsrc());
+            }
+        } else {
+            setValuesAndAddToList(picturesList, null, newsSummary.getImgsrc());
+        }
+        photoDetail.setPictures(picturesList);
+    }
+
+    private void setValuesAndAddToList(List<PhotoDetail.Picture> picturesList, String title, String imgsrc) {
+        PhotoDetail.Picture picture = new PhotoDetail.Picture();
+        if (title != null) {
+            picture.setTitle(title);
+        }
+        picture.setImgSrc(imgsrc);
+        picturesList.add(picture);
+
     }
 
     private class WrapperLinearLayoutManager extends LinearLayoutManager {
