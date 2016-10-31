@@ -31,10 +31,15 @@ import com.demo.panguso.mvp_mode.utils.DebugUtil;
 import com.demo.panguso.mvp_mode.utils.MyUtils;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by ${yangfang} on 2016/9/20.
@@ -102,7 +107,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
 
     @Override
     public void hideProgress() {
-        mProgressBar.setVisibility(View.GONE);
+//        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -125,7 +130,30 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
         setToolBarLayout(newsTitle);
     }
 
-    private void setNewsBody(NewsDetail newsDetail, String newsBody) {
+    private void setNewsBody(final NewsDetail newsDetail, final String newsBody) {
+
+        mSubscription = Observable.timer(500, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Long>() {
+                    @Override
+                    public void onCompleted() {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        setBody(newsDetail,newsBody);
+                    }
+                });
+    }
+
+    private void setBody(NewsDetail newsDetail, String newsBody) {
         if (mNewsDetailBodyTv != null) {
             if (App.isHavePhoto() && newsDetail.getImg().size() >= 2) {
                 int total = newsDetail.getImg().size();

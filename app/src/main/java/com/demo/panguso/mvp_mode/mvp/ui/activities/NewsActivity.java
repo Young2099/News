@@ -13,8 +13,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.demo.panguso.mvp_mode.R;
@@ -37,7 +37,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 import greendao.NewsChannelTable;
-import rx.Subscription;
 import rx.functions.Action1;
 
 
@@ -65,14 +64,6 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     NewsPresenterImpl mNewsPresenter;
     private ArrayList<Fragment> mNewsFragmentList = new ArrayList<>();
 
-    private Subscription mChannelChangeSubscription = RxBus.getInstance().toObservable(ChannelItemMoveEvent.class)
-            .subscribe(new Action1<ChannelItemMoveEvent>() {
-                @Override
-                public void call(ChannelItemMoveEvent channelItemMoveEvent) {
-                    mNewsPresenter.onChangedDb();
-                }
-            });
-
     protected void initViews() {
 //        mToolbar.setTitle("新闻");
 //        setSupportActionBar(mToolbar);
@@ -87,11 +78,15 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (!mChannelChangeSubscription.isUnsubscribed()) {
-            mChannelChangeSubscription.unsubscribe();
-        }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mSubscription = RxBus.getInstance().toObservable(ChannelItemMoveEvent.class)
+                .subscribe(new Action1<ChannelItemMoveEvent>() {
+                    @Override
+                    public void call(ChannelItemMoveEvent channelItemMoveEvent) {
+                        mNewsPresenter.onChangedDb();
+                    }
+                });
     }
 
     @Override
@@ -133,7 +128,7 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         setPageChangeListener();
         mChannelNames = channelName;
         int currentViewPagerPosition = getCurrentViewPagerPosition();
-        mViewPager.setCurrentItem(currentViewPagerPosition,false);
+        mViewPager.setCurrentItem(currentViewPagerPosition, false);
     }
 
     private void setPageChangeListener() {

@@ -17,6 +17,7 @@
             android:layout_height="?actionBarSize"
             android:background="@color/colorPrimary"
             android:title="@string/news_title"
+
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:layout_scrollFlags="scroll|enterAlways" />
 

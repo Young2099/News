@@ -13,9 +13,11 @@ import com.demo.panguso.mvp_mode.inject.component.DaggerFragmentComponent;
 import com.demo.panguso.mvp_mode.inject.component.FragmentComponent;
 import com.demo.panguso.mvp_mode.inject.module.FragmentModule;
 import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter;
+import com.demo.panguso.mvp_mode.utils.MyUtils;
 import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.ButterKnife;
+import rx.Subscription;
 
 /**
  * Created by ${yangfang} on 2016/9/9.
@@ -35,6 +37,7 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment {
     public abstract int getLayoutId();
 
     public abstract void initViews(View view);
+    public Subscription mSubscription;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,5 +68,6 @@ public abstract class BaseFragment<T extends BasePresenter> extends Fragment {
         if (mPresenter != null) {
             mPresenter.onDestory();
         }
+        MyUtils.cancleSubscription(mSubscription);
     }
 }

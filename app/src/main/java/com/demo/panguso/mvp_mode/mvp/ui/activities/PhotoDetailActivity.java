@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.demo.panguso.mvp_mode.R;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import rx.Subscription;
 import rx.functions.Action1;
 
 public class PhotoDetailActivity extends BaseActivity {
@@ -35,25 +33,30 @@ public class PhotoDetailActivity extends BaseActivity {
     PhotoViewPager mViewPager;
     @BindView(R.id.photo_detail_tv)
     TextView mPhotoTextViewTitle;
-    @BindView(R.id.progress_bar)
-    ProgressBar mProgressBar;
 
     private List<Fragment> mPhotoDetailFragments = new ArrayList<>();
     private PhotoDetail mPhotoDetail;
 
-    private Subscription mSubSubscription = RxBus.getInstance().toObservable(
-            PhotoDetailOnClickEvent.class)
-            .subscribe(new Action1<PhotoDetailOnClickEvent>() {
-                @Override
-                public void call(PhotoDetailOnClickEvent photoDetailOnClickEvent) {
-                    if (mPhotoTextViewTitle.getVisibility() == View.VISIBLE) {
-                        startAnimation(View.GONE, 0.9f, 0.5f);
-                    } else {
-                        mPhotoTextViewTitle.setVisibility(View.VISIBLE);
-                        startAnimation(View.VISIBLE, 0.5f, 0.9f);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        /**
+         * 点击图片显示title是一个异步的过程
+         */
+        mSubscription = RxBus.getInstance().toObservable(
+                PhotoDetailOnClickEvent.class)
+                .subscribe(new Action1<PhotoDetailOnClickEvent>() {
+                    @Override
+                    public void call(PhotoDetailOnClickEvent photoDetailOnClickEvent) {
+                        if (mPhotoTextViewTitle.getVisibility() == View.VISIBLE) {
+                            startAnimation(View.GONE, 0.9f, 0.5f);
+                        } else {
+                            mPhotoTextViewTitle.setVisibility(View.VISIBLE);
+                            startAnimation(View.VISIBLE, 0.5f, 0.9f);
+                        }
                     }
-                }
-            });
+                });
+    }
 
     private void startAnimation(final int endState, float startValue, float endValue) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(
@@ -158,11 +161,4 @@ public class PhotoDetailActivity extends BaseActivity {
         return title;
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (!mSubSubscription.isUnsubscribed()) {
-            mSubSubscription.unsubscribe();
-        }
-    }
 }

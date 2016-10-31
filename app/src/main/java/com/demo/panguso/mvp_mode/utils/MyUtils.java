@@ -5,12 +5,16 @@ import android.view.View;
 import android.support.design.widget.TabLayout;
 import android.util.Log;
 
+import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import retrofit2.adapter.rxjava.HttpException;
+import rx.Subscription;
 
 /**
  * Created by ${yangfang} on 2016/9/14.
@@ -68,5 +72,27 @@ public class MyUtils {
     public static int getScreenWidth() {
         //屏幕的宽度获取
         return App.getAppContext().getResources().getDisplayMetrics().widthPixels;
+    }
+
+    /**
+     * 取消注册的被观察者
+     *
+     * @param mSubscription
+     */
+    public static void cancleSubscription(Subscription mSubscription) {
+        if (mSubscription != null && mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
+    }
+
+    public static String analyzeNetworkError(Throwable e) {
+        String errMsg = App.getAppContext().getString(R.string.load_error);
+        if(e instanceof HttpException){
+            int state = ((HttpException) e).code();
+            if(state == 403){
+                errMsg = App.getAppContext().getString(R.string.retry_after);
+            }
+        }
+        return errMsg;
     }
 }

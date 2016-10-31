@@ -3,6 +3,7 @@ package com.demo.panguso.mvp_mode.mvp.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
@@ -14,7 +15,13 @@ import com.demo.panguso.mvp_mode.mvp.ui.fragment.base.BaseFragment;
 import com.demo.panguso.mvp_mode.mvp.view.PhotoDetailOnClickEvent;
 import com.demo.panguso.mvp_mode.utils.RxBus;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -25,6 +32,9 @@ public class PhotoDetailFragment extends BaseFragment {
     private String imgSrc;
     @BindView(R.id.photoview)
     PhotoView mPhotoView;
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
+
 
     @Override
     public void initInjector() {
@@ -43,16 +53,39 @@ public class PhotoDetailFragment extends BaseFragment {
 
     @Override
     public void initViews(View view) {
-        Glide.with(App.getAppContext()).load(imgSrc).asBitmap()
-                .format(DecodeFormat.PREFER_ARGB_8888)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .error(R.mipmap.ic_load_fail)
-                .into(mPhotoView);
+        mProgressBar.setVisibility(View.VISIBLE);
+        initPhotoView();
         //点击图片新闻的事件
-        setPhotoClickEvent();
+        setPhotoViewClickEvent();
     }
 
-    private void setPhotoClickEvent() {
+    private void initPhotoView() {
+        mSubscription = Observable.timer(100, TimeUnit.MILLISECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Long>() {
+                    @Override
+                    public void onCompleted() {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        Glide.with(App.getAppContext()).load(imgSrc).asBitmap()
+                                .format(DecodeFormat.PREFER_ARGB_8888)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .error(R.mipmap.ic_load_fail)
+                                .into(mPhotoView);
+                    }
+                });
+    }
+
+    private void setPhotoViewClickEvent() {
         mPhotoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float v, float v1) {

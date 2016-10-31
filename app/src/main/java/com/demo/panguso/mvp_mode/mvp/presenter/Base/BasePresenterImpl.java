@@ -19,6 +19,7 @@ package com.demo.panguso.mvp_mode.mvp.presenter.base;
 
 import com.demo.panguso.mvp_mode.listener.RequestCallBack;
 import com.demo.panguso.mvp_mode.mvp.view.base.BaseView;
+import com.demo.panguso.mvp_mode.utils.MyUtils;
 
 import rx.Subscription;
 
@@ -41,9 +42,10 @@ public class BasePresenterImpl<T extends BaseView, E> implements BasePresenter, 
 
     @Override
     public void onDestory() {
-        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
-        }
+//        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+//            mSubscription.unsubscribe();
+//        }
+        MyUtils.cancleSubscription(mSubscription);
     }
 
 

@@ -1,6 +1,7 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +26,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import greendao.NewsChannelTable;
-import rx.Subscription;
 import rx.functions.Action1;
 
 public class NewsChannelActivity extends BaseActivity implements NewsChannelView {
@@ -56,8 +56,10 @@ public class NewsChannelActivity extends BaseActivity implements NewsChannelView
 
     }
 
-
-    private Subscription mSubscription = RxBus.getInstance().toObservable(ChannelItemMoveEvent.class)
+    @Override
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+        mSubscription = RxBus.getInstance().toObservable(ChannelItemMoveEvent.class)
             .subscribe(new Action1<ChannelItemMoveEvent>() {
                 @Override
                 public void call(ChannelItemMoveEvent channelItemMoveEvent) {
@@ -66,11 +68,6 @@ public class NewsChannelActivity extends BaseActivity implements NewsChannelView
                     mChannelPresenter.onItemSwap(fromPosition, toPosition);
                 }
             });
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mSubscription.unsubscribe();
     }
 
     @Override

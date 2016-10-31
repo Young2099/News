@@ -1,12 +1,12 @@
 package com.demo.panguso.mvp_mode.mvp.interactor.impl;
 
-import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.HostType;
 import com.demo.panguso.mvp_mode.listener.RequestCallBack;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsDetail;
 import com.demo.panguso.mvp_mode.mvp.interactor.NewsDetailInteractor;
 import com.demo.panguso.mvp_mode.respository.network.RetrofitManager;
+import com.demo.panguso.mvp_mode.utils.MyUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -51,7 +51,7 @@ public class NewsDetailInteractorImpl implements NewsDetailInteractor<NewsDetail
 
                     @Override
                     public void onError(Throwable e) {
-                        listener.onError(App.getAppContext().getString(R.string.load_error));
+                        listener.onError(MyUtils.analyzeNetworkError(e));
                     }
 
                     @Override

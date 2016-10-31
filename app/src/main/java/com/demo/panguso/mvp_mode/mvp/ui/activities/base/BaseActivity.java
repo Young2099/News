@@ -18,11 +18,13 @@ import com.demo.panguso.mvp_mode.inject.component.ActivityComponent;
 import com.demo.panguso.mvp_mode.inject.component.DaggerActivityComponent;
 import com.demo.panguso.mvp_mode.inject.module.ActivityModule;
 import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter;
+import com.demo.panguso.mvp_mode.utils.MyUtils;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.squareup.leakcanary.RefWatcher;
 
 import butterknife.ButterKnife;
+import rx.Subscription;
 
 
 /**
@@ -39,7 +41,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     private View mNightView = null;
     private WindowManager mWindowManager = null;
     protected T mPresenter;
-
+    protected Subscription mSubscription;
     protected ActivityComponent mActivityComponent;
 
     public ActivityComponent getmActivityComponent() {
@@ -226,5 +228,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
             mWindowManager = null;
             mNightView = null;
         }
+
+        MyUtils.cancleSubscription(mSubscription);
     }
 }
