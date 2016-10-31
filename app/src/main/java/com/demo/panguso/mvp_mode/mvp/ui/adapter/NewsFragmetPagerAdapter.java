@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Created by ${yangfang} on 2016/9/9.
+ * 这里包括了图片新闻的adpter和频道页面adapter的切换
  */
 public class NewsFragmetPagerAdapter extends FragmentPagerAdapter {
 
@@ -20,6 +21,7 @@ public class NewsFragmetPagerAdapter extends FragmentPagerAdapter {
         list = mNewsFragmentList;
         titles = channelName;
     }
+
     @Override
     public Fragment getItem(int position) {
         return list.get(position);

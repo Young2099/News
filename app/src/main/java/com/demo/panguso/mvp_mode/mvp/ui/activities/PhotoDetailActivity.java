@@ -46,41 +46,41 @@ public class PhotoDetailActivity extends BaseActivity {
             .subscribe(new Action1<PhotoDetailOnClickEvent>() {
                 @Override
                 public void call(PhotoDetailOnClickEvent photoDetailOnClickEvent) {
-                    if(mPhotoTextViewTitle.getVisibility() ==View.VISIBLE){
-                        startAnimation(View.GONE,0.9f,0.5f);
-                    }else {
+                    if (mPhotoTextViewTitle.getVisibility() == View.VISIBLE) {
+                        startAnimation(View.GONE, 0.9f, 0.5f);
+                    } else {
                         mPhotoTextViewTitle.setVisibility(View.VISIBLE);
-                        startAnimation(View.VISIBLE,0.5f,0.9f);
+                        startAnimation(View.VISIBLE, 0.5f, 0.9f);
                     }
                 }
             });
 
     private void startAnimation(final int endState, float startValue, float endValue) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(
-                mPhotoTextViewTitle,"alpha",startValue,endValue)
+                mPhotoTextViewTitle, "alpha", startValue, endValue)
                 .setDuration(200);
 
-            animator.addListener(new Animator.AnimatorListener() {
-                @Override
-                public void onAnimationStart(Animator animator) {
+        animator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    mPhotoTextViewTitle.setVisibility(endState);
-                }
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                mPhotoTextViewTitle.setVisibility(endState);
+            }
 
-                @Override
-                public void onAnimationCancel(Animator animator) {
+            @Override
+            public void onAnimationCancel(Animator animator) {
 
-                }
+            }
 
-                @Override
-                public void onAnimationRepeat(Animator animator) {
+            @Override
+            public void onAnimationRepeat(Animator animator) {
 
-                }
-            });
+            }
+        });
         animator.start();
 
     }
@@ -92,6 +92,8 @@ public class PhotoDetailActivity extends BaseActivity {
         mPhotoDetail = getIntent().getParcelableExtra(Constants.PHOTO_DETAIL);
         createFragment(mPhotoDetail);
         initViewPager();
+        //显示初始化的位置的新闻title
+        setPhotoDetailTitle(0);
     }
 
     private void initViewPager() {
@@ -159,7 +161,7 @@ public class PhotoDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(!mSubSubscription.isUnsubscribed()){
+        if (!mSubSubscription.isUnsubscribed()) {
             mSubSubscription.unsubscribe();
         }
     }
