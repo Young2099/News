@@ -41,5 +41,4 @@ public class RxBus {
         return mBus.ofType(eventType);
     }
 
-
 }

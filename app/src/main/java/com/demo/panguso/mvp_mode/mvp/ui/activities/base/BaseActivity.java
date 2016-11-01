@@ -230,7 +230,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
             mWindowManager = null;
             mNightView = null;
         }
-//        MyUtils.cancleSubscription(mSubscription);
+        MyUtils.cancleSubscription(mSubscription);
         MyUtils.fixInputMethodManagerLeak(this);
 
     }

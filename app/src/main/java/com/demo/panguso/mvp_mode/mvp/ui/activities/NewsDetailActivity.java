@@ -2,6 +2,7 @@ package com.demo.panguso.mvp_mode.mvp.ui.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,6 +11,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -80,7 +83,6 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
 
     private String mNewsTitle;
     private String mShareLink;
-    private boolean shareContents;
 
     @Override
     protected void initViews() {
@@ -123,10 +125,11 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
         mProgressBar.setVisibility(View.GONE);
         Snackbar.make(mAppBarLayout, message, Snackbar.LENGTH_LONG);
     }
+
     @OnClick(R.id.fab)
-    public void onClick(){
+    public void onClick() {
         //分享
-            share();
+        share();
     }
 
     private void share() {
@@ -134,7 +137,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.share));
         intent.putExtra(Intent.EXTRA_TEXT, getShareContents());
-        startActivity(Intent.createChooser(intent,getTitle()));
+        startActivity(Intent.createChooser(intent, getTitle()));
     }
 
     @Override
@@ -147,6 +150,7 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
         mShareLink = newsDetail.getShareLink();
         mNewsTitle = newsDetail.getTitle();
         mNewsDetailFromTv.setText(getString(R.string.news_from, newsSource, newsTime));
+        mNewsDetailTitleTv.setText(mNewsTitle);
         setNewsDetailPhoto(imgsrc);
         setNewsBody(newsDetail, newsBody);
         setToolBarLayout(mNewsTitle);
@@ -238,9 +242,38 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
     }
 
     public String getShareContents() {
-        if(mShareLink == null){
-            mShareLink ="";
+        if (mShareLink == null) {
+            mShareLink = "";
         }
-        return getString(R.string.share_contents,mNewsTitle,mShareLink);
+        return getString(R.string.share_contents, mNewsTitle, mShareLink);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.news_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (R.id.action_browser == item.getItemId()) {
+            openWeb();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void openWeb() {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        if (canBrowse(intent)) {
+            Uri uri = Uri.parse(mShareLink);
+            intent.setData(uri);
+            startActivity(intent);
+        }
+    }
+
+    private boolean canBrowse(Intent intent) {
+
+        return intent.resolveActivity(getPackageManager()) != null && mShareLink != null;
     }
 }
