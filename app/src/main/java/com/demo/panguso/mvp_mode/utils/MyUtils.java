@@ -1,13 +1,17 @@
 package com.demo.panguso.mvp_mode.utils;
 
 import android.app.Activity;
-import android.view.View;
+import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
+import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter;
 
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -80,19 +84,64 @@ public class MyUtils {
      * @param mSubscription
      */
     public static void cancleSubscription(Subscription mSubscription) {
-        if (mSubscription != null && mSubscription.isUnsubscribed()) {
+        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
             mSubscription.unsubscribe();
         }
     }
 
     public static String analyzeNetworkError(Throwable e) {
         String errMsg = App.getAppContext().getString(R.string.load_error);
-        if(e instanceof HttpException){
+        if (e instanceof HttpException) {
             int state = ((HttpException) e).code();
-            if(state == 403){
+            if (state == 403) {
                 errMsg = App.getAppContext().getString(R.string.retry_after);
             }
         }
         return errMsg;
+    }
+
+    /**
+     * 解决InputManager内存泄露现象
+     *
+     * @param context
+     * @param <T>
+     */
+    public static <T extends BasePresenter> void fixInputMethodManagerLeak(Context context) {
+        if (context == null) {
+            return;
+        }
+        InputMethodManager im = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (im == null) {
+            return;
+        }
+        String[] arr = new String[]{"mCurRootView", "mServedView", "mNextServedView"};
+
+        Field f;
+        Object obj_get;
+        for (String param : arr) {
+            try {
+                f = im.getClass().getDeclaredField(param);
+                if (!f.isAccessible()) {
+                    f.setAccessible(true);
+                }
+                obj_get = f.get(im);
+                if (obj_get != null && obj_get instanceof View) {
+                    View v_get = (View) obj_get;
+                    if (v_get.getContext() == context) { // 被InputMethodManager持有引用的context是想要目标销毁的
+                        f.set(im, null);
+                    } else {
+                        // 不是想要目标销毁的，即为又进了另一层界面了，不要处理，避免影响原逻辑,也就不用继续for循环了
+                                               /*if (QLog.isColorLevel()) {
+                           QLog.d(ReflecterHelper.class.getSimpleName(), QLog.CLR, "fixInputMethodManagerLeak break, context is not suitable, get_context=" + v_get.getContext()+" dest_context=" + destContext);
+                        }*/
+                    }
+                } else {
+                    break;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
+        }
     }
 }
