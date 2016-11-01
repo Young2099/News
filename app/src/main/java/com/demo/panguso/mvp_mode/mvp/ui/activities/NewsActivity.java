@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.listener.ChannelItemMoveEvent;
+import com.demo.panguso.mvp_mode.mvp.event.ScrollToTopEvent;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
@@ -106,6 +107,9 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.add_channel_iv:
                 Intent intent = new Intent(this, NewsChannelActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.fab:
+                RxBus.getInstance().toObservable(ScrollToTopEvent.class);
                 break;
         }
     }

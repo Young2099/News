@@ -29,6 +29,7 @@ import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.common.LoadNewsType;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.mvp.bean.PhotoDetail;
+import com.demo.panguso.mvp_mode.mvp.event.ScrollToTopEvent;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsListPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.PhotoDetailActivity;
@@ -36,6 +37,7 @@ import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.base.BaseFragment;
 import com.demo.panguso.mvp_mode.mvp.view.NewsListView;
 import com.demo.panguso.mvp_mode.utils.NetUtil;
+import com.demo.panguso.mvp_mode.utils.RxBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,11 +46,13 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import rx.functions.Action1;
 
 import static android.support.v7.widget.RecyclerView.LayoutManager;
 
 /**
  * Created by ${yangfang} on 2016/9/9.
+ * 新闻详情页面
  */
 public class NewsListFragment extends BaseFragment implements NewsListView, NewsRecyclerViewAdapter.OnNewsListItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -91,6 +95,17 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
         initSwifreshLayout();
         initRecycleView();
         initPresenter();
+        registerScrollToTopEvent();
+    }
+
+    private void registerScrollToTopEvent() {
+        RxBus.getInstance().toObservable(ScrollToTopEvent.class)
+                .subscribe(new Action1<ScrollToTopEvent>() {
+                    @Override
+                    public void call(ScrollToTopEvent scrollToTopEvent) {
+                        mNewsRV.getLayoutManager().scrollToPosition(0);
+                    }
+                });
 
     }
 

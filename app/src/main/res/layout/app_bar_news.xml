@@ -18,8 +18,8 @@
             android:background="@color/colorPrimary"
             android:title="@string/news_title"
 
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,5 +54,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@mipmap/ic_arrow_upward" />
+        android:src="@mipmap/ic_arrow_upward"
+        app:layout_behavior=".widget.ScrollAwareFABBehavior" />
 </android.support.design.widget.CoordinatorLayout>
