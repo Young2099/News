@@ -19,7 +19,6 @@ import android.widget.ImageView;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
-import com.demo.panguso.mvp_mode.listener.ChannelItemMoveEvent;
 import com.demo.panguso.mvp_mode.mvp.event.ScrollToTopEvent;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
@@ -29,6 +28,7 @@ import com.demo.panguso.mvp_mode.mvp.view.NewsView;
 import com.demo.panguso.mvp_mode.utils.MyUtils;
 import com.demo.panguso.mvp_mode.utils.RxBus;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
+import com.demo.panguso.mvp_mode.widget.ChannelChangeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,9 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 import greendao.NewsChannelTable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 
 public class NewsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, NewsView {
@@ -81,10 +83,12 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mSubscription = RxBus.getInstance().toObservable(ChannelItemMoveEvent.class)
-                .subscribe(new Action1<ChannelItemMoveEvent>() {
+        mSubscription = RxBus.getInstance().toObservable(ChannelChangeEvent.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<ChannelChangeEvent>() {
                     @Override
-                    public void call(ChannelItemMoveEvent channelItemMoveEvent) {
+                    public void call(ChannelChangeEvent channelItemMoveEvent) {
                         mNewsPresenter.onChangedDb();
                     }
                 });

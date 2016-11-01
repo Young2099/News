@@ -13,7 +13,7 @@ import rx.subjects.Subject;
 public class RxBus {
     private static volatile RxBus mRxBus;
     //主题
-    private final Subject<Object,Object> mBus;
+    private static Subject<Object, Object> mBus = null;
 
     //PublishSubject只会把在订阅发生的时间点之后来之原始Observable的数据发射给观察者
     public RxBus() {
@@ -33,11 +33,12 @@ public class RxBus {
     }
 
     //提供了一个新的事件
-    public void post(Object  o){
+    public void post(Object o) {
         mBus.onNext(o);
     }
+
     // 根据传递的eventType类型返回特定类型的被观察者
-    public <T>Observable<T> toObservable(Class<T> eventType){
+    public <T> Observable<T> toObservable(Class<T> eventType) {
         return mBus.ofType(eventType);
     }
 

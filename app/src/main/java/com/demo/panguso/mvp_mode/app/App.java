@@ -1,6 +1,7 @@
 package com.demo.panguso.mvp_mode.app;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import greendao.NewsChannelTableDao;
 /**
  * Created by ${yangfang} on 2016/9/12.
  */
-public class App extends android.app.Application {
+public class App extends Application {
     private RefWatcher refWatcher;
     private static DaoSession mDaoSession;
     private static ApplicationComponent mAppComponent;

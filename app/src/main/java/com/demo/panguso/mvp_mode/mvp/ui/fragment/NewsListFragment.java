@@ -187,12 +187,6 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
         }
     }
 
-    @Override
-    public void onDestroy() {
-        mNewsPresenter.onDestory();
-        super.onDestroy();
-    }
-
     /**
      * 回调接口加载数据
      *
