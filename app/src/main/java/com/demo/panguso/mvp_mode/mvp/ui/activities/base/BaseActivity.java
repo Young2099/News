@@ -8,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -230,6 +231,7 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
             mWindowManager = null;
             mNightView = null;
         }
+        Log.e("TAG", "主Activity");
         MyUtils.cancleSubscription(mSubscription);
         MyUtils.fixInputMethodManagerLeak(this);
 

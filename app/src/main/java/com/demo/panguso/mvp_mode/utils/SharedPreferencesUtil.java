@@ -3,6 +3,7 @@ package com.demo.panguso.mvp_mode.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.common.PrefKey;
 
@@ -11,11 +12,6 @@ import com.demo.panguso.mvp_mode.common.PrefKey;
  * Created by ${yangfang} on 2016/9/14.
  */
 public class SharedPreferencesUtil {
-    private static Context mContext;
-
-    public static void init(Context context) {
-        mContext = context;
-    }
 
     /**
      * 设置Boolean值
@@ -25,7 +21,7 @@ public class SharedPreferencesUtil {
      * @param value
      */
     public static void setBoolean(String fileName, String key, boolean value) {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = App.getAppContext().getSharedPreferences(fileName, Context.MODE_PRIVATE).edit();
         editor.putBoolean(key, value);
         editor.commit();
     }
@@ -38,7 +34,7 @@ public class SharedPreferencesUtil {
      * @param value
      */
     public static void setString(String fileName, String key, String value) {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = App.getAppContext().getSharedPreferences(fileName, Context.MODE_PRIVATE).edit();
         editor.putString(key, value);
         editor.commit();
     }
@@ -51,7 +47,7 @@ public class SharedPreferencesUtil {
      * @param value
      */
     public static void setInteger(String filename, String key, int value) {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences(filename, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = App.getAppContext().getSharedPreferences(filename, Context.MODE_PRIVATE).edit();
         editor.putInt(key, value);
         editor.commit();
     }
@@ -63,7 +59,7 @@ public class SharedPreferencesUtil {
      * @param value
      */
     public static void setLong(String filename, String key, long value) {
-        SharedPreferences.Editor editor = mContext.getSharedPreferences(filename, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = App.getAppContext().getSharedPreferences(filename, Context.MODE_PRIVATE).edit();
         editor.putLong(key, value);
         editor.commit();
     }
@@ -77,7 +73,7 @@ public class SharedPreferencesUtil {
      * @return
      */
     public static int getInteger(String fileName, String key, Integer defaultValue) {
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(fileName, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = App.getAppContext().getSharedPreferences(fileName, Context.MODE_PRIVATE);
         return sharedPreferences.getInt(key, defaultValue);
     }
 
@@ -89,7 +85,7 @@ public class SharedPreferencesUtil {
      * @return
      */
     public static String getString(String filename, String key, String defaultValue) {
-        SharedPreferences preferences = mContext.getSharedPreferences(filename, Context.MODE_PRIVATE);
+        SharedPreferences preferences = App.getAppContext().getSharedPreferences(filename, Context.MODE_PRIVATE);
         return preferences.getString(key, defaultValue);
     }
 
@@ -101,7 +97,7 @@ public class SharedPreferencesUtil {
      * @return
      */
     public static boolean getBoolean(String filename, String key, boolean defaultValue) {
-        SharedPreferences preferences = mContext.getSharedPreferences(filename, Context.MODE_PRIVATE);
+        SharedPreferences preferences = App.getAppContext().getSharedPreferences(filename, Context.MODE_PRIVATE);
         return preferences.getBoolean(key, defaultValue);
     }
 
@@ -112,7 +108,7 @@ public class SharedPreferencesUtil {
      * @return
      */
     public static long getLong(String filename, String key, long defaultValue) {
-        SharedPreferences preferences = mContext.getSharedPreferences(filename, Context.MODE_PRIVATE);
+        SharedPreferences preferences = App.getAppContext().getSharedPreferences(filename, Context.MODE_PRIVATE);
         return preferences.getLong(key, defaultValue);
     }
 
@@ -129,20 +125,20 @@ public class SharedPreferencesUtil {
         return getBoolean(PrefKey.APP_USER, Constants.SHARES_COLOURFUL_NEWS, false);
     }
 
-    public static boolean getIsBoolean(){
-        return getBoolean(PrefKey.APP_USER,Constants.INIT_DB,false);
+    public static boolean getIsBoolean() {
+        return getBoolean(PrefKey.APP_USER, Constants.INIT_DB, false);
     }
 
-    public static void setIsBoolean(boolean value){
-        setBoolean(PrefKey.APP_USER,Constants.INIT_DB,value);
+    public static void setIsBoolean(boolean value) {
+        setBoolean(PrefKey.APP_USER, Constants.INIT_DB, value);
     }
 
-    public static void setIsHavePhoto(boolean flag){
-        setBoolean(PrefKey.APP_USER,Constants.SHOW_NEWS_PHOTO,flag);
+    public static void setIsHavePhoto(boolean flag) {
+        setBoolean(PrefKey.APP_USER, Constants.SHOW_NEWS_PHOTO, flag);
     }
 
-    public static boolean getIsHavePhoto(){
-        return getBoolean(PrefKey.APP_USER,Constants.SHOW_NEWS_PHOTO,true);
+    public static boolean getIsHavePhoto() {
+        return getBoolean(PrefKey.APP_USER, Constants.SHOW_NEWS_PHOTO, true);
     }
 
 }

@@ -19,7 +19,6 @@ import android.widget.ImageView;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
-import com.demo.panguso.mvp_mode.mvp.event.ScrollToTopEvent;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
@@ -75,7 +74,7 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
-        mNavView.setNavigationItemSelectedListener(this);
+//        mNavView.setNavigationItemSelectedListener(this);
         mPresenter = mNewsPresenter;
         mPresenter.attachView(this);
     }
@@ -113,7 +112,7 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
                 startActivity(intent);
                 break;
             case R.id.fab:
-                RxBus.getInstance().toObservable(ScrollToTopEvent.class);
+//                mSubscription = RxBus.getInstance().toObservable(ScrollToTopEvent.class);
                 break;
         }
     }

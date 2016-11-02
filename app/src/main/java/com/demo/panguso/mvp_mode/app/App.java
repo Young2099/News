@@ -58,7 +58,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         appContext = this;
-        initTools();
         initLeakCanary();
         initActivityLifecycleLogs();
 //        installLeakeCanary();
@@ -168,7 +167,4 @@ public class App extends Application {
         return SharedPreferencesUtil.getIsHavePhoto();
     }
 
-    private void initTools() {
-        SharedPreferencesUtil.init(this);
-    }
 }
