@@ -256,13 +256,26 @@ public class NewsDetailActivity extends BaseActivity implements NewsDetailView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (R.id.action_browser == item.getItemId()) {
-            openWeb();
+//        if (R.id.action_browser == item.getItemId()) {
+//            openWeb();
+//        }
+        if (item.getItemId() == R.id.action_web_view) {
+            openByWebView();
+        }
+        if (item.getItemId() == R.id.action_browser) {
+            openByBrowser();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void openWeb() {
+    private void openByWebView() {
+        Intent intent = new Intent(this, NewsBrowserActivity.class);
+        intent.putExtra(Constants.NEWS_LINK, mShareLink);
+        intent.putExtra(Constants.NEWS_TITLE, mNewsTitle);
+        startActivity(intent);
+    }
+
+    private void openByBrowser() {
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
         if (canBrowse(intent)) {

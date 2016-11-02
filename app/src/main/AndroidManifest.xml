@@ -31,6 +31,9 @@
             android:name=".mvp.ui.activities.NewsChannelActivity"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoTrans" />
+        <activity
+            android:name=".mvp.ui.activities.NewsBrowserActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

@@ -25,4 +25,5 @@
     <color name="fab_color">#99ff8f00</color>
     <color name="textColorSecondary">#212121</color>
     <color name="alpha_05_black">#0D000000</color>
+    <color name="progress_bar_unfinished">#D4D4D4</color>
 </resources>
