@@ -1,5 +1,6 @@
 package com.demo.panguso.mvp_mode.respository.network;
 
+import com.demo.panguso.mvp_mode.mvp.bean.GirData;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsDetail;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 
@@ -39,4 +40,8 @@ public interface NewsService {
     //url直接传入进来，baseUrl将被无视
     // baseUrl 需要符合标准，为空、""、或不合法将会报错
 
+    @GET("data/福利/{size}/{page}")
+    Observable<GirData> getPhotoList(
+            @Path("size") int size,
+            @Path("page") int page);
 }

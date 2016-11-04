@@ -6,6 +6,7 @@ import android.util.SparseArray;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.ApiConstants;
 import com.demo.panguso.mvp_mode.common.HostType;
+import com.demo.panguso.mvp_mode.mvp.bean.GirData;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsDetail;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.utils.NetUtil;
@@ -185,6 +186,17 @@ public class RetrofitManager {
 
     public Observable<ResponseBody> getNewsBodyHtmlPhoto(String photoPath) {
         return mNewsService.getNewsBodyHtmlPhoto(photoPath);
+    }
+
+    /**
+     * 获取新浪福利的图片
+     *
+     * @param size
+     * @param page
+     * @return
+     */
+    public Observable<GirData> getPhotoList(int size, int page) {
+        return mNewsService.getPhotoList(size, page);
     }
 
 }

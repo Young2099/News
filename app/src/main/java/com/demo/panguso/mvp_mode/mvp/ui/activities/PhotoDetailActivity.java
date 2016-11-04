@@ -139,7 +139,7 @@ public class PhotoDetailActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_photo;
+        return R.layout.activity_detail_photo;
     }
 
     @Override
