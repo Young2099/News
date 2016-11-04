@@ -12,6 +12,7 @@ import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.listener.ChannelItemMoveEvent;
 import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
+import com.demo.panguso.mvp_mode.mvp.ui.adapter.base.BaseRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.view.ItemDragHelperCallback;
 import com.demo.panguso.mvp_mode.utils.RxBus;
 
@@ -25,8 +26,7 @@ import greendao.NewsChannelTable;
 /**
  * Created by ${yangfang} on 2016/10/8.
  */
-public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.NewsChannelViewHolder> implements ItemDragHelperCallback.OnItemMoveListener {
-    private List<NewsChannelTable> mNewsChannelTables;
+public class NewsChannelAdapter extends BaseRecyclerViewAdapter<NewsChannelTable> implements ItemDragHelperCallback.OnItemMoveListener {
     private static final int IS_CHANEL_FIXED = 0;
     private static final int IS_CHANEL_NO_FIXED = 1;
     private ItemDragHelperCallback mItemDragHelperCallback;
@@ -41,7 +41,7 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
     }
 
     public NewsChannelAdapter(List<NewsChannelTable> mNewsChannelTables) {
-        this.mNewsChannelTables = mNewsChannelTables;
+        super(mNewsChannelTables);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
             newsChannelViewHolder.itemView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    NewsChannelTable newsChannelTable = mNewsChannelTables.get(newsChannelViewHolder.getLayoutPosition());
+                    NewsChannelTable newsChannelTable = mList.get(newsChannelViewHolder.getLayoutPosition());
                     boolean isChannelFixed = newsChannelTable.getNewsChannelFixed();
                     if (isChannelFixed) {
                         mItemDragHelperCallback.setLongPressEnabled(false);
@@ -83,27 +83,23 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
     }
 
     @Override
-    public void onBindViewHolder(NewsChannelAdapter.NewsChannelViewHolder holder, int position) {
-        NewsChannelTable newsChannelTable = mNewsChannelTables.get(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        NewsChannelTable newsChannelTable = mList.get(position);
         String newsChannelName = newsChannelTable.getNewsChannelName();
-        holder.mNewsChannelTv.setText(newsChannelName);
+        NewsChannelViewHolder viewHolder = (NewsChannelViewHolder) holder;
+        viewHolder.mNewsChannelTv.setText(newsChannelName);
         if (newsChannelTable.getNewsChannelIndex() == 0) {
-            holder.mNewsChannelTv.setTextColor(ContextCompat.getColor(App.getAppContext(), R.color.alpha_20_black));
+            viewHolder.mNewsChannelTv.setTextColor(ContextCompat.getColor(App.getAppContext(), R.color.alpha_20_black));
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (mNewsChannelTables.get(position).getNewsChannelFixed()) {
+        if (mList.get(position).getNewsChannelFixed()) {
             return IS_CHANEL_FIXED;
         } else {
             return IS_CHANEL_NO_FIXED;
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return mNewsChannelTables.size();
     }
 
     /**
@@ -115,28 +111,13 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
      */
     @Override
     public boolean onItemMoved(int formPosition, int toPosition) {
-        if (mNewsChannelTables.get(formPosition).getNewsChannelFixed() || mNewsChannelTables.get(toPosition).getNewsChannelFixed()) {
+        if (mList.get(formPosition).getNewsChannelFixed() || mList.get(toPosition).getNewsChannelFixed()) {
             return false;
         }
-        Collections.swap(mNewsChannelTables, formPosition, toPosition);
+        Collections.swap(mList, formPosition, toPosition);
         notifyItemMoved(formPosition, toPosition);
         RxBus.getInstance().post(new ChannelItemMoveEvent(formPosition, toPosition));
         return true;
-    }
-
-    /**
-     * 当我的频道和更多频道进行增加，递减的动作
-     * @param itemCount
-     * @param newsChannel
-     */
-    public void add(int itemCount, NewsChannelTable newsChannel) {
-        mNewsChannelTables.add(itemCount, newsChannel);
-        notifyItemInserted(itemCount);
-    }
-
-    public void delete(int layoutPosition) {
-        mNewsChannelTables.remove(layoutPosition);
-        notifyItemRemoved(layoutPosition);
     }
 
     class NewsChannelViewHolder extends RecyclerView.ViewHolder {
@@ -150,6 +131,6 @@ public class NewsChannelAdapter extends RecyclerView.Adapter<NewsChannelAdapter.
     }
 
     public List<NewsChannelTable> getData() {
-        return mNewsChannelTables;
+        return mList;
     }
 }

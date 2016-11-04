@@ -60,14 +60,14 @@ public class NewsChannelActivity extends BaseActivity implements NewsChannelView
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
         mSubscription = RxBus.getInstance().toObservable(ChannelItemMoveEvent.class)
-            .subscribe(new Action1<ChannelItemMoveEvent>() {
-                @Override
-                public void call(ChannelItemMoveEvent channelItemMoveEvent) {
-                    int fromPosition = channelItemMoveEvent.getFromPosition();
-                    int toPosition = channelItemMoveEvent.getToPosition();
-                    mChannelPresenter.onItemSwap(fromPosition, toPosition);
-                }
-            });
+                .subscribe(new Action1<ChannelItemMoveEvent>() {
+                    @Override
+                    public void call(ChannelItemMoveEvent channelItemMoveEvent) {
+                        int fromPosition = channelItemMoveEvent.getFromPosition();
+                        int toPosition = channelItemMoveEvent.getToPosition();
+                        mChannelPresenter.onItemSwap(fromPosition, toPosition);
+                    }
+                });
     }
 
     @Override

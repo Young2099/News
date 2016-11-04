@@ -198,7 +198,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
         switch (loadType) {
             case LoadNewsType.TYPE_REFRESH_SUCCESS:
                 mSwipeRefreshLayout.setRefreshing(false);
-                mNewsRecyclerViewAdapter.setItems(items);
+                mNewsRecyclerViewAdapter.setList(items);
                 mNewsRecyclerViewAdapter.notifyDataSetChanged();
                 checkIsEmpty(items);
                 break;
@@ -221,7 +221,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
     }
 
     private void checkIsEmpty(List<NewsSummary> newsSummaries) {
-        if (newsSummaries == null && mNewsRecyclerViewAdapter.getmNewsList() == null) {
+        if (newsSummaries == null && mNewsRecyclerViewAdapter.getList() == null) {
             mNewsRV.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.VISIBLE);
         } else {
@@ -242,7 +242,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
 //    }
 
     private void startNewDetailActivity(View view, int position) {
-        List<NewsSummary> newsSummaryList = mNewsRecyclerViewAdapter.getmNewsList();
+        List<NewsSummary> newsSummaryList = mNewsRecyclerViewAdapter.getList();
         Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
         intent.putExtra(Constants.NEWS_POST_ID, newsSummaryList.get(position).getPostid());
         intent.putExtra(Constants.NEWS_IMG_RES, newsSummaryList.get(position).getImgsrc());
@@ -296,7 +296,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
      * @return
      */
     private PhotoDetail getPhotoDetail(int position) {
-        NewsSummary newsSummary = mNewsRecyclerViewAdapter.getmNewsList().get(position);
+        NewsSummary newsSummary = mNewsRecyclerViewAdapter.getList().get(position);
         PhotoDetail photoDetail = new PhotoDetail();
         photoDetail.setTitle(newsSummary.getTitle());
         setPictures(newsSummary, photoDetail);

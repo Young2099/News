@@ -15,10 +15,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
+import com.demo.panguso.mvp_mode.mvp.ui.adapter.base.BaseRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.viewholder.CommonViewHolder;
 import com.demo.panguso.mvp_mode.utils.DimenUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,18 +26,17 @@ import javax.inject.Inject;
 /**
  * Created by ${yangfang} on 2016/9/9.
  */
-public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class NewsRecyclerViewAdapter extends BaseRecyclerViewAdapter<NewsSummary> {
 
     @Inject
     public NewsRecyclerViewAdapter() {
-
+        super(null);
     }
 
     public static final int TYPE_ITEM = 0;
     public static final int TYPE_FOOTER = 1;
     public static final int TYPE_PHOTO_ITEM = 2;
     private boolean mIsShowFooter;
-    private List<NewsSummary> mNewsList = new ArrayList<>();
     private int mLastPosition = -1;
     private OnNewsListItemClickListener onItemClickListener;
     CommonViewHolder mCommonViewHolder;
@@ -50,9 +49,6 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         this.onItemClickListener = onItemClickListener;
     }
 
-    public List<NewsSummary> getmNewsList() {
-        return mNewsList;
-    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -60,16 +56,16 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         switch (viewType) {
             case TYPE_FOOTER:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_footer, parent, false);
-                mCommonViewHolder = new CommonViewHolder(view,TYPE_FOOTER);
+                mCommonViewHolder = new CommonViewHolder(view, TYPE_FOOTER);
                 return mCommonViewHolder.footerViewHolder;
             case TYPE_ITEM:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news, parent, false);
-                mCommonViewHolder = new CommonViewHolder(view,TYPE_ITEM);
+                mCommonViewHolder = new CommonViewHolder(view, TYPE_ITEM);
                 setItemOnclick(mCommonViewHolder.itemViewHolder, false);
                 return mCommonViewHolder.itemViewHolder;
             case TYPE_PHOTO_ITEM:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_photo, parent, false);
-                mCommonViewHolder = new CommonViewHolder(view,TYPE_PHOTO_ITEM);
+                mCommonViewHolder = new CommonViewHolder(view, TYPE_PHOTO_ITEM);
                 setItemOnclick(mCommonViewHolder.photoViewHolder, true);
                 return mCommonViewHolder.photoViewHolder;
             default:
@@ -99,7 +95,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public int getItemViewType(int position) {
         if (mIsShowFooter && (getItemCount() - 1) == position) {
             return TYPE_FOOTER;
-        } else if (!TextUtils.isEmpty(mNewsList.get(position).getDigest())) {
+        } else if (!TextUtils.isEmpty(mList.get(position).getDigest())) {
             return TYPE_ITEM;
         } else {
             return TYPE_PHOTO_ITEM;
@@ -140,12 +136,13 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     /**
      * 加载页面是图片的item
+     *
      * @param holder
      * @param position
      */
     private void setPhotoItemValues(CommonViewHolder.PhotoViewHolder holder, int position) {
-        String title = mNewsList.get(position).getTitle();
-        String pTime = mNewsList.get(position).getPtime();
+        String title = mList.get(position).getTitle();
+        String pTime = mList.get(position).getPtime();
         holder.mNewsSummaryTitleTv.setText(title);
         holder.mNewsSummaryPtime.setText(pTime);
 
@@ -158,7 +155,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         String imgSrcRight = null;
 
         ViewGroup.LayoutParams layoutParams = holder.mNewsSummaryPhotoIvGroup.getLayoutParams();
-        NewsSummary newsSummary = mNewsList.get(position);
+        NewsSummary newsSummary = mList.get(position);
         if (newsSummary.getAds() != null) {
             List<NewsSummary.AdsBean> mAdsBeen = newsSummary.getAds();
             int size = mAdsBeen.size();
@@ -168,7 +165,7 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
                 imgSrcRight = mAdsBeen.get(2).getImgsrc();
                 layoutParams.height = mPhotoTreeHeight;
                 holder.mNewsSummaryTitleTv.setText(App.getAppContext()
-                        .getString(R.string.photos,mAdsBeen.get(0).getTitle()));
+                        .getString(R.string.photos, mAdsBeen.get(0).getTitle()));
             } else if (size >= 2) {
                 imgSrcLeft = mAdsBeen.get(0).getImgsrc();
                 imgSrcMiddle = mAdsBeen.get(1).getImgsrc();
@@ -212,9 +209,9 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         } else {
             holder.mNewsSummaryPhotoRight.setVisibility(View.GONE);
         }
-        if(imgSrcRight != null){
-            showAndSetPhoto(holder.mNewsSummaryPhotoRight,imgSrcRight);
-        }else {
+        if (imgSrcRight != null) {
+            showAndSetPhoto(holder.mNewsSummaryPhotoRight, imgSrcRight);
+        } else {
             holder.mNewsSummaryPhotoRight.setVisibility(View.GONE);
         }
     }
@@ -229,13 +226,13 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     private void setItemValues(CommonViewHolder.ItemViewHolder holder, int position) {
-        String title = mNewsList.get(position).getLtitle();
+        String title = mList.get(position).getLtitle();
         if (title == null) {
-            title = mNewsList.get(position).getTitle();
+            title = mList.get(position).getTitle();
         }
-        String ptime = mNewsList.get(position).getPtime();
-        String digest = mNewsList.get(position).getDigest();
-        String imgSrc = mNewsList.get(position).getImgsrc();
+        String ptime = mList.get(position).getPtime();
+        String digest = mList.get(position).getDigest();
+        String imgSrc = mList.get(position).getImgsrc();
 
         holder.mNewsSummaryTitleTv.setText(title);
         holder.mTextViewTime.setText(ptime);
@@ -251,7 +248,10 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-        int itemSize = mNewsList.size();
+        if (mList == null) {
+            return 0;
+        }
+        int itemSize = mList.size();
         if (mIsShowFooter) {
             itemSize += 1;
         }
@@ -266,15 +266,5 @@ public class NewsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void hideFooter() {
         mIsShowFooter = false;
         notifyItemRemoved(getItemCount());
-    }
-
-    public void setItems(List<NewsSummary> items) {
-        this.mNewsList = items;
-    }
-
-    public void addMore(List<NewsSummary> newsSummaries) {
-        int startPosition = newsSummaries.size();
-        mNewsList.addAll(newsSummaries);
-        notifyItemRangeInserted(startPosition, mNewsList.size());
     }
 }
