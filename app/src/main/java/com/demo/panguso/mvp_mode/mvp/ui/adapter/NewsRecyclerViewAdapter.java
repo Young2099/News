@@ -14,6 +14,7 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
+import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.base.BaseRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.viewholder.CommonViewHolder;
@@ -33,20 +34,11 @@ public class NewsRecyclerViewAdapter extends BaseRecyclerViewAdapter<NewsSummary
         super(null);
     }
 
-    public static final int TYPE_ITEM = 0;
-    public static final int TYPE_FOOTER = 1;
     public static final int TYPE_PHOTO_ITEM = 2;
-    private boolean mIsShowFooter;
-    private int mLastPosition = -1;
-    private OnNewsListItemClickListener onItemClickListener;
     CommonViewHolder mCommonViewHolder;
 
-    public interface OnNewsListItemClickListener {
+    public interface OnNewsListItemClickListener extends OnItemClickListener{
         void onItemClick(View view, int position, boolean isPhoto);
-    }
-
-    public void setOnItemClickListener(OnNewsListItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
     }
 
 
@@ -81,11 +73,12 @@ public class NewsRecyclerViewAdapter extends BaseRecyclerViewAdapter<NewsSummary
     }
 
     private void setItemOnclick(final RecyclerView.ViewHolder holder, final boolean isPhoto) {
-        if (onItemClickListener != null) {
+        if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onItemClickListener.onItemClick(holder.itemView, holder.getLayoutPosition(), isPhoto);
+                    ((OnNewsListItemClickListener)mOnItemClickListener).onItemClick(holder.itemView,
+                            holder.getLayoutPosition(),isPhoto);
                 }
             });
         }
@@ -99,21 +92,6 @@ public class NewsRecyclerViewAdapter extends BaseRecyclerViewAdapter<NewsSummary
             return TYPE_ITEM;
         } else {
             return TYPE_PHOTO_ITEM;
-        }
-    }
-
-    private void setItemAppearAnimation(RecyclerView.ViewHolder holder, int position) {
-        if (position > mLastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(),
-                    R.anim.item_bottom);
-//            AnimationSet animation = new AnimationSet(true);
-//            TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0.5f,
-//                    Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 1.0f);
-//            AlphaAnimation alphaAnimation = new AlphaAnimation(0, 1);
-//            animation.addAnimation(translateAnimation);
-//            animation.addAnimation(alphaAnimation);
-            holder.itemView.startAnimation(animation);
-            mLastPosition = position;
         }
     }
 
@@ -246,25 +224,4 @@ public class NewsRecyclerViewAdapter extends BaseRecyclerViewAdapter<NewsSummary
                 .into(holder.mImageViewPhotoIv);
     }
 
-    @Override
-    public int getItemCount() {
-        if (mList == null) {
-            return 0;
-        }
-        int itemSize = mList.size();
-        if (mIsShowFooter) {
-            itemSize += 1;
-        }
-        return itemSize;
-    }
-
-    public void showFooter() {
-        mIsShowFooter = true;
-        notifyItemInserted(getItemCount());
-    }
-
-    public void hideFooter() {
-        mIsShowFooter = false;
-        notifyItemRemoved(getItemCount());
-    }
 }

@@ -18,13 +18,13 @@ import javax.inject.Inject;
 public class PhotoPresenterImpl extends BasePresenterImpl<PhotoView, List<PhotoGirl>> implements PhotoPresenter {
 
     private PhotoInteractorImpl mPhotoInteractor;
-    private int SIZE;
-    private int mStartPage;
+    private int SIZE = 20;
+    private int mStartPage=1;
     private boolean misFirstLoad;
     private boolean mIsRefresh = true;
 
     @Inject
-    private PhotoPresenterImpl(PhotoInteractorImpl photoInteractorImpl) {
+    public PhotoPresenterImpl(PhotoInteractorImpl photoInteractorImpl) {
         mPhotoInteractor = photoInteractorImpl;
     }
 
@@ -77,7 +77,7 @@ public class PhotoPresenterImpl extends BasePresenterImpl<PhotoView, List<PhotoG
 
     @Override
     public void refreshData() {
-        mStartPage = 0;
+        mStartPage = 1;
         mIsRefresh = true;
         loadPhotoData();
     }

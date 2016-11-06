@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import static com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter.TYPE_FOOTER;
 import static com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter.TYPE_ITEM;
 import static com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter.TYPE_PHOTO_ITEM;
+import static com.demo.panguso.mvp_mode.mvp.ui.adapter.PhotoListAdapter.TYPE_PHOTO;
 
 /**
  * Created by ${yangfang} on 2016/10/26.
@@ -25,6 +26,7 @@ public class CommonViewHolder {
     public ItemViewHolder itemViewHolder;
     public FooterViewHolder footerViewHolder;
     public PhotoViewHolder photoViewHolder;
+    public PhotoListViewHolder photoListViewHolder;
 
     public CommonViewHolder(View view, int i) {
         this.view = view;
@@ -34,6 +36,8 @@ public class CommonViewHolder {
             this.footerViewHolder = new FooterViewHolder(view);
         } else if (i == TYPE_PHOTO_ITEM) {
             this.photoViewHolder = new PhotoViewHolder(view);
+        } else if (i == TYPE_PHOTO) {
+            photoListViewHolder = new PhotoListViewHolder(view);
         }
     }
 
@@ -76,6 +80,16 @@ public class CommonViewHolder {
 
 
         public PhotoViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+    }
+
+    public class PhotoListViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.photo_list_view)
+        public ImageView mImageView;
+
+        public PhotoListViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

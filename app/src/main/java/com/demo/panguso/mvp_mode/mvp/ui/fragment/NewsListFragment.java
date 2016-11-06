@@ -330,6 +330,11 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
 
     }
 
+    @Override
+    public void onItemClick(View itemView, int layoutPosition) {
+
+    }
+
     private class WrapperLinearLayoutManager extends LinearLayoutManager {
 
         public WrapperLinearLayoutManager(Context context) {

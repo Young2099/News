@@ -20,7 +20,6 @@ package com.demo.panguso.mvp_mode.mvp.presenter.base;
 import com.demo.panguso.mvp_mode.listener.RequestCallBack;
 import com.demo.panguso.mvp_mode.mvp.view.base.BaseView;
 import com.demo.panguso.mvp_mode.utils.MyUtils;
-
 import rx.Subscription;
 
 /**

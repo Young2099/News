@@ -42,7 +42,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 
-public class NewsActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, NewsView {
+public class NewsActivity extends BaseActivity implements  NewsView {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -77,6 +77,17 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
 //        mNavView.setNavigationItemSelectedListener(this);
         mPresenter = mNewsPresenter;
         mPresenter.attachView(this);
+
+        mNavView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                if(item.getItemId() == R.id.nav_photo){
+                    startActivity(new Intent(NewsActivity.this,PhotoActivity.class));
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -187,20 +198,6 @@ public class NewsActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.nav_news) {
-
-        } else if (id == R.id.nav_photo) {
-
-        } else if (id == R.id.nav_video) {
-
-        }
-        mDrawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     @Override
     public void onBackPressed() {
