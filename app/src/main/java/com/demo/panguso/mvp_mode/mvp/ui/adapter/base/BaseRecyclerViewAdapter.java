@@ -1,6 +1,7 @@
 package com.demo.panguso.mvp_mode.mvp.ui.adapter.base;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,9 +44,14 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerVie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
-//        if(getItemViewType(position) == TYPE_FOOTER){
-//            if(layoutParams )
-//        }
+        if (getItemViewType(position) == TYPE_FOOTER) {
+            if (layoutParams != null) {
+                if (layoutParams instanceof StaggeredGridLayoutManager.LayoutParams) {
+                    StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
+                    params.setFullSpan(true);//设置图片充满整个屏幕
+                }
+            }
+        }
     }
 
     /**

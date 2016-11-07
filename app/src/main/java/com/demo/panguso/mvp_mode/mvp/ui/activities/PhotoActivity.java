@@ -1,5 +1,6 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +26,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefreshLayout.OnRefreshListener {
     @Inject
@@ -47,6 +49,8 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.empty_view)
     TextView mEmptyView;
+    @BindView(R.id.fab)
+    FloatingActionButton mFab;
     private boolean mIsAllLoad;
 
     @Override
@@ -172,6 +176,11 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
     @Override
     public void showErrorMsg(String message) {
 
+    }
+
+    @OnClick(R.id.fab)
+    public void onClick() {
+        mPhotoRV.getLayoutManager().scrollToPosition(0);
     }
 
     @Override

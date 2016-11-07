@@ -10,4 +10,5 @@
     <dimen name="toolbar_padding_top">0dp</dimen>
     <dimen name="micro">12sp</dimen>
     <dimen name="fb_margin">5dp</dimen>
+    <dimen name="fab_margin">2dp</dimen>
 </resources>
