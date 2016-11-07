@@ -18,7 +18,6 @@ import com.demo.panguso.mvp_mode.mvp.bean.PhotoGirl;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.PhotoPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.PhotoListAdapter;
-import com.demo.panguso.mvp_mode.mvp.ui.adapter.base.BaseRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.view.PhotoView;
 
 import java.util.List;
@@ -61,7 +60,6 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
         mPresenter = mPhotoPresenter;
         mPresenter.attachView(this);
         mPresenter.onCreate();
-
     }
 
     private void initRecyclerView() {
@@ -98,7 +96,7 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
 
     private void initSiwpRefresh() {
         mSwipeRefreshLayout.setOnRefreshListener(this);
-//        mSwipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.gplus_colors));
+        mSwipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.gplus_colors));
     }
 
     @Override
@@ -121,17 +119,18 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
     public void initPhotoList(List<PhotoGirl> photoGirls, @LoadNewsType.checker int loadType) {
         switch (loadType) {
             case LoadNewsType.TYPE_REFRESH_SUCCESS:
-                mSwipeRefreshLayout.setRefreshing(true);
+                mSwipeRefreshLayout.setRefreshing(false);
                 mPhotoListAdapter.setList(photoGirls);
                 mPhotoListAdapter.notifyDataSetChanged();
                 checkIsEmpty(photoGirls);
+                mIsAllLoad = false;
                 break;
             case LoadNewsType.TYPE_REFRESH_ERROR:
                 mSwipeRefreshLayout.setRefreshing(false);
                 checkIsEmpty(photoGirls);
                 break;
             case LoadNewsType.TYPE_LOAD_MORE_SUCCESS:
-//                mPhotoListAdapter.hideFooter();
+                mPhotoListAdapter.hideFooter();
                 if (photoGirls == null || photoGirls.size() == 0) {
                     mIsAllLoad = true;
                     Snackbar.make(mPhotoRV, getString(R.string.no_more), Snackbar.LENGTH_LONG).show();
@@ -140,7 +139,7 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
                 }
                 break;
             case LoadNewsType.TYPE_LOAD_MORE_ERROR:
-//                mPhotoListAdapter.hideFooter();
+                mPhotoListAdapter.hideFooter();
                 break;
         }
     }

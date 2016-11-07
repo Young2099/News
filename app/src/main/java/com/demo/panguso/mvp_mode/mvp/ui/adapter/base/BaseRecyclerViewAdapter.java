@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
@@ -43,7 +42,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerVie
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+        ViewGroup.LayoutParams layoutParams = holder.itemView.getLayoutParams();
+//        if(getItemViewType(position) == TYPE_FOOTER){
+//            if(layoutParams )
+//        }
     }
 
     /**
@@ -117,12 +119,6 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerVie
     public void hideFooter() {
         mIsShowFooter = false;
         notifyItemRemoved(getItemCount());
-    }
-
-    protected class FooterViewHolder extends RecyclerView.ViewHolder {
-        public FooterViewHolder(View itemView) {
-            super(itemView);
-        }
     }
 
 

@@ -3,6 +3,7 @@ package com.demo.panguso.mvp_mode.mvp.ui.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
@@ -12,8 +13,11 @@ import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.mvp.bean.PhotoGirl;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.base.BaseRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.viewholder.CommonViewHolder;
+import com.demo.panguso.mvp_mode.utils.DimenUtil;
 
-
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -23,6 +27,9 @@ import javax.inject.Inject;
 
 public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
 
+    private int width = DimenUtil.getScreenSize() / 2;
+
+    private Map<Integer, Integer> mHeights = new HashMap<>();
 
     public static final int TYPE_PHOTO = 5;
 
@@ -47,13 +54,6 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
             default:
                 throw new RuntimeException("there is no type");
         }
-
-    }
-
-    public void showFooter() {
-    }
-
-    public void hideFooter() {
 
     }
 
@@ -85,13 +85,24 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         if (holder instanceof CommonViewHolder.PhotoListViewHolder) {
+            ImageView imageView = ((CommonViewHolder.PhotoListViewHolder) holder).mImageView;
             Glide.with(App.getAppContext())
                     .load(mList.get(position).getUrl())
                     .asBitmap().format(DecodeFormat.PREFER_ARGB_8888)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .placeholder(R.color.image_place_holder)
                     .error(R.mipmap.ic_load_fail)
-                    .into(((CommonViewHolder.PhotoListViewHolder) holder).mImageView);
+                    .into(imageView);
         }
+    }
+
+    private int getHeight(int position) {
+        int height;
+        if(position >= mHeights.size()){
+            height = (int) (width*(new Random().nextFloat() /2 +1));
+            mHeights.put(position,height);
+        }else {
+            height = mHeights.get(position);
+        }
+        return height;
     }
 }

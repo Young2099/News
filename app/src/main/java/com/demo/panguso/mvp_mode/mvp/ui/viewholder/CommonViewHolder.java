@@ -22,14 +22,12 @@ import static com.demo.panguso.mvp_mode.mvp.ui.adapter.PhotoListAdapter.TYPE_PHO
 
 public class CommonViewHolder {
 
-    View view;
     public ItemViewHolder itemViewHolder;
     public FooterViewHolder footerViewHolder;
     public PhotoViewHolder photoViewHolder;
     public PhotoListViewHolder photoListViewHolder;
 
     public CommonViewHolder(View view, int i) {
-        this.view = view;
         if (i == TYPE_ITEM) {
             this.itemViewHolder = new ItemViewHolder(view);
         } else if (i == TYPE_FOOTER) {

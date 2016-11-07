@@ -31,7 +31,6 @@ public class BasePresenterImpl<T extends BaseView, E> implements BasePresenter, 
     protected Subscription mSubscription;
     @Override
     public void onCreate() {
-
     }
 
     @Override

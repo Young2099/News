@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:drawablePadding="@dimen/item_margin"
-        android:drawableTop="@mipmap/ic_menu_photo"
+        android:drawableTop="@mipmap/ic_photo_empty"
         android:gravity="center"
         android:text="@string/retry_refresh_news"
         android:textSize="@dimen/big_medium"

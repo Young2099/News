@@ -1,6 +1,7 @@
 package com.demo.panguso.mvp_mode.mvp.presenter.impl;
 
 import com.demo.panguso.mvp_mode.common.LoadNewsType;
+import com.demo.panguso.mvp_mode.listener.RequestCallBack;
 import com.demo.panguso.mvp_mode.mvp.bean.PhotoGirl;
 import com.demo.panguso.mvp_mode.mvp.interactor.impl.PhotoInteractorImpl;
 import com.demo.panguso.mvp_mode.mvp.presenter.PhotoPresenter;
@@ -15,7 +16,7 @@ import javax.inject.Inject;
  * Created by ${yangfang} on 2016/11/4.
  */
 
-public class PhotoPresenterImpl extends BasePresenterImpl<PhotoView, List<PhotoGirl>> implements PhotoPresenter {
+public class PhotoPresenterImpl extends BasePresenterImpl<PhotoView, List<PhotoGirl>> implements PhotoPresenter, RequestCallBack<List<PhotoGirl>> {
 
     private PhotoInteractorImpl mPhotoInteractor;
     private int SIZE = 20;
@@ -43,7 +44,7 @@ public class PhotoPresenterImpl extends BasePresenterImpl<PhotoView, List<PhotoG
     }
 
     private void loadPhotoData() {
-        mSubscription = mPhotoInteractor.loadPhotos(this, SIZE, mStartPage);
+       mSubscription = mPhotoInteractor.loadPhotosList(this,SIZE,mStartPage);
     }
 
     @Override
@@ -80,5 +81,11 @@ public class PhotoPresenterImpl extends BasePresenterImpl<PhotoView, List<PhotoG
         mStartPage = 1;
         mIsRefresh = true;
         loadPhotoData();
+    }
+
+    @Override
+    public void onDestory() {
+        super.onDestory();
+        mView = null;
     }
 }

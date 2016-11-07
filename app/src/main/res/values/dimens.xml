@@ -9,4 +9,5 @@
     <dimen name="big_small">16sp</dimen>
     <dimen name="toolbar_padding_top">0dp</dimen>
     <dimen name="micro">12sp</dimen>
+    <dimen name="fb_margin">5dp</dimen>
 </resources>

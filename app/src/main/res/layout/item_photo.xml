@@ -2,13 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
+    android:layout_margin="2dp"
     android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/photo_list_view"
-        android:layout_width="200dp"
-        android:layout_height="300dp"
-        android:layout_margin="@dimen/item_margin"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
         android:scaleType="centerCrop"
         android:src="@mipmap/ic_launcher"
         android:transitionName="@string/photos"

@@ -10,5 +10,5 @@ import rx.Subscription;
  */
 
 public interface PhotoInteractor<T> {
-    Subscription loadPhotos(RequestCallBack<T> callBack, int size, int page);
+    Subscription loadPhotosList(RequestCallBack<T> callBack, int size, int page);
 }
