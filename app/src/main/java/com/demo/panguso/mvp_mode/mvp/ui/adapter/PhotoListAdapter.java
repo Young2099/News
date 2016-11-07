@@ -3,16 +3,15 @@ package com.demo.panguso.mvp_mode.mvp.ui.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.mvp.bean.PhotoGirl;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.base.BaseRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.viewholder.CommonViewHolder;
+import com.demo.panguso.mvp_mode.mvp.view.RationImageView;
 import com.demo.panguso.mvp_mode.utils.DimenUtil;
 
 import java.util.HashMap;
@@ -85,14 +84,17 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         if (holder instanceof CommonViewHolder.PhotoListViewHolder) {
-            ImageView imageView = ((CommonViewHolder.PhotoListViewHolder) holder).mImageView;
+            RationImageView imageView = ((CommonViewHolder.PhotoListViewHolder) holder).mImageView;
+            imageView.setOriginalSize(width,getHeight(position));
             Glide.with(App.getAppContext())
                     .load(mList.get(position).getUrl())
-                    .asBitmap().format(DecodeFormat.PREFER_ARGB_8888)
+//                    .asBitmap().format(DecodeFormat.PREFER_ARGB_8888)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .placeholder(R.mipmap.ic_photo_empty)
                     .error(R.mipmap.ic_load_fail)
                     .into(imageView);
         }
+        setItemAppearAnimation(holder,position);
     }
 
     private int getHeight(int position) {

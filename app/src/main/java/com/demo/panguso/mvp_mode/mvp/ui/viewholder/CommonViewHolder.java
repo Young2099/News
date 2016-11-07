@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.demo.panguso.mvp_mode.R;
+import com.demo.panguso.mvp_mode.mvp.view.RationImageView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,7 +86,7 @@ public class CommonViewHolder {
 
     public class PhotoListViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.photo_list_view)
-        public ImageView mImageView;
+        public RationImageView mImageView;
 
         public PhotoListViewHolder(View itemView) {
             super(itemView);
