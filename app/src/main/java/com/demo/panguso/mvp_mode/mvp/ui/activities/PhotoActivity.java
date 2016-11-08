@@ -1,9 +1,15 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.demo.panguso.mvp_mode.R;
+import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.common.LoadNewsType;
 import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
 import com.demo.panguso.mvp_mode.mvp.bean.PhotoGirl;
@@ -36,6 +43,8 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
 
     @Inject
     PhotoListAdapter mPhotoListAdapter;
+    @Inject
+    Activity mActivity;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -70,10 +79,25 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
         mPhotoListAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int layoutPosition) {
-
+                Intent intent = new Intent(PhotoActivity.this, PhotoDetailActivity.class);
+                intent.putExtra(Constants.PHOTO_DETAIL, mPhotoListAdapter.getList().get(layoutPosition).getUrl());
+                //整个打开图片的动画
+                startActivity(itemView, intent);
             }
         });
 
+    }
+
+    private void startActivity(View itemView, Intent intent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                    mActivity, itemView, Constants.TRANSITION_ANIMATION_NEWS_PHOTOS);
+            startActivity(intent, options.toBundle());
+        } else {
+            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat
+                    .makeScaleUpAnimation(itemView, itemView.getWidth() / 2, itemView.getHeight() / 2, 0, 0);
+            ActivityCompat.startActivity(mActivity, intent, optionsCompat.toBundle());
+        }
     }
 
     private void initPresenter() {

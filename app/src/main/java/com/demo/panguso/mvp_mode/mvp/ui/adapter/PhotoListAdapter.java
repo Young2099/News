@@ -1,6 +1,7 @@
 package com.demo.panguso.mvp_mode.mvp.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -106,6 +107,7 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
         } else {
             height = mHeights.get(position);
         }
+        Log.e("PhotoListAdapter", "width：" + width + "height:" + height);
         return height;
     }
 }

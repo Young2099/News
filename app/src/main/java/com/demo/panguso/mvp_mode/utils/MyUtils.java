@@ -5,11 +5,11 @@ import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
-import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter;
 
 import java.lang.reflect.Field;
 import java.text.ParseException;
@@ -146,4 +146,13 @@ public class MyUtils {
         }
     }
 
+    /**
+     * 找到FrameLayout里面的根视图
+     *
+     * @param context
+     * @return
+     */
+    public static View getRootView(Activity context) {
+        return ((ViewGroup) context.findViewById(android.R.id.content)).getChildAt(0);
+    }
 }

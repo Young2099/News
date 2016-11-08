@@ -4,9 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".app.App"
@@ -21,6 +20,7 @@
             android:theme="@style/AppTheme.NoTrans">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -36,11 +36,12 @@
         <activity
             android:name=".mvp.ui.activities.NewsBrowserActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".mvp.ui.activities.PhotoActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            >
-
-        </activity>
+        <activity
+            android:name=".mvp.ui.activities.PhotoActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".mvp.ui.activities.PhotoDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
