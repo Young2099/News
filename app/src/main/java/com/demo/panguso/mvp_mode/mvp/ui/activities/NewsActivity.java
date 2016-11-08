@@ -66,23 +66,9 @@ public class NewsActivity extends BaseActivity implements  NewsView {
     private ArrayList<Fragment> mNewsFragmentList = new ArrayList<>();
 
     protected void initViews() {
-//        setStatusBarTranslucent();
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
-//        mDrawerLayout.addDrawerListener(toggle);
-//        toggle.syncState();
         mPresenter = mNewsPresenter;
         mPresenter.attachView(this);
         mIsHasNavigationView = true;
-        mNavView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                if(item.getItemId() == R.id.nav_photo){
-                    startActivity(new Intent(NewsActivity.this,PhotoActivity.class));
-                    return true;
-                }
-                return false;
-            }
-        });
     }
 
     @Override

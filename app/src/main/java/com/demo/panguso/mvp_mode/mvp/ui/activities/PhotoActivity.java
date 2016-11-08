@@ -57,6 +57,7 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
 
     @Override
     protected void initViews() {
+        mToolbar.setTitle(R.string.news_photo);
         mIsHasNavigationView = true;
         initSiwpRefresh();
         initRecyclerView();
