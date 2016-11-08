@@ -25,7 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import rx.functions.Action1;
 
-public class PhotoDetailActivity extends BaseActivity {
+public class NewsPhotoDetailActivity extends BaseActivity {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -139,7 +139,7 @@ public class PhotoDetailActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_detail_photo;
+        return R.layout.activity_news_detail_photo;
     }
 
     @Override

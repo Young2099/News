@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -67,17 +66,13 @@ public class NewsActivity extends BaseActivity implements  NewsView {
     private ArrayList<Fragment> mNewsFragmentList = new ArrayList<>();
 
     protected void initViews() {
-//        mToolbar.setTitle("新闻");
-//        setSupportActionBar(mToolbar);
-        //适配
-        setStatusBarTranslucent();
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
-        mDrawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-//        mNavView.setNavigationItemSelectedListener(this);
+//        setStatusBarTranslucent();
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.open_drawer, R.string.close_drawer);
+//        mDrawerLayout.addDrawerListener(toggle);
+//        toggle.syncState();
         mPresenter = mNewsPresenter;
         mPresenter.attachView(this);
-
+        mIsHasNavigationView = true;
         mNavView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {

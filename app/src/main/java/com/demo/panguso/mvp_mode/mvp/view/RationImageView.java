@@ -36,7 +36,7 @@ public class RationImageView extends ImageView {
             int width = MeasureSpec.getSize(widthMeasureSpec);
             int height = MeasureSpec.getSize(heightMeasureSpec);
             if (width > 0) {
-                height = (int) (width / ratio);
+                    height = (int) (width / ratio);
             }
             setMeasuredDimension(width, height);
         } else {

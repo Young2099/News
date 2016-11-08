@@ -24,7 +24,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.demo.panguso.mvp_mode.R;
-import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.common.LoadNewsType;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
@@ -32,7 +31,7 @@ import com.demo.panguso.mvp_mode.mvp.bean.PhotoDetail;
 import com.demo.panguso.mvp_mode.mvp.event.ScrollToTopEvent;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsListPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
-import com.demo.panguso.mvp_mode.mvp.ui.activities.PhotoDetailActivity;
+import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsPhotoDetailActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.base.BaseFragment;
 import com.demo.panguso.mvp_mode.mvp.view.NewsListView;
@@ -158,7 +157,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initValues();
-//        NetUtil.checkNetworkState(mActivity.getString(R.string.internet_error));
+        NetUtil.checkNetworkState();
     }
 
     private void initValues() {
@@ -182,7 +181,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
     @Override
     public void showErrorMsg(String message) {
         mProgressBar.setVisibility(View.GONE);
-        if (NetUtil.isNetworkAvailable(App.getAppContext())) {
+        if (NetUtil.isNetworkAvailable()) {
             Snackbar.make(mNewsRV, message, Snackbar.LENGTH_LONG).show();
         }
     }
@@ -284,7 +283,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
      * @param photoDetail
      */
     private void startNewsPhotoDetailActivity(PhotoDetail photoDetail) {
-        Intent intent = new Intent(getActivity(), PhotoDetailActivity.class);
+        Intent intent = new Intent(getActivity(), NewsPhotoDetailActivity.class);
         intent.putExtra(Constants.PHOTO_DETAIL, photoDetail);
         startActivity(intent);
     }

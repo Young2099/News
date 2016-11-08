@@ -1,5 +1,6 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities;
 
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.LoadNewsType;
+import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
 import com.demo.panguso.mvp_mode.mvp.bean.PhotoGirl;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.PhotoPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
@@ -55,15 +57,33 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
 
     @Override
     protected void initViews() {
+        mIsHasNavigationView = true;
         initSiwpRefresh();
         initRecyclerView();
+        //图片的点击事件
+        setAdapterItemClickEvent();
         initPresenter();
+    }
+
+    private void setAdapterItemClickEvent() {
+        mPhotoListAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View itemView, int layoutPosition) {
+
+            }
+        });
+
     }
 
     private void initPresenter() {
         mPresenter = mPhotoPresenter;
         mPresenter.attachView(this);
         mPresenter.onCreate();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     private void initRecyclerView() {

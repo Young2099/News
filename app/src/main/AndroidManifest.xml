@@ -28,7 +28,7 @@
             android:name=".mvp.ui.activities.NewsDetailActivity"
             android:theme="@style/AppTheme.NoTrans" />
         <activity android:name=".mvp.ui.activities.SplashActivity" />
-        <activity android:name=".mvp.ui.activities.PhotoDetailActivity" />
+        <activity android:name=".mvp.ui.activities.NewsPhotoDetailActivity" />
         <activity
             android:name=".mvp.ui.activities.NewsChannelActivity"
             android:launchMode="singleTop"

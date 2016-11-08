@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 
 /**
@@ -17,8 +18,8 @@ public class NetUtil {
      * @param context
      * @return
      */
-    public static boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getApplicationContext()
+    public static boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) App.getAppContext()
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager != null) {
             NetworkInfo info = connectivityManager.getActiveNetworkInfo();
@@ -31,9 +32,9 @@ public class NetUtil {
         return false;
     }
 
-    public static void checkNetworkState(String s) {
-        if (!NetUtil.isNetworkAvailable(App.getAppContext())) {
-            ToastUtil.showToast(App.getAppContext(), s, 0);
+    public static void checkNetworkState() {
+        if (!NetUtil.isNetworkAvailable()) {
+            ToastUtil.showToast(App.getAppContext(), App.getAppContext().getString(R.string.internet_error), 0);
         }
     }
 }

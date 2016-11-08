@@ -99,14 +99,14 @@ public class RetrofitManager {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request request = chain.request();
-            if (!NetUtil.isNetworkAvailable(App.getAppContext())) {
+            if (!NetUtil.isNetworkAvailable()) {
                 request = request.newBuilder()
                         .cacheControl(CacheControl.FORCE_CACHE)
                         .build();
 
             }
             Response originalResponse = chain.proceed(request);
-            if (NetUtil.isNetworkAvailable(App.getAppContext())) {
+            if (NetUtil.isNetworkAvailable()) {
                 //有网读取接口的@Headers里的配置，进行统一设置
                 String cacheControl = request.cacheControl().toString();
                 return originalResponse.newBuilder().header("Cache-Control", cacheControl)
@@ -158,7 +158,7 @@ public class RetrofitManager {
      * @return
      */
     private String getCacheControl() {
-        return NetUtil.isNetworkAvailable(App.getAppContext()) ? CACHE_CONTROL_AGE : CACHE_CONTROL_CACHE;
+        return NetUtil.isNetworkAvailable() ? CACHE_CONTROL_AGE : CACHE_CONTROL_CACHE;
     }
 
     /**

@@ -85,24 +85,25 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
         super.onBindViewHolder(holder, position);
         if (holder instanceof CommonViewHolder.PhotoListViewHolder) {
             RationImageView imageView = ((CommonViewHolder.PhotoListViewHolder) holder).mImageView;
-            imageView.setOriginalSize(width,getHeight(position));
+            imageView.setOriginalSize(width, getHeight(position));
             Glide.with(App.getAppContext())
                     .load(mList.get(position).getUrl())
 //                    .asBitmap().format(DecodeFormat.PREFER_ARGB_8888)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .crossFade()
 //                    .placeholder(R.mipmap.ic_photo_empty)
                     .error(R.mipmap.ic_load_fail)
                     .into(imageView);
         }
-        setItemAppearAnimation(holder,position);
+        setItemAppearAnimation(holder, position);
     }
 
     private int getHeight(int position) {
         int height;
-        if(position >= mHeights.size()){
-            height = (int) (width*(new Random().nextFloat() /2 +1));
-            mHeights.put(position,height);
-        }else {
+        if (position >= mHeights.size()) {
+            height = (int) (width * (new Random().nextFloat() / 2 + 1));
+            mHeights.put(position, height);
+        } else {
             height = mHeights.get(position);
         }
         return height;

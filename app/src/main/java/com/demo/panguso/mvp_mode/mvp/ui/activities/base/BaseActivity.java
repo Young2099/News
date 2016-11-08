@@ -1,10 +1,13 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities.base;
 
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
@@ -19,10 +22,13 @@ import com.demo.panguso.mvp_mode.inject.component.ActivityComponent;
 import com.demo.panguso.mvp_mode.inject.component.DaggerActivityComponent;
 import com.demo.panguso.mvp_mode.inject.module.ActivityModule;
 import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter;
+import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.PhotoActivity;
 import com.demo.panguso.mvp_mode.utils.MyUtils;
+import com.demo.panguso.mvp_mode.utils.NetUtil;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
+import com.demo.panguso.mvp_mode.utils.ToastUtil;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -63,31 +69,35 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        NetUtil.checkNetworkState();
         setNightOrDayMode();
-        mActivityComponent = DaggerActivityComponent.builder()
-                .applicationComponent(((App) getApplication()).getApplicationComponent())
-                .activityModule(new ActivityModule(this))
-                .build();
+        initActivityComponent();
         int layoutId = getLayoutId();
         setContentView(layoutId);
         initInjector();
         ButterKnife.bind(this);
         initToolBar();
         initViews();
-//        if(mIsHasNavigationView){
-//            initDrawerLayout();
-//
-//        }
+        if (mIsHasNavigationView) {
+            initDrawerLayout();
+        }
 //        initNightModeSwitch();
+        setStatusBarTranslucent();
         if (mPresenter != null) {
             mPresenter.onCreate();
         }
     }
 
+    private void initActivityComponent() {
+        mActivityComponent = DaggerActivityComponent.builder()
+                .applicationComponent(((App) getApplication()).getApplicationComponent())
+                .activityModule(new ActivityModule(this))
+                .build();
+    }
+
     //TODO:适配4.4
     protected void setStatusBarTranslucent() {
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) && !(this instanceof NewsDetailActivity) || this instanceof PhotoActivity)
-        {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) && !(this instanceof NewsDetailActivity) || this instanceof PhotoActivity) {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
@@ -114,53 +124,62 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 //        }
 //    }
 //
-//    private void initDrawerLayout() {
-//        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-//        //监听DrawerLayou的事件。
-//        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.open_drawer,R.string.close_drawer);
-//        mDrawerLayout.addDrawerListener(drawerToggle);
-//        //将DrawerLayout和ActionBar相关联
-//        drawerToggle.syncState();
-//
-//        //针对navigationView的选择事件的选取
-//        if(navigationView != null){
-//            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//                @Override
-//                public boolean onNavigationItemSelected(MenuItem item) {
-//                    switch (item.getItemId()){
-//                        case R.id.nav_news:
-//                            mClass = NewsActivity.class;
-//                            break;
-//                        case R.id.nav_photo:
-//                            mClass = PhotoActivity.class;
-//                            break;
-//                        case R.id.nav_video:
-//                            ToastUtil.showToast(BaseActivity.this,"hh",0);
-//                            break;
-//                        default:
-//                            break;
-//                    }
-//                    mDrawerLayout.closeDrawer(GravityCompat.START);
-//                    return false;
-//                }
-//
-//            });
-//        }
-//        mDrawerLayout.addDrawerListener(new SimpleDrawerListener(){
-//            @Override
-//            public void onDrawerClosed(View drawerView) {
-//                super.onDrawerClosed(drawerView);
-//                if(mClass != null){
-//                    Intent intent = new Intent(BaseActivity.this,mClass);
-//                    startActivity(intent);
-//                    overridePendingTransition(0,0);
-//                    mClass = null;
-//                }
-//            }
-//        });
-//    }
-//
+    private void initDrawerLayout() {
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        //监听DrawerLayou的事件。
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
+        mDrawerLayout.addDrawerListener(drawerToggle);
+        //将DrawerLayout和ActionBar相关联
+        drawerToggle.syncState();
+
+        //针对navigationView的选择事件的选取
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.nav_news:
+                            mClass = NewsActivity.class;
+                            break;
+                        case R.id.nav_photo:
+                            mClass = PhotoActivity.class;
+                            break;
+                        case R.id.nav_video:
+                            ToastUtil.showToast(BaseActivity.this, "hh", 0);
+                            break;
+                        default:
+                            break;
+                    }
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
+                    return false;
+                }
+
+            });
+        }
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                if (mClass != null) {
+                    Intent intent = new Intent(BaseActivity.this, mClass);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
+                    mClass = null;
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (mIsHasNavigationView) {
+            overridePendingTransition(0, 0);
+        }
+    }
+
     private void initToolBar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("新闻");
