@@ -25,6 +25,7 @@ import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenter;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.PhotoActivity;
+import com.demo.panguso.mvp_mode.mvp.ui.activities.PhotoDetailActivity;
 import com.demo.panguso.mvp_mode.utils.MyUtils;
 import com.demo.panguso.mvp_mode.utils.NetUtil;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
@@ -97,7 +98,8 @@ public abstract class BaseActivity<T extends BasePresenter> extends AppCompatAct
 
     //TODO:适配4.4
     protected void setStatusBarTranslucent() {
-        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) && !(this instanceof NewsDetailActivity) || this instanceof PhotoActivity) {
+        if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) && !(this instanceof NewsDetailActivity) || (this instanceof PhotoActivity)
+        ||(this instanceof PhotoDetailActivity)){
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);

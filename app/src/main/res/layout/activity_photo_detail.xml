@@ -9,7 +9,7 @@
     android:background="@color/black"
     tools:context="com.demo.panguso.mvp_mode.mvp.ui.activities.NewsPhotoDetailActivity">
 
-    <ooo.oxo.library.widget.PullBackLayout
+    <com.demo.panguso.mvp_mode.mvp.view.PullBackLayout
         android:id="@+id/pull_back_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -22,7 +22,7 @@
             android:transitionName="@string/transition_photos"
             tools:src="@mipmap/ic_photo_empty"
             tools:targetApi="lollipop" />
-    </ooo.oxo.library.widget.PullBackLayout>
+    </com.demo.panguso.mvp_mode.mvp.view.PullBackLayout>
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
