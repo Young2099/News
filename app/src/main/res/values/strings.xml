@@ -32,4 +32,5 @@
     <string name="web_view">WebView</string>
     <string name="browser">用浏览器打开</string>
     <string name="photo">妹纸</string>
+    <string name="share_error">分享失败</string>
 </resources>

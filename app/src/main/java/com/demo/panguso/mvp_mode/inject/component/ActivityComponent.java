@@ -11,6 +11,7 @@ import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsChannelActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.PhotoActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsPhotoDetailActivity;
+import com.demo.panguso.mvp_mode.mvp.ui.activities.PhotoDetailActivity;
 
 import dagger.Component;
 
@@ -36,5 +37,7 @@ public interface ActivityComponent {
 
     void inject(NewsPhotoDetailActivity photoDetailActivity);
 
-    void inject(PhotoActivity photoDetailActivity);
+    void inject(PhotoActivity photoActivity);
+
+    void inject(PhotoDetailActivity photoDetailActivity);
 }

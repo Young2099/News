@@ -1,5 +1,6 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -8,25 +9,33 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.widget.Toolbar;
 import android.transition.Transition;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
+import com.demo.panguso.mvp_mode.inject.scope.ContextLife;
+import com.demo.panguso.mvp_mode.mvp.bean.PhotoDetaiView;
+import com.demo.panguso.mvp_mode.mvp.presenter.impl.PhotoDetailPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.view.PullBackLayout;
 import com.demo.panguso.mvp_mode.utils.MyUtils;
 import com.demo.panguso.mvp_mode.utils.SystemUnivisibilityUtil;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
 
-public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.Callback {
+public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.Callback, PhotoDetaiView {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -40,6 +49,13 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
     private boolean mIsStatusBarHidden;
     private ColorDrawable mBackGround;
 
+    @Inject
+    PhotoDetailPresenterImpl mPhotoDetailPresenter;
+
+    @Inject
+    @ContextLife("Activity")
+    Context mContext;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initViews() {
@@ -47,11 +63,32 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
         initImageView();
         initBackground();
         setPhotoViewClickEvent();
+        initPresenter();
+    }
+
+    private void initPresenter() {
+        mPresenter = mPhotoDetailPresenter;
+        mPresenter.attachView(this);
     }
 
     private void initBackground() {
         mBackGround = new ColorDrawable(Color.BLACK);
         MyUtils.getRootView(this).setBackgroundDrawable(mBackGround);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_photo, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_share) {
+            mPhotoDetailPresenter.shareUri(getIntent().getStringExtra(Constants.PHOTO_DETAIL));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -126,7 +163,7 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
 
     @Override
     protected void initInjector() {
-
+        mActivityComponent.inject(this);
     }
 
     @Override
@@ -137,7 +174,7 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
     }
 
     private void initLazyLoadView() {
-        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getEnterTransition().addListener(new Transition.TransitionListener() {
                 @Override
                 public void onTransitionStart(Transition transition) {
@@ -164,7 +201,7 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
 
                 }
             });
-        }else {
+        } else {
             showToolBarAndPhotoTouchView();
         }
     }
@@ -200,5 +237,20 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
     @Override
     public void onPullComplete() {
         supportFinishAfterTransition();
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void showErrorMsg(String message) {
+        Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
     }
 }
