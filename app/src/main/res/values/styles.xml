@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-
+    <!-- Base application theme. -->
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -9,14 +9,14 @@
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
         <item name="android:screenOrientation">portrait</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="kitkat">true</item>
-
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.NoTrans">
+    </style>
 
-    <style name="AppTheme.NoTrans" />
     <style name="AppTheme.Trans">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
@@ -29,6 +29,6 @@
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

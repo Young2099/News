@@ -10,7 +10,7 @@ import java.util.List;
  * Created by ${yangfang} on 2016/10/28.
  */
 
-public class PhotoDetail implements Parcelable {
+public class NewsPhotoDetail implements Parcelable {
     private String title;
     private List<Picture> pictures = new ArrayList<>();
 
@@ -99,24 +99,24 @@ public class PhotoDetail implements Parcelable {
         parcel.writeList(this.pictures);
     }
 
-    public PhotoDetail() {
+    public NewsPhotoDetail() {
     }
 
-    public PhotoDetail(Parcel parcel) {
+    public NewsPhotoDetail(Parcel parcel) {
         this.title = parcel.readString();
         this.pictures = new ArrayList<>();
         parcel.readList(this.pictures, Picture.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<PhotoDetail> CREATOR = new Creator<PhotoDetail>() {
+    public static final Parcelable.Creator<NewsPhotoDetail> CREATOR = new Creator<NewsPhotoDetail>() {
         @Override
-        public PhotoDetail createFromParcel(Parcel parcel) {
-            return new PhotoDetail(parcel);
+        public NewsPhotoDetail createFromParcel(Parcel parcel) {
+            return new NewsPhotoDetail(parcel);
         }
 
         @Override
-        public PhotoDetail[] newArray(int i) {
-            return new PhotoDetail[i];
+        public NewsPhotoDetail[] newArray(int i) {
+            return new NewsPhotoDetail[i];
         }
     };
 }

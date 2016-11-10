@@ -36,12 +36,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 import greendao.NewsChannelTable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 
-public class NewsActivity extends BaseActivity implements  NewsView {
+public class NewsActivity extends BaseActivity implements NewsView {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -75,12 +73,11 @@ public class NewsActivity extends BaseActivity implements  NewsView {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSubscription = RxBus.getInstance().toObservable(ChannelChangeEvent.class)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<ChannelChangeEvent>() {
                     @Override
                     public void call(ChannelChangeEvent channelItemMoveEvent) {
                         mNewsPresenter.onChangedDb();
+
                     }
                 });
     }
@@ -121,8 +118,9 @@ public class NewsActivity extends BaseActivity implements  NewsView {
             }
         }
         NewsFragmetPagerAdapter adapter = new NewsFragmetPagerAdapter(getSupportFragmentManager(), channelName, mNewsFragmentList);
-        mTabs.setupWithViewPager(mViewPager);
         mViewPager.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+        mTabs.setupWithViewPager(mViewPager);
         MyUtils.dynamicSetTabLayoutMode(mTabs);
         setPageChangeListener();
         mChannelNames = channelName;

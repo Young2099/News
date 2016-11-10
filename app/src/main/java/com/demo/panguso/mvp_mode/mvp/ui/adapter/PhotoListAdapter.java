@@ -33,6 +33,10 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
 
     public static final int TYPE_PHOTO = 5;
 
+    public Map<Integer, Integer> getHeights() {
+        return mHeights;
+    }
+
     @Inject
     public PhotoListAdapter() {
         super(null);
@@ -101,13 +105,18 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
 
     private int getHeight(int position) {
         int height;
-        if (position >= mHeights.size()) {
-            height = (int) (width * (new Random().nextFloat() / 2 + 1));
-            mHeights.put(position, height);
-        } else {
-            height = mHeights.get(position);
+        try {
+
+            if (position >= mHeights.size()) {
+                height = (int) (width * (new Random().nextFloat() / 2 + 1));
+                mHeights.put(position, height);
+            } else {
+                height = mHeights.get(position);
+            }
+            Log.e("PhotoListAdapter", "width：" + width + "height:" + height);
+        }catch (Exception e){
+            height =width/2;
         }
-        Log.e("PhotoListAdapter", "width：" + width + "height:" + height);
         return height;
     }
 }

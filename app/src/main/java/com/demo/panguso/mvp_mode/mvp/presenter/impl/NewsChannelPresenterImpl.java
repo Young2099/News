@@ -1,12 +1,12 @@
 package com.demo.panguso.mvp_mode.mvp.presenter.impl;
 
 import com.demo.panguso.mvp_mode.common.Constants;
-import com.demo.panguso.mvp_mode.listener.ChannelItemMoveEvent;
 import com.demo.panguso.mvp_mode.mvp.interactor.impl.NewsChannelInteractorImpl;
 import com.demo.panguso.mvp_mode.mvp.presenter.NewsChannelPresenter;
 import com.demo.panguso.mvp_mode.mvp.presenter.base.BasePresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.view.NewsChannelView;
 import com.demo.panguso.mvp_mode.utils.RxBus;
+import com.demo.panguso.mvp_mode.widget.ChannelChangeEvent;
 
 import java.util.List;
 import java.util.Map;
@@ -69,7 +69,7 @@ public class NewsChannelPresenterImpl extends BasePresenterImpl<NewsChannelView,
     public void onDestory() {
         super.onDestory();
         if (mIsChannelChanged) {
-            RxBus.getInstance().post(new ChannelItemMoveEvent());
+            RxBus.getInstance().post(new ChannelChangeEvent());
         }
     }
 }

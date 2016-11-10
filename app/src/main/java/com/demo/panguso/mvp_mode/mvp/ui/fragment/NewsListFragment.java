@@ -27,7 +27,7 @@ import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.common.LoadNewsType;
 import com.demo.panguso.mvp_mode.mvp.bean.NewsSummary;
-import com.demo.panguso.mvp_mode.mvp.bean.PhotoDetail;
+import com.demo.panguso.mvp_mode.mvp.bean.NewsPhotoDetail;
 import com.demo.panguso.mvp_mode.mvp.event.ScrollToTopEvent;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsListPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.NewsDetailActivity;
@@ -270,7 +270,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
     @Override
     public void onItemClick(View view, int position, boolean isPhoto) {
         if (isPhoto) {
-            PhotoDetail photoDetail = getPhotoDetail(position);
+            NewsPhotoDetail photoDetail = getPhotoDetail(position);
             startNewsPhotoDetailActivity(photoDetail);
         } else {
             startNewDetailActivity(view, position);
@@ -282,7 +282,7 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
      *
      * @param photoDetail
      */
-    private void startNewsPhotoDetailActivity(PhotoDetail photoDetail) {
+    private void startNewsPhotoDetailActivity(NewsPhotoDetail photoDetail) {
         Intent intent = new Intent(getActivity(), NewsPhotoDetailActivity.class);
         intent.putExtra(Constants.PHOTO_DETAIL, photoDetail);
         startActivity(intent);
@@ -294,16 +294,16 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
      * @param position
      * @return
      */
-    private PhotoDetail getPhotoDetail(int position) {
+    private NewsPhotoDetail getPhotoDetail(int position) {
         NewsSummary newsSummary = mNewsRecyclerViewAdapter.getList().get(position);
-        PhotoDetail photoDetail = new PhotoDetail();
+        NewsPhotoDetail photoDetail = new NewsPhotoDetail();
         photoDetail.setTitle(newsSummary.getTitle());
         setPictures(newsSummary, photoDetail);
         return photoDetail;
     }
 
-    private void setPictures(NewsSummary newsSummary, PhotoDetail photoDetail) {
-        List<PhotoDetail.Picture> picturesList = new ArrayList<>();
+    private void setPictures(NewsSummary newsSummary, NewsPhotoDetail photoDetail) {
+        List<NewsPhotoDetail.Picture> picturesList = new ArrayList<>();
         //newSummary里面的图片地址和title
         if (newsSummary.getAds() != null) {
             for (NewsSummary.AdsBean entity : newsSummary.getAds()) {
@@ -319,8 +319,8 @@ public class NewsListFragment extends BaseFragment implements NewsListView, News
         photoDetail.setPictures(picturesList);
     }
 
-    private void setValuesAndAddToList(List<PhotoDetail.Picture> picturesList, String title, String imgsrc) {
-        PhotoDetail.Picture picture = new PhotoDetail.Picture();
+    private void setValuesAndAddToList(List<NewsPhotoDetail.Picture> picturesList, String title, String imgsrc) {
+        NewsPhotoDetail.Picture picture = new NewsPhotoDetail.Picture();
         if (title != null) {
             picture.setTitle(title);
         }

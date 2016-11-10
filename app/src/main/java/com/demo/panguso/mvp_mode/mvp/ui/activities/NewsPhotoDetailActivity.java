@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
-import com.demo.panguso.mvp_mode.mvp.bean.PhotoDetail;
+import com.demo.panguso.mvp_mode.mvp.bean.NewsPhotoDetail;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.PhotoDetailFragment;
@@ -35,7 +35,7 @@ public class NewsPhotoDetailActivity extends BaseActivity {
     TextView mPhotoTextViewTitle;
 
     private List<Fragment> mPhotoDetailFragments = new ArrayList<>();
-    private PhotoDetail mPhotoDetail;
+    private NewsPhotoDetail mPhotoDetail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,9 +126,9 @@ public class NewsPhotoDetailActivity extends BaseActivity {
      *
      * @param mPhotoDetail
      */
-    private void createFragment(PhotoDetail mPhotoDetail) {
+    private void createFragment(NewsPhotoDetail mPhotoDetail) {
         mPhotoDetailFragments.clear();
-        for (PhotoDetail.Picture photoDetail : mPhotoDetail.getPictures()) {
+        for (NewsPhotoDetail.Picture photoDetail : mPhotoDetail.getPictures()) {
             PhotoDetailFragment fragment = new PhotoDetailFragment();
             Bundle bundle = new Bundle();
             bundle.putString(Constants.PHOTO_DETAIL_IMGSRC, photoDetail.getImgSrc());

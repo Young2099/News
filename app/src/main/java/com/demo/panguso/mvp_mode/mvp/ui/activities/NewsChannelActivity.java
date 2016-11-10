@@ -1,7 +1,6 @@
 package com.demo.panguso.mvp_mode.mvp.ui.activities;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -53,12 +52,6 @@ public class NewsChannelActivity extends BaseActivity implements NewsChannelView
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
         mSubscription = RxBus.getInstance().toObservable(ChannelItemMoveEvent.class)
                 .subscribe(new Action1<ChannelItemMoveEvent>() {
                     @Override

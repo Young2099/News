@@ -18,7 +18,7 @@
         <activity
             android:name=".mvp.ui.activities.NewsActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoTrans">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,15 +32,13 @@
         <activity android:name=".mvp.ui.activities.NewsPhotoDetailActivity" />
         <activity
             android:name=".mvp.ui.activities.NewsChannelActivity"
-            android:launchMode="singleTop"
             android:theme="@style/AppTheme.NoTrans" />
         <activity
             android:name=".mvp.ui.activities.NewsBrowserActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoTrans" />
         <activity
             android:name=".mvp.ui.activities.PhotoActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.Trans" />
+            android:theme="@style/AppTheme.NoTrans" />
         <activity
             android:name=".mvp.ui.activities.PhotoDetailActivity"
             android:theme="@style/AppTheme.Trans" />

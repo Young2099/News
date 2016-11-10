@@ -2,9 +2,10 @@ package com.demo.panguso.mvp_mode.mvp.interactor.impl;
 
 import android.util.Log;
 
-import com.demo.panguso.mvp_mode.respository.db.NewsChannelTableManager;
-import com.demo.panguso.mvp_mode.mvp.interactor.NewsInteractor;
 import com.demo.panguso.mvp_mode.listener.RequestCallBack;
+import com.demo.panguso.mvp_mode.mvp.interactor.NewsInteractor;
+import com.demo.panguso.mvp_mode.respository.db.NewsChannelTableManager;
+import com.demo.panguso.mvp_mode.utils.TransformUtils;
 
 import java.util.List;
 
@@ -14,8 +15,6 @@ import greendao.NewsChannelTable;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by ${yangfang} on 2016/9/19.
@@ -36,8 +35,7 @@ public class NewsInteractorImpl implements NewsInteractor<List<NewsChannelTable>
                 subscriber.onNext(NewsChannelTableManager.loadNewsChannelsMine());
                 subscriber.onCompleted();
             }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        }).compose(TransformUtils.<List<NewsChannelTable>>defaultSchedulers())
                 .subscribe(new Subscriber<List<NewsChannelTable>>() {
                     @Override
                     public void onCompleted() {
