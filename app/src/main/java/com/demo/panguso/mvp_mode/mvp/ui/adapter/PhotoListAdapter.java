@@ -5,15 +5,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.app.App;
 import com.demo.panguso.mvp_mode.mvp.bean.PhotoGirl;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.base.BaseRecyclerViewAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.viewholder.CommonViewHolder;
-import com.demo.panguso.mvp_mode.mvp.view.RationImageView;
 import com.demo.panguso.mvp_mode.utils.DimenUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,10 +30,6 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
     private Map<Integer, Integer> mHeights = new HashMap<>();
 
     public static final int TYPE_PHOTO = 5;
-
-    public Map<Integer, Integer> getHeights() {
-        return mHeights;
-    }
 
     @Inject
     public PhotoListAdapter() {
@@ -89,18 +83,25 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         if (holder instanceof CommonViewHolder.PhotoListViewHolder) {
-            RationImageView imageView = ((CommonViewHolder.PhotoListViewHolder) holder).mImageView;
-            imageView.setOriginalSize(width, getHeight(position));
-            Glide.with(App.getAppContext())
+//            RationImageView imageView = ((CommonViewHolder.PhotoListViewHolder) holder).mImageView;
+//            imageView.setOriginalSize(width, getHeight(position));
+//            Glide.with(App.getAppContext())
+//                    .load(mList.get(position).getUrl())
+////                    .asBitmap().format(DecodeFormat.PREFER_ARGB_8888)
+//                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                    .crossFade()
+////                    .placeholder(R.mipmap.ic_photo_empty)
+//                    .error(R.mipmap.ic_load_fail)
+//                    .into(imageView);
+            Picasso.with(App.getAppContext())
                     .load(mList.get(position).getUrl())
-//                    .asBitmap().format(DecodeFormat.PREFER_ARGB_8888)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .crossFade()
-//                    .placeholder(R.mipmap.ic_photo_empty)
                     .error(R.mipmap.ic_load_fail)
-                    .into(imageView);
+                    .into(((CommonViewHolder.PhotoListViewHolder) holder).mImageView);
+                    //使用picasso加载图片可以自动计算实际宽高比进行设置，
+            //刷新也不会出现闪屏
+
         }
-        setItemAppearAnimation(holder, position);
+//        setItemAppearAnimation(holder, position);
     }
 
     private int getHeight(int position) {
