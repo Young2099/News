@@ -16,8 +16,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
 import com.demo.panguso.mvp_mode.inject.scope.ContextLife;
@@ -28,6 +26,7 @@ import com.demo.panguso.mvp_mode.mvp.view.PullBackLayout;
 import com.demo.panguso.mvp_mode.utils.MyUtils;
 import com.demo.panguso.mvp_mode.utils.PhotoRequestType;
 import com.demo.panguso.mvp_mode.utils.SystemUnivisibilityUtil;
+import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
@@ -130,10 +129,14 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
     }
 
     private void loadPhotoIv() {
-        Glide.with(this)
+//        Glide.with(this)
+//                .load(getIntent().getStringExtra(Constants.PHOTO_DETAIL))
+//                .asBitmap()
+//                .diskCacheStrategy(DiskCacheStrategy.ALL)
+//                .into(mPhotoView);
+        Picasso.with(this)
                 .load(getIntent().getStringExtra(Constants.PHOTO_DETAIL))
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .error(R.mipmap.ic_load_fail)
                 .into(mPhotoView);
     }
 
@@ -171,10 +174,8 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
     }
 
     private void loadPhotoTouchIv() {
-        Glide.with(this)
+        Picasso.with(this)
                 .load(getIntent().getStringExtra(Constants.PHOTO_DETAIL))
-                .asBitmap()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
 //                .placeholder(R.mipmap.ic_photo_empty)
                 .error(R.mipmap.ic_load_fail)
                 .into(mPhotoTouchView);

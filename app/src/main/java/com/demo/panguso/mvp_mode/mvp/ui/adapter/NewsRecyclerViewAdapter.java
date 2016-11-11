@@ -5,8 +5,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -69,7 +67,7 @@ public class NewsRecyclerViewAdapter extends BaseRecyclerViewAdapter<NewsSummary
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         setValues(holder, position);
         //动画在加载新item的时候 动画显示
-        setItemAppearAnimation(holder, position);
+        setItemAppearAnimation(holder, position,R.anim.item_bottom);
     }
 
     private void setItemOnclick(final RecyclerView.ViewHolder holder, final boolean isPhoto) {

@@ -18,6 +18,7 @@ import android.widget.ImageView;
 
 import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.common.Constants;
+import com.demo.panguso.mvp_mode.mvp.event.ScrollToTopEvent;
 import com.demo.panguso.mvp_mode.mvp.presenter.impl.NewsPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
@@ -101,7 +102,7 @@ public class NewsActivity extends BaseActivity implements NewsView {
                 startActivity(intent);
                 break;
             case R.id.fab:
-//                mSubscription = RxBus.getInstance().toObservable(ScrollToTopEvent.class);
+                RxBus.getInstance().toObservable(ScrollToTopEvent.class);
                 break;
         }
     }

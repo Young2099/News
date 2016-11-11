@@ -101,7 +101,7 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
             //刷新也不会出现闪屏
 
         }
-//        setItemAppearAnimation(holder, position);
+//        setItemAppearAnimation(holder, position,R.anim.anim_rotate_scale_in);
     }
 
     private int getHeight(int position) {

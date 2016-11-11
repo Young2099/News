@@ -19,8 +19,8 @@ import javax.inject.Inject;
 public class PhotoPresenterImpl extends BasePresenterImpl<PhotoView, List<PhotoGirl>> implements PhotoPresenter, RequestCallBack<List<PhotoGirl>> {
 
     private PhotoInteractorImpl mPhotoInteractor;
-    private int SIZE = 20;
-    private int mStartPage=1;
+    private static int SIZE = 20;
+    private int mStartPage = 1;
     private boolean misFirstLoad;
     private boolean mIsRefresh = true;
 
@@ -44,7 +44,7 @@ public class PhotoPresenterImpl extends BasePresenterImpl<PhotoView, List<PhotoG
     }
 
     private void loadPhotoData() {
-       mSubscription = mPhotoInteractor.loadPhotosList(this,SIZE,mStartPage);
+        mPhotoInteractor.loadPhotosList(this, SIZE, mStartPage);
     }
 
     @Override

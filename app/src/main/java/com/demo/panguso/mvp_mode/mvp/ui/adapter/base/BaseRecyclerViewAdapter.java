@@ -1,14 +1,15 @@
 package com.demo.panguso.mvp_mode.mvp.ui.adapter.base;
 
+import android.support.annotation.AnimRes;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.demo.panguso.mvp_mode.R;
 import com.demo.panguso.mvp_mode.listener.OnItemClickListener;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerVie
     protected List<T> mList;
     public static final int TYPE_ITEM = 0;
     public static final int TYPE_FOOTER = 1;
-    protected int mLastPosition;
+    protected int mLastPosition= -1;
     protected boolean mIsShowFooter;
     protected OnItemClickListener mOnItemClickListener;
 
@@ -71,13 +72,16 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerVie
             return 0;
         }
         int itemSize = mList.size();
+        if (mIsShowFooter) {
+            itemSize += 1;
+        }
         return itemSize;
     }
 
-    protected void setItemAppearAnimation(RecyclerView.ViewHolder holder, int position) {
+    protected void setItemAppearAnimation(RecyclerView.ViewHolder holder, int position, @AnimRes int type) {
         if (position > mLastPosition) {
             Animation animation = AnimationUtils.loadAnimation(holder.itemView.getContext(),
-                    R.anim.item_bottom);
+                    type);
             holder.itemView.startAnimation(animation);
             mLastPosition = position;
         }
@@ -93,9 +97,10 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerVie
     }
 
     public void addMore(List<T> data) {
-        int statrPosition = mList.size();
+        int startPosition= mList.size();
         mList.addAll(data);
-        notifyItemRangeChanged(statrPosition, mList.size());
+        notifyItemRangeInserted(startPosition, mList.size());
+        Log.e("TAG","startPosition："+startPosition+":::::::"+mList.size());
     }
 
     public void delete(int position) {

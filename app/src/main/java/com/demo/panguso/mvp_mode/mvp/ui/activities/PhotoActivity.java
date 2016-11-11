@@ -29,6 +29,7 @@ import com.demo.panguso.mvp_mode.mvp.presenter.impl.PhotoPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.PhotoListAdapter;
 import com.demo.panguso.mvp_mode.mvp.view.PhotoView;
+import com.demo.panguso.mvp_mode.utils.NetUtil;
 
 import java.util.List;
 
@@ -91,7 +92,7 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
     private void startActivity(View itemView, Intent intent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
-                    mActivity, itemView, Constants.TRANSITION_ANIMATION_NEWS_PHOTOS);
+                    mActivity, itemView, getResources().getString(R.string.transition_photos));
             startActivity(intent, options.toBundle());
         } else {
             ActivityOptionsCompat optionsCompat = ActivityOptionsCompat
@@ -220,12 +221,21 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
 
     @Override
     public void showErrorMsg(String message) {
-
+        mProgressBar.setVisibility(View.GONE);
+        if (NetUtil.isNetworkAvailable()) {
+            Snackbar.make(mPhotoRV, message, Snackbar.LENGTH_LONG).show();
+        }
     }
 
-    @OnClick(R.id.fab)
-    public void onClick() {
-        mPhotoRV.getLayoutManager().scrollToPosition(0);
+    @OnClick({R.id.fab, R.id.empty_view})
+    public void onClick(View view) {
+        if (view.getId() == R.id.fab) {
+            mPhotoRV.getLayoutManager().scrollToPosition(0);
+        }
+        if (view.getId() == R.id.empty_view) {
+            mSwipeRefreshLayout.setRefreshing(true);
+            mPhotoPresenter.refreshData();
+        }
     }
 
     @Override
