@@ -32,6 +32,7 @@ import com.demo.panguso.mvp_mode.utils.SystemUnivisibilityUtil;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import dagger.Lazy;
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
@@ -50,8 +51,11 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
     private boolean mIsStatusBarHidden;
     private ColorDrawable mBackGround;
 
+    /**
+     * 使用dagger2延迟加载
+     */
     @Inject
-    PhotoDetailPresenterImpl mPhotoDetailPresenter;
+    Lazy<PhotoDetailPresenterImpl> mPhotoDetailPresenter;
 
     @Inject
     @ContextLife("Activity")
@@ -64,11 +68,12 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
         initImageView();
         initBackground();
         setPhotoViewClickEvent();
-        initPresenter();
+//        initPresenter();
     }
 
     private void initPresenter() {
-        mPresenter = mPhotoDetailPresenter;
+//        在这时才创建mPhotoDetailPresenter,以后每次调用get会得到同一个mPhotoDetailPresenter对象
+        mPresenter = mPhotoDetailPresenter.get();
         mPresenter.attachView(this);
     }
 
@@ -106,7 +111,8 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
     }
 
     private void handlePicture(int type) {
-        mPhotoDetailPresenter.handlePicture(getIntent().getStringExtra(Constants.PHOTO_DETAIL), type);
+        initPresenter();
+        mPhotoDetailPresenter.get().handlePicture(getIntent().getStringExtra(Constants.PHOTO_DETAIL), type);
     }
 
     /**
