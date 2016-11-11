@@ -26,6 +26,7 @@ import com.demo.panguso.mvp_mode.mvp.presenter.impl.PhotoDetailPresenterImpl;
 import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.view.PullBackLayout;
 import com.demo.panguso.mvp_mode.utils.MyUtils;
+import com.demo.panguso.mvp_mode.utils.PhotoRequestType;
 import com.demo.panguso.mvp_mode.utils.SystemUnivisibilityUtil;
 
 import javax.inject.Inject;
@@ -71,6 +72,11 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
         mPresenter.attachView(this);
     }
 
+    @Override
+    public void supportFinishAfterTransition() {
+        super.supportFinishAfterTransition();
+    }
+
     private void initBackground() {
         mBackGround = new ColorDrawable(Color.BLACK);
         MyUtils.getRootView(this).setBackgroundDrawable(mBackGround);
@@ -84,11 +90,23 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_share) {
-            mPhotoDetailPresenter.shareUri(getIntent().getStringExtra(Constants.PHOTO_DETAIL));
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_share:
+                handlePicture(PhotoRequestType.TYPE_SHARE);
+                return true;
+            case R.id.action_save:
+                handlePicture(PhotoRequestType.TYPE_SAVE);
+                return true;
+            case R.id.action_set_wallpaper:
+                handlePicture(PhotoRequestType.TYPE_SET_WALLPAPER);
+                return true;
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void handlePicture(int type) {
+        mPhotoDetailPresenter.handlePicture(getIntent().getStringExtra(Constants.PHOTO_DETAIL), type);
     }
 
     /**
@@ -252,5 +270,12 @@ public class PhotoDetailActivity extends BaseActivity implements PullBackLayout.
     @Override
     public void showErrorMsg(String message) {
         Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAfterTransition();
     }
 }

@@ -33,4 +33,8 @@
     <string name="browser">用浏览器打开</string>
     <string name="photo">妹纸</string>
     <string name="share_error">分享失败</string>
+    <string name="picture_alerady_save_to">图片已经保存</string>
+    <string name="set_waller_success">换肤成功</string>
+    <string name="save">保存图片</string>
+    <string name="set_wallpaper">设为壁纸</string>
 </resources>

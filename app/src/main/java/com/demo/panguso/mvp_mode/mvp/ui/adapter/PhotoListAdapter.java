@@ -113,9 +113,9 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
             } else {
                 height = mHeights.get(position);
             }
-            Log.e("PhotoListAdapter", "width：" + width + "height:" + height);
-        }catch (Exception e){
-            height =width/2;
+            Log.e("PhotoListAdapter", "width：" + width + ":height:" + height);
+        } catch (Exception e) {
+            height = width / 2;
         }
         return height;
     }

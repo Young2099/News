@@ -1,5 +1,6 @@
 package com.demo.panguso.mvp_mode.mvp.interactor.impl;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
@@ -84,7 +85,13 @@ public class PhotoDetailInteractorImpl implements PhotoDetailInteractor {
 
     private Observable<Uri> getUriObservable(Bitmap bitmap, String url) {
         File file = getImageFile(bitmap, url);
+        if (file == null) {
+            return Observable.error(new IOException("save image file failed"));
+        }
         Uri uri = Uri.fromFile(file);
+        //通知图库更新
+        Intent scannerIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri);
+        App.getAppContext().sendBroadcast(scannerIntent);
         return Observable.just(uri);//将转成的uri多个just的意思
     }
 
@@ -101,6 +108,7 @@ public class PhotoDetailInteractorImpl implements PhotoDetailInteractor {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         } finally {
             if (outputStream != null) {
                 try {
