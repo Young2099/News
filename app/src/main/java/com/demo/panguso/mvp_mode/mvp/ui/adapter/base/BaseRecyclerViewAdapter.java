@@ -132,5 +132,4 @@ public class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<RecyclerVie
         notifyItemRemoved(getItemCount());
     }
 
-
 }

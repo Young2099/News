@@ -68,7 +68,7 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
     @Override
     protected void initViews() {
         mToolbar.setTitle(R.string.news_photo);
-        mIsHasNavigationView = true;
+//        mIsHasNavigationView = true;
         initSiwpRefresh();
         initRecyclerView();
         //图片的点击事件
@@ -114,7 +114,9 @@ public class PhotoActivity extends BaseActivity implements PhotoView, SwipeRefre
 
     private void initRecyclerView() {
         mPhotoRV.setHasFixedSize(true);
-        mPhotoRV.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+//        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        mPhotoRV.setLayoutManager(layoutManager);
         mPhotoRV.setItemAnimator(new DefaultItemAnimator());
         mPhotoRV.setAdapter(mPhotoListAdapter);
         mPhotoRV.addOnScrollListener(new RecyclerView.OnScrollListener() {

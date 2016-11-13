@@ -15,7 +15,7 @@
     <color name="tertiary_text">#8affffff</color>
     <!--54%white-->
 
-    <color name="image_place_holder">#272B2F</color>
+    <color name="image_place_holder">#DFDFDF</color>
     <!--54%black-->
 
     <color name="icons">#FFFFFF</color>

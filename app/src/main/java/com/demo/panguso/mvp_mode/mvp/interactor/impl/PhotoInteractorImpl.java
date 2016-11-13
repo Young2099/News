@@ -19,6 +19,7 @@ import javax.inject.Inject;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by ${yangfang} on 2016/11/4.
@@ -31,7 +32,7 @@ public class PhotoInteractorImpl implements PhotoInteractor<List<PhotoGirl>> {
     }
 
     @Override
-    public Subscription loadPhotosList(final RequestCallBack<List<PhotoGirl>> callBack, int size,  int page) {
+    public Subscription loadPhotosList(final RequestCallBack<List<PhotoGirl>> callBack, int size, int page) {
         return RetrofitManager.getInstance(HostType.GANK_GIRL_PHOTO)
                 .getPhotoList(size, page)
                 //用map说明返回的数据是数组类型的girdata和一个错误的信息message
@@ -50,7 +51,7 @@ public class PhotoInteractorImpl implements PhotoInteractor<List<PhotoGirl>> {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("TAG","PPPPPPPP");
+                        Log.e("TAG", "PPPPPPPP");
                         callBack.onError(App.getAppContext().getString(R.string.load_error));
                     }
 

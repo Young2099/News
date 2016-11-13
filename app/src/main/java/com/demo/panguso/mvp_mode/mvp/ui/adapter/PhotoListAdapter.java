@@ -95,6 +95,8 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
 //                    .into(imageView);
             Picasso.with(App.getAppContext())
                     .load(mList.get(position).getUrl())
+                    .placeholder(R.drawable.load_photo)
+//                    .placeholder(R.color.image_place_holder)
                     .error(R.mipmap.ic_load_fail)
                     .into(((CommonViewHolder.PhotoListViewHolder) holder).mImageView);
                     //使用picasso加载图片可以自动计算实际宽高比进行设置，
