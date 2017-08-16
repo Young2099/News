@@ -53,7 +53,7 @@ public class NewsListInteractorImpl implements NewsListInteractor<List<NewsSumma
                         try {
                             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                                     .parse(newsSummary.getPtime());
-                            String ptime = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(date);
+                            String ptime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(date);
                             newsSummary.setPtime(ptime);
                         } catch (ParseException e) {
                             e.printStackTrace();
@@ -69,7 +69,6 @@ public class NewsListInteractorImpl implements NewsListInteractor<List<NewsSumma
                         return newsSummary2.getPtime().compareTo(newsSummary.getPtime());
                     }
                 })
-//                .toList()
                 .compose(TransformUtils.<List<NewsSummary>>defaultSchedulers() )
                 .subscribe(new Subscriber<List<NewsSummary>>() {
                     @Override
