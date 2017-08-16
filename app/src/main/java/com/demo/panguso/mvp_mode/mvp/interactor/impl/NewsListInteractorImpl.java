@@ -53,7 +53,7 @@ public class NewsListInteractorImpl implements NewsListInteractor<List<NewsSumma
                         try {
                             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                                     .parse(newsSummary.getPtime());
-                            String ptime = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault()).format(date);
+                            String ptime = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(date);
                             newsSummary.setPtime(ptime);
                         } catch (ParseException e) {
                             e.printStackTrace();
