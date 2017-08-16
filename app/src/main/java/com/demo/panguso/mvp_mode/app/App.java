@@ -14,6 +14,7 @@ import com.demo.panguso.mvp_mode.inject.component.DaggerApplicationComponent;
 import com.demo.panguso.mvp_mode.inject.module.ApplicationModule;
 import com.demo.panguso.mvp_mode.utils.DebugUtil;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -60,6 +61,7 @@ public class App extends Application {
         appContext = this;
         initLeakCanary();
         initActivityLifecycleLogs();
+        Fresco.initialize(this);
 //        installLeakeCanary();
         //官方推荐将获取DaoMaster对象的方法放到Application层，这样将避免多次创建生成session对象
         initStricMode();

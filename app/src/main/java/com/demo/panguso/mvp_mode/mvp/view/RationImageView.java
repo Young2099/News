@@ -32,11 +32,11 @@ public class RationImageView extends ImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (originalWidth > 0 && originalHeight > 0) {
-            float ratio = (float) originalWidth / (float)originalHeight;
+            float ratio = (float) originalWidth / (float) originalHeight;
             int width = MeasureSpec.getSize(widthMeasureSpec);
             int height = MeasureSpec.getSize(heightMeasureSpec);
             if (width > 0) {
-                    height = (int) (width / ratio);
+                height = (int) ((float) width / ratio);
             }
             setMeasuredDimension(width, height);
         } else {

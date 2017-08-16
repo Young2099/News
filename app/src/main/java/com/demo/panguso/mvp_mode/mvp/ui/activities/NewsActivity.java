@@ -24,6 +24,7 @@ import com.demo.panguso.mvp_mode.mvp.ui.activities.base.BaseActivity;
 import com.demo.panguso.mvp_mode.mvp.ui.adapter.NewsFragmetPagerAdapter;
 import com.demo.panguso.mvp_mode.mvp.ui.fragment.NewsListFragment;
 import com.demo.panguso.mvp_mode.mvp.view.NewsView;
+import com.demo.panguso.mvp_mode.mvp.view.drawview.FlodDrawerLayout;
 import com.demo.panguso.mvp_mode.utils.MyUtils;
 import com.demo.panguso.mvp_mode.utils.RxBus;
 import com.demo.panguso.mvp_mode.utils.SharedPreferencesUtil;
@@ -51,7 +52,7 @@ public class NewsActivity extends BaseActivity implements NewsView {
     @BindView(R.id.navigation_view)
     NavigationView mNavView;
     @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
+    FlodDrawerLayout mDrawerLayout;
     @BindView(R.id.fab)
     FloatingActionButton mFab;
     @BindView(R.id.add_channel_iv)

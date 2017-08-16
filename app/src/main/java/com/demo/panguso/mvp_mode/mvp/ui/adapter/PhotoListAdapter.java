@@ -99,9 +99,8 @@ public class PhotoListAdapter extends BaseRecyclerViewAdapter<PhotoGirl> {
 //                    .placeholder(R.color.image_place_holder)
                     .error(R.mipmap.ic_load_fail)
                     .into(((CommonViewHolder.PhotoListViewHolder) holder).mImageView);
-                    //使用picasso加载图片可以自动计算实际宽高比进行设置，
+            //使用picasso加载图片可以自动计算实际宽高比进行设置，
             //刷新也不会出现闪屏
-
         }
 //        setItemAppearAnimation(holder, position,R.anim.anim_rotate_scale_in);
     }
