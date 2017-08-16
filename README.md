@@ -13,5 +13,6 @@
 
 ![img](https://github.com/yangfang521314/MVP/blob/master/picture/Screenshot_20170816-140057.png)
 
-（4）侧边可以折叠滑动的DrawerLayout
+(4)侧边可以折叠阴影的滑动的DrawerLayout
+
 ![img](https://github.com/yangfang521314/MVP/blob/master/picture/Screenshot_20170816-152900.png)
